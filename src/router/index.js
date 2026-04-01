@@ -2,11 +2,16 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
     // --- SECCIÓN INSTITUCIONAL ---
+    // {
+    //     path: '/',
+    //     name: 'home',
+    //     component: () => import('../views/HomeView.vue'),
+    // },
     {
-        path: '/',
-        name: 'home',
-        component: () => import('../views/HomeView.vue'),
-    },
+    path: '/',
+    name: 'proximamente',
+    component: () => import('../views/ProximamenteView.vue'),
+},
     {
         path: '/quienes-somos',
         name: 'quienes-somos',

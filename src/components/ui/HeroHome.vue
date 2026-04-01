@@ -8,7 +8,7 @@
                     <p class="hero-eyebrow">IPN Chile</p>
 
                     <h1 class="hero-title">
-                        Una iglesia para
+                        Una Iglesia para
                         <br />
                         <span>usted y su familia</span>
                     </h1>
@@ -27,7 +27,7 @@
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z" />
                                 <circle cx="12" cy="10" r="3" />
                             </svg>
-                            <span>Buscar iglesia</span>
+                            <span>Buscar Iglesia</span>
                         </RouterLink>
 
                         <RouterLink to="/quienes-somos" class="btn-secondary hero-action">
