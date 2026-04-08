@@ -262,6 +262,7 @@ import fotoVicepresidente from '@/assets/img/directorio/2025-2028/VICEPRESIDENTE
 import fotoSecretario from '@/assets/img/directorio/2025-2028/SECRETARIO.jpeg'
 import fotoTesorero from '@/assets/img/directorio/2025-2028/TESORERO.jpeg'
 import fotoProsecretario from '@/assets/img/directorio/2025-2028/PROSECRETARIO.jpeg'
+import fotoDirector from '@/assets/img/directorio/2025-2028/DIRECTOR.jpeg'
 
 
 
@@ -269,7 +270,7 @@ import fotoProsecretario from '@/assets/img/directorio/2025-2028/PROSECRETARIO.j
 const directorioNacional = [
     {
         cargo: 'Pastor Presidente',
-        nombre: 'Pr. Presbítero Rev. Rosamel Ceballos',
+        nombre: 'Pr. Presbítero Rev. Rosamel Ceballo',
         foto: fotoPresidente
     },
     {
@@ -279,7 +280,7 @@ const directorioNacional = [
     },
     {
         cargo: 'Pastor Secretario',
-        nombre: 'Pr. Presbítero Rev. Alejandro Molina',
+        nombre: 'Pr. Diacono Rev. Alejandro Molina',
         foto: fotoSecretario
     },
     {
@@ -289,12 +290,17 @@ const directorioNacional = [
     },
     {
         cargo: 'Pastor Prosecretario',
-        nombre: 'Pr. Presbítero Rev. Andrés Seulveda',
+        nombre: 'Pr. Diacono Rev. Andrés Seulveda',
         foto: fotoProsecretario
     },
     {
         cargo: 'Pastor Protesorero',
         nombre: 'Pr. Presbítero Rev. Guillermo Herrada',
+        foto: ''
+    },
+    {
+        cargo: 'Pastor Director',
+        nombre: 'Pr. Presbítero Rev. Pascual Silva',
         foto: ''
     }
 ]
@@ -323,7 +329,7 @@ const tribunalEtica = [
     {
         cargo: 'Director',
         nombre: 'Pr. Presbítero Rev. Alex Brana',
-        foto: ''
+        foto: fotoDirector
     }
 ]
 
