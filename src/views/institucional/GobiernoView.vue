@@ -301,7 +301,7 @@ const directorioNacional = [
     {
         cargo: 'Pastor Director',
         nombre: 'Pr. Presbítero Rev. Pascual Silva',
-        foto: ''
+        foto: fotoDirector
     }
 ]
 
@@ -329,7 +329,7 @@ const tribunalEtica = [
     {
         cargo: 'Director',
         nombre: 'Pr. Presbítero Rev. Alex Brana',
-        foto: fotoDirector
+        foto: ''
     }
 ]
 
