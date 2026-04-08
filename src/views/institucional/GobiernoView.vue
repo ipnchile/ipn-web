@@ -290,7 +290,7 @@ const directorioNacional = [
     },
     {
         cargo: 'Pastor Prosecretario',
-        nombre: 'Pr. Diacono Rev. Andrés Seulveda',
+        nombre: 'Pr. Diacono Rev. Andrés Sepulveda',
         foto: fotoProsecretario
     },
     {
