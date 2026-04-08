@@ -182,33 +182,30 @@ import departmentLogo from '@/assets/img/departamentos/JUMIX_NACIONAL.png'
 const nationalBoard = [
     {
         role: 'Jefe Nacional',
-        name: 'Nombre del Jefe Nacional',
-        period: 'Directiva Nacional 2026',
+        name: 'Hno. Joel Pardo',
+        period: 'Directiva Nacional',
         description:
             'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional JUMIX.',
         photo: '',
-        email: 'jefe.jumix@ipnchile.cl',
-        phone: '+56 9 0000 0000'
+        email: 'jefe.jumix@ipnchile.cl'
     },
     {
         role: 'Secretario Nacional',
-        name: 'Nombre del Secretario Nacional',
-        period: 'Directiva Nacional 2026',
+        name: 'Hno. Benjamin Ceballo',
+        period: 'Directiva Nacional',
         description:
             'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades juveniles.',
         photo: '',
-        email: 'secretario.jumix@ipnchile.cl',
-        phone: '+56 9 0000 0001'
+        email: 'secretario.jumix@ipnchile.cl'
     },
     {
         role: 'Tesorero Nacional',
-        name: 'Nombre del Tesorero Nacional',
-        period: 'Directiva Nacional 2026',
+        name: 'Hna. Genesis Rodriguez',
+        period: 'Directiva Nacional',
         description:
             'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
         photo: '',
-        email: 'tesoreria.jumix@ipnchile.cl',
-        phone: '+56 9 0000 0002'
+        email: 'tesoreria.jumix@ipnchile.cl'
     }
 ]
 

@@ -40,7 +40,7 @@
                             Conforme a sus estatutos, la Iglesia cuenta con autoridades, órganos de apoyo
                             y cuerpos de servicio que colaboran en la dirección, administración, disciplina
                             y acompañamiento pastoral de la obra. Esta estructura busca preservar el buen
-                            funcionamiento institucional y fortalecer la comunión del cuerpo de Cristo.
+                            funcionamiento Institucional y fortalecer la comunión del cuerpo de Cristo.
                         </p>
                     </div>
                 </div>
@@ -257,68 +257,72 @@
 import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 
+import fotoPresidente from '@/assets/img/directorio/2025-2028/PRESIDENTE.jpeg'
+import fotoVicepresidente from '@/assets/img/directorio/2025-2028/VICEPRESIDENTE.jpeg'
+import fotoSecretario from '@/assets/img/directorio/2025-2028/SECRETARIO.jpeg'
+import fotoTesorero from '@/assets/img/directorio/2025-2028/TESORERO.jpeg'
+import fotoProsecretario from '@/assets/img/directorio/2025-2028/PROSECRETARIO.jpeg'
+
+
+
+
 const directorioNacional = [
     {
         cargo: 'Pastor Presidente',
-        nombre: 'Información en actualización',
-        foto: ''
+        nombre: 'Pr. Presbítero Rev. Rosamel Ceballos',
+        foto: fotoPresidente
     },
     {
         cargo: 'Pastor Vicepresidente',
-        nombre: 'Información en actualización',
-        foto: ''
+        nombre: 'Pr. Presbítero Rev. Marco Alarcón',
+        foto: fotoVicepresidente
     },
     {
         cargo: 'Pastor Secretario',
-        nombre: 'Información en actualización',
-        foto: ''
+        nombre: 'Pr. Presbítero Rev. Alejandro Molina',
+        foto: fotoSecretario
     },
     {
         cargo: 'Pastor Tesorero',
-        nombre: 'Información en actualización',
-        foto: ''
+        nombre: 'Pr. Presbítero Rev. Juan Montecino',
+        foto: fotoTesorero
     },
     {
         cargo: 'Pastor Prosecretario',
-        nombre: 'Información en actualización',
-        foto: ''
+        nombre: 'Pr. Presbítero Rev. Andrés Seulveda',
+        foto: fotoProsecretario
     },
     {
         cargo: 'Pastor Protesorero',
-        nombre: 'Información en actualización',
-        foto: ''
-    },
-    {
-        cargo: 'Pastor Director',
-        nombre: 'Información en actualización',
+        nombre: 'Pr. Presbítero Rev. Guillermo Herrada',
         foto: ''
     }
 ]
 
 const tribunalEtica = [
     {
-        cargo: 'Presidente',
-        nombre: 'Información en actualización',
+        cargo: 'Director',
+        nombre: 'Pr. Presbítero Rev. Hernan Sepulveda',
         foto: ''
     },
     {
         cargo: 'Secretario',
-        nombre: 'Información en actualización',
+        nombre: 'Pr. Presbítero Rev. Luis Mondaca',
         foto: ''
     },
     {
-        cargo: 'Miembro',
-        nombre: 'Información en actualización',
+        cargo: 'Director',
+        nombre: 'Pr. Presbítero Rev. Raúl Vidal',
         foto: ''
     },
     {
-        cargo: 'Miembro',
-        nombre: 'Información en actualización',
+        cargo: 'Director',
+        nombre: 'Pr. Presbítero Rev. Nelsón Mondaca',
         foto: ''
     },
     {
-        cargo: 'Miembro',
-        nombre: 'Información en actualización',
+        cargo: 'Director',
+        nombre: 'Pr. Presbítero Rev. Alex Brana',
         foto: ''
     }
 ]
@@ -894,5 +898,26 @@ onBeforeUnmount(() => {
         opacity: 1 !important;
         filter: none !important;
     }
+}
+
+.person-avatar {
+    width: 64px;
+    min-width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(203, 164, 94, 0.28);
+    background: rgba(255, 255, 255, 0.04);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.person-avatar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
 }
 </style>

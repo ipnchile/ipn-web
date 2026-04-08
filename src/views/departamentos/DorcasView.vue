@@ -173,33 +173,30 @@ import departmentLogo from '@/assets/img/departamentos/DORCAS_NACIONAL.png'
 const nationalBoard = [
     {
         role: 'Jefa Nacional',
-        name: 'Nombre de la Jefa Nacional',
-        period: 'Directiva Nacional 2026',
+        name: 'Pra. Miriam Morales',
+        period: 'Directiva Nacional',
         description:
             'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional Dorcas.',
         photo: '',
-        email: 'jefa.dorcas@ipnchile.cl',
-        phone: '+56 9 0000 0000'
+        email: 'jefa.dorcas@ipnchile.cl'
     },
     {
         role: 'Secretaria Nacional',
-        name: 'Nombre de la Secretaria Nacional',
-        period: 'Directiva Nacional 2026',
+        name: 'Pra. Soraya Sepulveda',
+        period: 'Directiva Nacional',
         description:
             'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades.',
         photo: '',
-        email: 'secretaria.dorcas@ipnchile.cl',
-        phone: '+56 9 0000 0001'
+        email: 'secretaria.dorcas@ipnchile.cl'
     },
     {
         role: 'Tesorera Nacional',
-        name: 'Nombre de la Tesorera Nacional',
-        period: 'Directiva Nacional 2026',
+        name: 'Pra. Norma Aguilera',
+        period: 'Directiva Nacional',
         description:
             'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
         photo: '',
-        email: 'tesoreria.dorcas@ipnchile.cl',
-        phone: '+56 9 0000 0002'
+        email: 'tesoreria.dorcas@ipnchile.cl'
     }
 ]
 

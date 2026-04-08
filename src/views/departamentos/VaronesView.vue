@@ -189,33 +189,30 @@ import departmentLogo from '@/assets/img/departamentos/VARONES_NACIONAL.png'
 const nationalBoard = [
   {
     role: 'Jefe Nacional',
-    name: 'Nombre del Jefe Nacional',
-    period: 'Directiva Nacional 2026',
+    name: 'Hno. Stalin Guzman',
+    period: 'Directiva Nacional',
     description:
       'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional de Varones.',
     photo: '',
-    email: 'jefe.varones@ipnchile.cl',
-    phone: '+56 9 0000 0000'
+    email: 'jefe.varones@ipnchile.cl'
   },
   {
     role: 'Secretario Nacional',
-    name: 'Nombre del Secretario Nacional',
-    period: 'Directiva Nacional 2026',
+    name: 'Hno. Álvaro Gonzalez',
+    period: 'Directiva Nacional',
     description:
       'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades.',
     photo: '',
-    email: 'secretario.varones@ipnchile.cl',
-    phone: '+56 9 0000 0001'
+    email: 'secretario.varones@ipnchile.cl'
   },
   {
     role: 'Tesorero Nacional',
-    name: 'Nombre del Tesorero Nacional',
-    period: 'Directiva Nacional 2026',
+    name: 'Hno. Claudio Ayala',
+    period: 'Directiva Nacional',
     description:
       'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
     photo: '',
-    email: 'tesoreria.varones@ipnchile.cl',
-    phone: '+56 9 0000 0002'
+    email: 'tesoreria.varones@ipnchile.cl'
   }
 ]
 

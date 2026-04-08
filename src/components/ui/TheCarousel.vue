@@ -62,7 +62,7 @@ let autoplay = null
 const slides = ref([
     {
         eyebrow: 'Iglesia Pentecostal Nazareth',
-        title: 'Una presencia institucional con propósito',
+        title: 'Una presencia Institucional con propósito',
         description: 'Un espacio digital renovado para fortalecer la conexión, la identidad y la misión de nuestra comunidad.',
         buttonText: 'Conócenos',
         buttonLink: '/quienes-somos',
@@ -211,13 +211,14 @@ onBeforeUnmount(() => {
     margin: 0 0 1rem;
     font-family: var(--font-serif, "Lora", serif);
     font-size: clamp(2rem, 4.1vw, 4.4rem);
-    line-height: 1.05;
+    line-height: 1.08;
     font-weight: 700;
     color: var(--theme-text-strong, #ffffff);
     text-wrap: balance;
-    max-width: 12ch;
-    overflow-wrap: anywhere;
-    hyphens: auto;
+    max-width: 16ch;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
 }
 
 .carousel-description {
@@ -489,11 +490,14 @@ onBeforeUnmount(() => {
 
 /* Ajuste especial para el segundo slide */
 .carousel-slide--second .carousel-content {
-    width: min(860px, calc(100% - 3rem));
+    width: min(980px, calc(100% - 3rem));
 }
 
 .carousel-slide--second .carousel-content h2 {
-    max-width: 14ch;
+    max-width: 18ch;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
 }
 
 .carousel-slide--second .carousel-description {
@@ -511,22 +515,13 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 768px) {
-    .carousel-slide--second .carousel-content {
-        left: 1.1rem;
-        right: 1.1rem;
-        width: auto;
-        bottom: 4.7rem;
-    }
-
+    .carousel-content h2,
     .carousel-slide--second .carousel-content h2 {
         max-width: 100%;
-        font-size: clamp(1.45rem, 6.6vw, 2.05rem);
-    }
-
-    .carousel-slide--second .carousel-description {
-        max-width: 100%;
-        font-size: 0.95rem;
-        line-height: 1.5;
+        overflow-wrap: normal;
+        word-break: keep-all;
+        hyphens: none;
+        text-wrap: pretty;
     }
 }
 
