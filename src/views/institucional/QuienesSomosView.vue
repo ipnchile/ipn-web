@@ -36,12 +36,96 @@
                 <div class="overview-card glass-panel">
                     <div class="overview-card__content">
                         <p class="section-eyebrow">Nuestra Identidad</p>
-                        <h2>Una iglesia con fundamento bíblico, comunión fraternal y orden institucional</h2>
+                        <h2>Una Iglesia con fundamento bíblico, comunión fraternal y orden institucional</h2>
                         <p>
-                            Somos una iglesia que afirma la autoridad de las Sagradas Escrituras, la centralidad de Cristo
-                            y la obra del Espíritu Santo. Nuestra identidad se expresa en una fe viva, en la sana doctrina,
-                            en la unidad del cuerpo de Cristo y en un servicio reverente que busca edificar a cada familia,
+                            Somos una Iglesia que afirma la autoridad de las Sagradas Escrituras, la centralidad de
+                            Cristo
+                            y la obra del Espíritu Santo. Nuestra identidad se expresa en una fe viva, en la sana
+                            doctrina,
+                            en la unidad del cuerpo de Cristo y en un servicio reverente que busca edificar a cada
+                            familia,
                             congregación y generación.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="purpose-section">
+            <div class="section-container">
+                <div class="section-heading">
+                    <p class="section-eyebrow">Propósito Institucional</p>
+                    <h2>Visión, misión y Compromiso de nuestra Iglesia</h2>
+                    <p>
+                        Nuestra labor se orienta a anunciar a Jesucristo, servir a las personas con amor
+                        y responder con fidelidad al llamado del Señor en estos tiempos.
+                    </p>
+                </div>
+
+                <div class="purpose-grid">
+                    <article class="purpose-card glass-panel">
+                        <div class="purpose-icon">👁</div>
+                        <p class="purpose-label">Visión</p>
+                        <h3>Alcanzar vidas con el conocimiento de la salvación</h3>
+                        <p>
+                            Lograr que el conocimiento de la salvación llegue a toda persona, a través de todos los
+                            medios
+                            disponibles, utilizando métodos bíblicos con el fin de que reciban y acepten a Jesucristo
+                            como Señor y Salvador.
+                        </p>
+                    </article>
+
+                    <article class="purpose-card glass-panel">
+                        <div class="purpose-icon">🌍</div>
+                        <p class="purpose-label">Misión</p>
+                        <h3>Llevar el mensaje de Cristo a cada lugar</h3>
+                        <p>
+                            Llevar el mensaje de salvación a toda comunidad, villa, pueblo, ciudad y región en Chile
+                            y el mundo, cumpliendo el mandato de Cristo:
+                            <strong>“Id por el mundo y haced discípulos”.</strong>
+                        </p>
+                    </article>
+
+                    <article class="purpose-card glass-panel">
+                        <div class="purpose-icon">🤝</div>
+                        <p class="purpose-label">Compromiso</p>
+                        <h3>Servir con excelencia, equidad y amor fraternal</h3>
+                        <p>
+                            Atender las distintas necesidades espirituales, tanto individuales como colectivas,
+                            de toda persona, familia o comunidad, a través de la Iglesia como cuerpo de Cristo,
+                            enfocando todos los esfuerzos a la excelencia en el servicio y a una vida fraterna
+                            con equidad, integración y participación.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="context-section">
+            <div class="section-container">
+                <div class="context-card glass-panel">
+                    <div class="context-card__header">
+                        <p class="section-eyebrow">Nuestro Testimonio</p>
+                        <h2>Una Iglesia que permanece firme en medio de tiempos difíciles</h2>
+                    </div>
+
+                    <div class="context-card__body">
+                        <p>
+                            Son tiempos difíciles, ya que como Iglesia de Cristo vivimos en un mundo cada vez más hostil
+                            a causa de nuestra fe. Sin embargo, seguimos adelante con convicción, esperanza y
+                            dependencia
+                            del Señor.
+                        </p>
+
+                        <p>
+                            Como Iglesia Pentecostal Nazareth, tenemos la bendición, por misericordia divina,
+                            de ser parte del Cuerpo de Cristo: su Iglesia, compuesta por un número importante
+                            de familias chilenas comprometidas con el evangelio de nuestro Señor Jesucristo.
+                        </p>
+
+                        <p>
+                            Creemos que el Señor sigue obrando en su pueblo, fortaleciendo a su Iglesia y levantando
+                            generaciones que amen la verdad, vivan en santidad y sirvan con fidelidad.
                         </p>
                     </div>
                 </div>
@@ -137,6 +221,8 @@ import { RouterLink } from 'vue-router'
    ========================= */
 .hero-section,
 .overview-section,
+.purpose-section,
+.context-section,
 .cards-section,
 .nav-section {
     padding: 0 0 3.5rem;
@@ -242,18 +328,20 @@ import { RouterLink } from 'vue-router'
 }
 
 /* =========================
-   TARJETA IDENTIDAD
+   TARJETAS GENERALES
    ========================= */
-.overview-card {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 2rem;
-    border-radius: 26px;
+.overview-card,
+.purpose-card,
+.context-card,
+.info-card,
+.nav-card {
     position: relative;
     overflow: hidden;
 }
 
 .overview-card::before,
+.purpose-card::before,
+.context-card::before,
 .info-card::before,
 .nav-card::before {
     content: "";
@@ -264,10 +352,22 @@ import { RouterLink } from 'vue-router'
 }
 
 .overview-card__content,
-.info-card,
-.nav-card {
+.purpose-card>*,
+.context-card>*,
+.info-card>*,
+.nav-card>* {
     position: relative;
     z-index: 1;
+}
+
+/* =========================
+   TARJETA IDENTIDAD
+   ========================= */
+.overview-card {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 26px;
 }
 
 .overview-card__content {
@@ -284,6 +384,116 @@ import { RouterLink } from 'vue-router'
     margin-bottom: 0;
     color: var(--theme-text-soft);
     line-height: 1.85;
+}
+
+/* =========================
+   CABECERA SECCIÓN
+   ========================= */
+.section-heading {
+    max-width: 760px;
+    margin: 0 auto 1.5rem;
+    text-align: center;
+}
+
+.section-heading h2 {
+    margin: 0.35rem 0 0.8rem;
+    font-size: clamp(1.8rem, 3vw, 2.7rem);
+    line-height: 1.15;
+}
+
+.section-heading p {
+    margin: 0;
+    color: var(--theme-text-soft);
+    line-height: 1.8;
+}
+
+/* =========================
+   VISIÓN / MISIÓN / COMPROMISO
+   ========================= */
+.purpose-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.purpose-card {
+    padding: 1.6rem;
+    border-radius: 24px;
+    min-height: 100%;
+    transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+
+.purpose-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(203, 164, 94, 0.24);
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+}
+
+.purpose-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 1rem;
+    font-size: 1.35rem;
+    background: rgba(203, 164, 94, 0.14);
+    border: 1px solid rgba(203, 164, 94, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.purpose-label {
+    margin: 0 0 0.45rem;
+    color: var(--theme-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.76rem;
+    font-weight: 800;
+}
+
+.purpose-card h3 {
+    margin: 0 0 0.85rem;
+    font-size: 1.25rem;
+    line-height: 1.3;
+}
+
+.purpose-card p:last-child {
+    margin: 0;
+    color: var(--theme-text-soft);
+    line-height: 1.85;
+}
+
+/* =========================
+   CONTEXTO / TESTIMONIO
+   ========================= */
+.context-card {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 28px;
+}
+
+.context-card__header {
+    max-width: 760px;
+    margin-bottom: 1.2rem;
+}
+
+.context-card__header h2 {
+    margin: 0.35rem 0 0;
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    line-height: 1.2;
+}
+
+.context-card__body {
+    display: grid;
+    gap: 1rem;
+}
+
+.context-card__body p {
+    margin: 0;
+    color: var(--theme-text-soft);
+    line-height: 1.9;
+    font-size: 1.02rem;
 }
 
 /* =========================
@@ -333,27 +543,6 @@ import { RouterLink } from 'vue-router'
 }
 
 /* =========================
-   CABECERA SECCIÓN
-   ========================= */
-.section-heading {
-    max-width: 760px;
-    margin: 0 auto 1.5rem;
-    text-align: center;
-}
-
-.section-heading h2 {
-    margin: 0.35rem 0 0.8rem;
-    font-size: clamp(1.8rem, 3vw, 2.7rem);
-    line-height: 1.15;
-}
-
-.section-heading p {
-    margin: 0;
-    color: var(--theme-text-soft);
-    line-height: 1.8;
-}
-
-/* =========================
    NAVEGACIÓN
    ========================= */
 .nav-grid {
@@ -396,8 +585,13 @@ import { RouterLink } from 'vue-router'
 /* =========================
    RESPONSIVE
    ========================= */
-@media (max-width: 1000px) {
-    .cards-grid,
+@media (max-width: 1100px) {
+
+    .purpose-grid,
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
     .nav-grid {
         grid-template-columns: 1fr;
     }
@@ -413,6 +607,8 @@ import { RouterLink } from 'vue-router'
     }
 
     .overview-card,
+    .purpose-card,
+    .context-card,
     .info-card,
     .nav-card {
         padding: 1.15rem;
@@ -432,9 +628,17 @@ import { RouterLink } from 'vue-router'
     .hero-subtext,
     .section-heading p,
     .overview-card p:last-child,
+    .purpose-card p:last-child,
+    .context-card__body p,
     .info-card p,
     .nav-card p {
         line-height: 1.75;
+    }
+
+    .purpose-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.15rem;
     }
 }
 </style>

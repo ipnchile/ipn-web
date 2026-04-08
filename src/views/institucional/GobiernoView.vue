@@ -79,15 +79,32 @@
                             en la conducción administrativa e institucional de la Iglesia.
                         </p>
 
-                        <ul class="people-list">
-                            <li><strong>Pastor Presidente:</strong> Información en actualización</li>
-                            <li><strong>Pastor Vicepresidente:</strong> Información en actualización</li>
-                            <li><strong>Pastor Secretario:</strong> Información en actualización</li>
-                            <li><strong>Pastor Tesorero:</strong> Información en actualización</li>
-                            <li><strong>Pastor Prosecretario:</strong> Información en actualización</li>
-                            <li><strong>Pastor Protesorero:</strong> Información en actualización</li>
-                            <li><strong>Pastor Director:</strong> Información en actualización</li>
-                        </ul>
+                        <div class="people-list-modern">
+                            <div
+                                v-for="persona in directorioNacional"
+                                :key="persona.cargo"
+                                class="person-item"
+                            >
+                                <div class="person-avatar">
+                                    <img
+                                        v-if="persona.foto"
+                                        :src="persona.foto"
+                                        :alt="persona.nombre || persona.cargo"
+                                        class="person-avatar__img"
+                                    />
+                                    <div v-else class="person-avatar__fallback">
+                                        <font-awesome-icon :icon="['fas', 'user']" />
+                                    </div>
+                                </div>
+
+                                <div class="person-info">
+                                    <p class="person-role">{{ persona.cargo }}</p>
+                                    <p class="person-name">
+                                        {{ persona.nombre || 'Información en actualización' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </article>
 
                     <article
@@ -106,13 +123,32 @@
                             de la idoneidad para determinados cargos eclesiásticos.
                         </p>
 
-                        <ul class="people-list">
-                            <li><strong>Presidente:</strong> Información en actualización</li>
-                            <li><strong>Secretario:</strong> Información en actualización</li>
-                            <li><strong>Miembro:</strong> Información en actualización</li>
-                            <li><strong>Miembro:</strong> Información en actualización</li>
-                            <li><strong>Miembro:</strong> Información en actualización</li>
-                        </ul>
+                        <div class="people-list-modern">
+                            <div
+                                v-for="persona in tribunalEtica"
+                                :key="persona.cargo + persona.nombre"
+                                class="person-item"
+                            >
+                                <div class="person-avatar">
+                                    <img
+                                        v-if="persona.foto"
+                                        :src="persona.foto"
+                                        :alt="persona.nombre || persona.cargo"
+                                        class="person-avatar__img"
+                                    />
+                                    <div v-else class="person-avatar__fallback">
+                                        <font-awesome-icon :icon="['fas', 'user']" />
+                                    </div>
+                                </div>
+
+                                <div class="person-info">
+                                    <p class="person-role">{{ persona.cargo }}</p>
+                                    <p class="person-name">
+                                        {{ persona.nombre || 'Información en actualización' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </article>
                 </div>
             </div>
@@ -156,7 +192,7 @@
                         <h3>Superintendentes de Zona</h3>
                         <p>
                             Colaboradores directos del Pastor Presidente en la supervisión, acompañamiento
-                            y orientación de las iglesias dentro de sus respectivas zonas.
+                            y orientación de las Iglesias dentro de sus respectivas zonas.
                         </p>
                     </article>
 
@@ -220,6 +256,72 @@
 <script setup>
 import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
+
+const directorioNacional = [
+    {
+        cargo: 'Pastor Presidente',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Pastor Vicepresidente',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Pastor Secretario',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Pastor Tesorero',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Pastor Prosecretario',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Pastor Protesorero',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Pastor Director',
+        nombre: 'Información en actualización',
+        foto: ''
+    }
+]
+
+const tribunalEtica = [
+    {
+        cargo: 'Presidente',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Secretario',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Miembro',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Miembro',
+        nombre: 'Información en actualización',
+        foto: ''
+    },
+    {
+        cargo: 'Miembro',
+        nombre: 'Información en actualización',
+        foto: ''
+    }
+]
 
 const heroRef = ref(null)
 const introRef = ref(null)
@@ -464,7 +566,7 @@ onBeforeUnmount(() => {
 .intro-card__content,
 .org-card__header,
 .org-card__text,
-.people-list,
+.people-list-modern,
 .team-card h3,
 .team-card p,
 .team-icon {
@@ -547,15 +649,76 @@ onBeforeUnmount(() => {
     margin-bottom: 0;
 }
 
-.people-list {
-    margin: 1.15rem 0 0;
-    padding-left: 1.1rem;
-    color: var(--theme-text-soft);
-    line-height: 1.95;
+/* =========================
+   PERSONAS CON FOTO
+   ========================= */
+.people-list-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1.2rem;
 }
 
-.people-list li + li {
-    margin-top: 0.2rem;
+.person-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.75rem 0.85rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.person-avatar {
+    width: 54px;
+    min-width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(203, 164, 94, 0.28);
+    background: rgba(255, 255, 255, 0.04);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.person-avatar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.person-avatar__fallback {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: var(--theme-secondary);
+    font-size: 1.1rem;
+    background:
+        radial-gradient(circle at top, rgba(203, 164, 94, 0.14), transparent 70%),
+        rgba(255, 255, 255, 0.03);
+}
+
+.person-info {
+    min-width: 0;
+}
+
+.person-role {
+    margin: 0 0 0.18rem;
+    font-size: 0.83rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--theme-secondary);
+    font-weight: 800;
+}
+
+.person-name {
+    margin: 0;
+    color: var(--theme-text);
+    line-height: 1.45;
+    font-weight: 600;
 }
 
 /* =========================
@@ -611,7 +774,6 @@ onBeforeUnmount(() => {
 /* =========================
    GOLD SHIMMER EFFECT
    ========================= */
-
 .org-card,
 .team-card,
 .intro-card {
@@ -619,7 +781,6 @@ onBeforeUnmount(() => {
     overflow: hidden;
 }
 
-/* capa de brillo */
 .org-card::after,
 .team-card::after,
 .intro-card::after {
@@ -629,7 +790,6 @@ onBeforeUnmount(() => {
     left: -50%;
     width: 60%;
     height: 300%;
-
     background: linear-gradient(
         110deg,
         transparent 0%,
@@ -640,13 +800,11 @@ onBeforeUnmount(() => {
         transparent 60%,
         transparent 100%
     );
-
     transform: rotate(25deg);
     opacity: 0;
     pointer-events: none;
 }
 
-/* cuando aparece el elemento */
 .reveal.is-visible.org-card::after,
 .reveal.is-visible.team-card::after,
 .reveal.is-visible.intro-card::after {
@@ -654,25 +812,20 @@ onBeforeUnmount(() => {
 }
 
 @keyframes goldSweep {
-
     0% {
         opacity: 0;
         left: -60%;
     }
-
     20% {
         opacity: 1;
     }
-
     60% {
         opacity: 1;
     }
-
     100% {
         opacity: 0;
         left: 120%;
     }
-
 }
 
 /* =========================
@@ -714,9 +867,12 @@ onBeforeUnmount(() => {
     .section-description,
     .intro-card p:last-child,
     .org-card__text,
-    .team-card p,
-    .people-list {
+    .team-card p {
         line-height: 1.75;
+    }
+
+    .person-item {
+        align-items: flex-start;
     }
 
     .reveal,

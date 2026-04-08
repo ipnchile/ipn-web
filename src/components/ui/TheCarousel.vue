@@ -2,17 +2,11 @@
     <section class="carousel-container">
         <div class="carousel-wrapper">
             <div class="carousel-slides">
-                <article
-                    v-for="(slide, index) in slides"
-                    :key="index"
-                    class="carousel-slide"
-                    :class="{ active: index === currentSlide }"
-                >
-                    <img
-                        :src="slide.image"
-                        :alt="slide.title"
-                        class="carousel-image"
-                    />
+                <article v-for="(slide, index) in slides" :key="index" class="carousel-slide" :class="[
+                    { active: index === currentSlide },
+                    { 'carousel-slide--second': index === 1 }
+                ]">
+                    <img :src="slide.image" :alt="slide.title" class="carousel-image" />
 
                     <div class="carousel-overlay"></div>
 
@@ -28,10 +22,7 @@
                         </p>
 
                         <div v-if="slide.buttonText && slide.buttonLink" class="carousel-actions">
-                            <RouterLink
-                                :to="slide.buttonLink"
-                                class="carousel-button-primary"
-                            >
+                            <RouterLink :to="slide.buttonLink" class="carousel-button-primary">
                                 {{ slide.buttonText }}
                             </RouterLink>
                         </div>
@@ -39,33 +30,20 @@
                 </article>
             </div>
 
-            <button
-                class="carousel-button prev"
-                type="button"
-                aria-label="Anterior"
-                @click="prevSlide"
-            >
+            <button class="carousel-button prev" type="button" aria-label="Anterior"
+                @click="stopAutoplay(); prevSlide()">
                 ‹
             </button>
 
-            <button
-                class="carousel-button next"
-                type="button"
-                aria-label="Siguiente"
-                @click="nextSlide"
-            >
+            <button class="carousel-button next" type="button" aria-label="Siguiente"
+                @click="stopAutoplay(); nextSlide()">
                 ›
             </button>
 
             <div class="carousel-dots">
-                <button
-                    v-for="(slide, index) in slides"
-                    :key="`dot-${index}`"
-                    class="dot"
-                    :class="{ active: index === currentSlide }"
-                    :aria-label="`Ir al slide ${index + 1}`"
-                    @click="goToSlide(index)"
-                ></button>
+                <button v-for="(slide, index) in slides" :key="`dot-${index}`" class="dot"
+                    :class="{ active: index === currentSlide }" :aria-label="`Ir al slide ${index + 1}`"
+                    @click="stopAutoplay(); goToSlide(index)"></button>
             </div>
         </div>
     </section>
@@ -148,7 +126,7 @@ onBeforeUnmount(() => {
 .carousel-container {
     width: 100%;
     overflow: hidden;
-    background-color: #060c14;
+    background-color: var(--theme-bg-deep, #060c14);
     margin: 0;
     padding: 0;
 }
@@ -159,7 +137,6 @@ onBeforeUnmount(() => {
     min-height: 420px;
     height: clamp(420px, 70vh, 760px);
     overflow: hidden;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .carousel-slides {
@@ -187,6 +164,7 @@ onBeforeUnmount(() => {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center center;
     display: block;
 }
 
@@ -194,23 +172,20 @@ onBeforeUnmount(() => {
     position: absolute;
     inset: 0;
     z-index: 3;
-    background: linear-gradient(
-        to right,
-        rgba(0, 0, 0, 0.82) 0%,
-        rgba(0, 0, 0, 0.56) 42%,
-        rgba(0, 0, 0, 0.28) 74%,
-        rgba(0, 0, 0, 0.16) 100%
-    );
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.56) 0%,
+            rgba(0, 0, 0, 0.32) 40%,
+            rgba(0, 0, 0, 0.14) 72%,
+            rgba(0, 0, 0, 0.05) 100%);
 }
 
 .carousel-content {
     position: absolute;
     left: clamp(1.5rem, 4vw, 5.5rem);
-    right: clamp(1.5rem, 4vw, 5rem);
-    bottom: clamp(7rem, 14vh, 9.5rem);
-    max-width: 760px;
+    bottom: clamp(6rem, 13vh, 9rem);
+    width: min(760px, calc(100% - 3rem));
     z-index: 10;
-    color: #ffffff;
+    color: var(--theme-text, #ffffff);
     text-align: left;
     transform: translateY(20px);
     opacity: 0;
@@ -229,26 +204,29 @@ onBeforeUnmount(() => {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.18em;
-    color: #cba45e;
+    color: var(--theme-secondary, #cba45e);
 }
 
 .carousel-content h2 {
     margin: 0 0 1rem;
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-serif, "Lora", serif);
     font-size: clamp(2rem, 4.1vw, 4.4rem);
     line-height: 1.05;
-    font-weight: 800;
-    color: #ffffff;
+    font-weight: 700;
+    color: var(--theme-text-strong, #ffffff);
     text-wrap: balance;
     max-width: 12ch;
+    overflow-wrap: anywhere;
+    hyphens: auto;
 }
 
 .carousel-description {
     margin: 0 0 2rem;
     font-size: clamp(1rem, 1.2vw, 1.15rem);
     line-height: 1.65;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.92);
     max-width: 560px;
+    text-wrap: pretty;
 }
 
 .carousel-actions {
@@ -264,20 +242,20 @@ onBeforeUnmount(() => {
     min-height: 48px;
     padding: 0.95rem 2rem;
     background-color: transparent;
-    color: #cba45e;
-    border: 1px solid #cba45e;
+    color: var(--theme-secondary, #cba45e);
+    border: 1px solid var(--theme-secondary, #cba45e);
     text-decoration: none;
     font-weight: 700;
     font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    border-radius: 4px;
+    border-radius: var(--radius-sm, 8px);
     transition: all 0.3s ease;
 }
 
 .carousel-button-primary:hover {
-    background-color: #cba45e;
-    color: #09111d;
+    background-color: var(--theme-secondary, #cba45e);
+    color: var(--theme-button-text, #09111d);
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.28);
 }
@@ -289,7 +267,7 @@ onBeforeUnmount(() => {
     z-index: 20;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.22);
-    color: white;
+    color: var(--theme-text, #ffffff);
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -304,9 +282,9 @@ onBeforeUnmount(() => {
 }
 
 .carousel-button:hover {
-    background: #cba45e;
-    border-color: #cba45e;
-    color: #09111d;
+    background: var(--theme-secondary, #cba45e);
+    border-color: var(--theme-secondary, #cba45e);
+    color: var(--theme-button-text, #09111d);
 }
 
 .carousel-button.prev {
@@ -340,7 +318,7 @@ onBeforeUnmount(() => {
 }
 
 .dot.active {
-    background: #cba45e;
+    background: var(--theme-secondary, #cba45e);
     width: 28px;
 }
 
@@ -352,11 +330,12 @@ onBeforeUnmount(() => {
 
     .carousel-content {
         bottom: 8.5rem;
-        max-width: 820px;
+        width: min(820px, calc(100% - 8rem));
     }
 
     .carousel-content h2 {
         font-size: clamp(2.4rem, 4vw, 4.8rem);
+        max-width: 11ch;
     }
 }
 
@@ -368,7 +347,7 @@ onBeforeUnmount(() => {
 
     .carousel-content {
         bottom: 6.25rem;
-        max-width: 680px;
+        width: min(680px, calc(100% - 3rem));
     }
 
     .carousel-content h2 {
@@ -389,7 +368,7 @@ onBeforeUnmount(() => {
 
     .carousel-content {
         bottom: 5.5rem;
-        max-width: 620px;
+        width: min(620px, calc(100% - 3rem));
     }
 
     .carousel-content h2 {
@@ -404,20 +383,23 @@ onBeforeUnmount(() => {
         height: min(78vh, 620px);
     }
 
+    .carousel-image {
+        object-position: center center;
+    }
+
     .carousel-overlay {
-        background: linear-gradient(
-            to top,
-            rgba(0, 0, 0, 0.9) 0%,
-            rgba(0, 0, 0, 0.72) 42%,
-            rgba(0, 0, 0, 0.38) 72%,
-            rgba(0, 0, 0, 0.16) 100%
-        );
+        background: linear-gradient(to top,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.46) 42%,
+                rgba(0, 0, 0, 0.22) 72%,
+                rgba(0, 0, 0, 0.07) 100%);
     }
 
     .carousel-content {
         left: 1.1rem;
         right: 1.1rem;
         bottom: 5rem;
+        width: auto;
         max-width: none;
         text-align: left;
     }
@@ -480,17 +462,91 @@ onBeforeUnmount(() => {
         bottom: 4.5rem;
     }
 
+    .carousel-eyebrow {
+        font-size: 0.68rem;
+        margin-bottom: 0.55rem;
+    }
+
     .carousel-content h2 {
         font-size: clamp(1.4rem, 7.5vw, 1.95rem);
+        line-height: 1.1;
     }
 
     .carousel-description {
         font-size: 0.93rem;
+        line-height: 1.48;
     }
 
     .carousel-button-primary {
         width: 100%;
         max-width: 100%;
+    }
+
+    .carousel-dots {
+        bottom: 12px;
+    }
+}
+
+/* Ajuste especial para el segundo slide */
+.carousel-slide--second .carousel-content {
+    width: min(860px, calc(100% - 3rem));
+}
+
+.carousel-slide--second .carousel-content h2 {
+    max-width: 14ch;
+}
+
+.carousel-slide--second .carousel-description {
+    max-width: 620px;
+}
+
+@media (max-width: 1200px) {
+    .carousel-slide--second .carousel-content {
+        width: min(760px, calc(100% - 3rem));
+    }
+
+    .carousel-slide--second .carousel-content h2 {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-slide--second .carousel-content {
+        left: 1.1rem;
+        right: 1.1rem;
+        width: auto;
+        bottom: 4.7rem;
+    }
+
+    .carousel-slide--second .carousel-content h2 {
+        max-width: 100%;
+        font-size: clamp(1.45rem, 6.6vw, 2.05rem);
+    }
+
+    .carousel-slide--second .carousel-description {
+        max-width: 100%;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-slide--second .carousel-content {
+        bottom: 4.2rem;
+    }
+
+    .carousel-slide--second .carousel-content h2 {
+        font-size: clamp(1.3rem, 7vw, 1.8rem);
+        line-height: 1.08;
+    }
+
+    .carousel-slide--second .carousel-description {
+        font-size: 0.9rem;
+        line-height: 1.45;
+    }
+
+    .carousel-slide--second .carousel-image {
+        object-position: 62% center;
     }
 }
 </style>

@@ -94,11 +94,9 @@
   --theme-scrollbar-thumb-end: rgba(var(--theme-secondary-rgb), 0.74);
 
   --theme-hero-overlay:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(0, 0, 0, 0.08) 0%,
-      rgba(0, 0, 0, 0.72) 100%
-    );
+      rgba(0, 0, 0, 0.72) 100%);
 }
 
 /* =========================================
@@ -144,11 +142,9 @@ body[data-department="dorcas"] {
   --theme-scrollbar-thumb-end: rgba(145, 118, 109, 0.92);
 
   --theme-hero-overlay:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(34, 26, 24, 0.08) 0%,
-      rgba(34, 26, 24, 0.72) 100%
-    );
+      rgba(34, 26, 24, 0.72) 100%);
 }
 
 body[data-department="varones"] {
@@ -191,11 +187,9 @@ body[data-department="varones"] {
   --theme-scrollbar-thumb-end: rgba(219, 181, 121, 0.92);
 
   --theme-hero-overlay:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(4, 8, 12, 0.08) 0%,
-      rgba(4, 8, 12, 0.74) 100%
-    );
+      rgba(4, 8, 12, 0.74) 100%);
 }
 
 body[data-department="jumix"] {
@@ -238,11 +232,9 @@ body[data-department="jumix"] {
   --theme-scrollbar-thumb-end: rgba(130, 31, 34, 0.92);
 
   --theme-hero-overlay:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(20, 6, 6, 0.08) 0%,
-      rgba(20, 6, 6, 0.76) 100%
-    );
+      rgba(20, 6, 6, 0.76) 100%);
 }
 
 body[data-department="sumate-kids"] {
@@ -286,11 +278,9 @@ body[data-department="sumate-kids"] {
   --theme-scrollbar-thumb-end: rgba(38, 177, 148, 0.94);
 
   --theme-hero-overlay:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(8, 18, 36, 0.06) 0%,
-      rgba(8, 18, 36, 0.68) 100%
-    );
+      rgba(8, 18, 36, 0.68) 100%);
 }
 
 body[data-department="coro"] {
@@ -333,11 +323,9 @@ body[data-department="coro"] {
   --theme-scrollbar-thumb-end: rgba(160, 110, 45, 0.92);
 
   --theme-hero-overlay:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(5, 7, 10, 0.08) 0%,
-      rgba(5, 7, 10, 0.78) 100%
-    );
+      rgba(5, 7, 10, 0.78) 100%);
 }
 
 body[data-department="rrpp"] {
@@ -380,11 +368,9 @@ body[data-department="rrpp"] {
   --theme-scrollbar-thumb-end: rgba(120, 95, 56, 0.9);
 
   --theme-hero-overlay:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(0, 0, 0, 0.08) 0%,
-      rgba(0, 0, 0, 0.8) 100%
-    );
+      rgba(0, 0, 0, 0.8) 100%);
 }
 
 /* =========================================
@@ -420,12 +406,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   background:
-    radial-gradient(
-      circle at top center,
+    radial-gradient(circle at top center,
       var(--theme-primary) 0%,
       var(--theme-bg) 42%,
-      var(--theme-bg-deep) 100%
-    );
+      var(--theme-bg-deep) 100%);
   background-attachment: fixed;
   transition:
     background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
@@ -439,19 +423,17 @@ body::after {
   pointer-events: none;
   z-index: 1;
   background:
-    linear-gradient(
-      115deg,
+    linear-gradient(115deg,
       transparent 0%,
       rgba(255, 255, 255, 0.02) 18%,
       transparent 36%,
       rgba(255, 255, 255, 0.03) 52%,
       transparent 72%,
-      rgba(255, 255, 255, 0.015) 100%
-    );
+      rgba(255, 255, 255, 0.015) 100%);
   background-size: 200% 200%;
   animation: silkFlow 18s linear infinite;
   mix-blend-mode: screen;
-  opacity: 0.4;
+  opacity: 0.14;
 }
 
 #app {
@@ -600,12 +582,10 @@ a:hover {
 
 .btn-primary {
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       rgba(var(--theme-secondary-rgb), 0.88) 0%,
       rgba(var(--theme-secondary-rgb), 1) 46%,
-      rgba(var(--theme-secondary-rgb), 0.78) 100%
-    );
+      rgba(var(--theme-secondary-rgb), 0.78) 100%);
   color: var(--theme-button-text);
   border: 1px solid rgba(var(--theme-secondary-rgb), 0.35);
   box-shadow:
@@ -999,116 +979,10 @@ tr:hover td {
 
 /* =========================================
    16. CARRUSEL
+   -----------------------------------------
+   Se elimina del global para evitar choque
+   con el componente TheCarousel.vue
    ========================================= */
-.carousel-wrapper {
-  position: relative;
-  overflow: hidden;
-  border-radius: 20px;
-}
-
-.carousel-slide {
-  position: relative;
-  min-height: 500px;
-}
-
-.carousel-image {
-  width: 100%;
-  height: 500px;
-  object-fit: cover;
-  display: block;
-  border-radius: 20px;
-}
-
-.carousel-overlay {
-  position: absolute;
-  inset: auto 0 0 0;
-  padding: 1.5rem;
-  background: var(--theme-hero-overlay);
-  border-radius: 0 0 20px 20px;
-}
-
-.carousel-overlay h3 {
-  margin: 0.25rem 0 0.65rem;
-  color: var(--theme-text);
-  font-size: 1.5rem;
-}
-
-.carousel-overlay p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.88);
-  max-width: 60ch;
-}
-
-.carousel-tag {
-  margin: 0;
-  color: var(--theme-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 52px;
-  height: 52px;
-  border: 1px solid var(--theme-border-soft);
-  border-radius: 50%;
-  background: rgba(var(--theme-bg-rgb), 0.75);
-  color: var(--theme-text);
-  font-size: 2rem;
-  line-height: 1;
-  cursor: pointer;
-  transition:
-    background var(--transition-base),
-    transform var(--transition-base),
-    border-color var(--transition-base);
-  z-index: 2;
-}
-
-.carousel-btn:hover {
-  background: rgba(var(--theme-bg-rgb), 0.95);
-  border-color: var(--theme-border-strong);
-}
-
-.carousel-btn--prev {
-  left: 1rem;
-}
-
-.carousel-btn--next {
-  right: 1rem;
-}
-
-.carousel-indicators {
-  display: flex;
-  justify-content: center;
-  gap: 0.65rem;
-  margin-top: 1rem;
-}
-
-.carousel-dot {
-  width: 12px;
-  height: 12px;
-  border: none;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.25);
-  cursor: pointer;
-  transition:
-    transform var(--transition-base),
-    background var(--transition-base),
-    opacity var(--transition-base);
-}
-
-.carousel-dot:hover {
-  opacity: 0.9;
-}
-
-.carousel-dot--active {
-  background: var(--theme-secondary);
-  transform: scale(1.15);
-}
 
 /* =========================================
    17. PARTÍCULAS / CELESTIAL TRAIL
@@ -1156,12 +1030,10 @@ tr:hover td {
 
 ::-webkit-scrollbar-thumb {
   background:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       var(--theme-scrollbar-thumb-start) 0%,
       var(--theme-scrollbar-thumb-mid) 45%,
-      var(--theme-scrollbar-thumb-end) 100%
-    );
+      var(--theme-scrollbar-thumb-end) 100%);
   border-radius: var(--radius-pill);
   border: 2px solid var(--theme-scrollbar-track);
 }
@@ -1255,18 +1127,6 @@ tr:hover td {
     grid-template-columns: 1fr;
   }
 
-  .carousel-image,
-  .carousel-slide {
-    min-height: 340px;
-    height: 340px;
-  }
-
-  .carousel-btn {
-    width: 44px;
-    height: 44px;
-    font-size: 1.6rem;
-  }
-
   .btn-primary,
   .btn-secondary,
   .btn-ghost {
@@ -1289,15 +1149,14 @@ tr:hover td {
   .btn-ghost,
   a,
   .gallery-card,
-  .carousel-dot,
-  .carousel-btn,
   .logo-card {
     animation: none !important;
     transition: none !important;
   }
+}
 
-  /* =========================================
-   BOTÓN GLOBAL VOLVER ARRIBA
+/* =========================================
+   23. BOTÓN GLOBAL VOLVER ARRIBA
    ========================================= */
 .scroll-top-btn {
   position: fixed;
@@ -1310,11 +1169,9 @@ tr:hover td {
   border: 1px solid var(--theme-border-soft);
   border-radius: 50%;
   background:
-    radial-gradient(
-      circle at 30% 30%,
+    radial-gradient(circle at 30% 30%,
       rgba(255, 255, 255, 0.92) 0%,
-      rgba(255, 255, 255, 0.82) 100%
-    );
+      rgba(255, 255, 255, 0.82) 100%);
   color: var(--theme-primary);
   box-shadow:
     0 18px 35px rgba(0, 0, 0, 0.18),
@@ -1386,10 +1243,10 @@ tr:hover td {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .scroll-top-btn,
   .scroll-top-fade-enter-active,
   .scroll-top-fade-leave-active {
     transition: none !important;
   }
-}
 }

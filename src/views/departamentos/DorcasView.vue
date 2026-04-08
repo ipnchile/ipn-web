@@ -19,6 +19,14 @@
                 </div>
 
                 <aside class="card dorcas-hero__highlight">
+                    <div class="dorcas-hero__logo-wrap">
+                        <img v-if="departmentLogo" :src="departmentLogo" alt="Logo oficial del Departamento Dorcas"
+                            class="dorcas-hero__logo" />
+                        <div v-else class="dorcas-hero__logo dorcas-hero__logo--placeholder">
+                            <font-awesome-icon :icon="['fas', 'image']" />
+                        </div>
+                    </div>
+
                     <p class="dorcas-hero__label">Lema del departamento</p>
                     <h2>Servicio con amor y fidelidad</h2>
                     <p>
@@ -65,7 +73,7 @@
                     <h3>Servicio y testimonio</h3>
                     <p>
                         Impulsar obras de servicio, misericordia y colaboración en beneficio
-                        de la iglesia y la comunidad.
+                        de la Iglesia y la comunidad.
                     </p>
                 </article>
             </div>
@@ -88,8 +96,9 @@
 
                     <div class="official-card__photo-wrap">
                         <img v-if="leader.photo" :src="leader.photo" :alt="leader.name" class="official-card__photo" />
-                        <div v-else class="official-card__photo official-card__photo--placeholder">
-                            <span>Foto oficial</span>
+
+                        <div v-else class="official-card__photo official-card__photo--fallback">
+                            <font-awesome-icon :icon="['fas', 'user']" />
                         </div>
                     </div>
 
@@ -98,6 +107,13 @@
                         <h3>{{ leader.name }}</h3>
                         <p class="official-card__meta">{{ leader.period }}</p>
                         <p class="official-card__text">{{ leader.description }}</p>
+
+                        <div class="official-card__contact">
+                            <div class="official-card__contact-item">
+                                <font-awesome-icon :icon="['fas', 'envelope']" />
+                                <a :href="`mailto:${leader.email}`">{{ leader.email }}</a>
+                            </div>
+                        </div>
                     </div>
                 </article>
             </div>
@@ -114,7 +130,7 @@
                 </p>
             </div>
 
-            <div class="gallery-grid dorcas-gallery-grid">
+            <div v-if="galleryPhotos.length" class="gallery-grid dorcas-gallery-grid">
                 <article v-for="photo in galleryPhotos" :key="photo.src" class="gallery-card">
                     <img :src="photo.src" :alt="photo.title" class="gallery-image" />
                     <div class="gallery-content">
@@ -122,6 +138,19 @@
                         <p>{{ photo.description }}</p>
                     </div>
                 </article>
+            </div>
+
+            <div v-else class="glass-panel dorcas-gallery-empty">
+                <div class="dorcas-gallery-empty__icon">
+                    <font-awesome-icon :icon="['fas', 'images']" />
+                </div>
+
+                <h3>Sin eventos aún</h3>
+                <p>
+                    Por el momento no hay eventos o registros publicados.
+                    Esta sección se irá actualizando con futuras actividades
+                    del Departamento Nacional Dorcas.
+                </p>
             </div>
         </section>
 
@@ -139,6 +168,8 @@
 </template>
 
 <script setup>
+import departmentLogo from '@/assets/img/departamentos/DORCAS_NACIONAL.png'
+
 const nationalBoard = [
     {
         role: 'Jefa Nacional',
@@ -146,7 +177,9 @@ const nationalBoard = [
         period: 'Directiva Nacional 2026',
         description:
             'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional Dorcas.',
-        photo: ''
+        photo: '',
+        email: 'jefa.dorcas@ipnchile.cl',
+        phone: '+56 9 0000 0000'
     },
     {
         role: 'Secretaria Nacional',
@@ -154,7 +187,9 @@ const nationalBoard = [
         period: 'Directiva Nacional 2026',
         description:
             'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades.',
-        photo: ''
+        photo: '',
+        email: 'secretaria.dorcas@ipnchile.cl',
+        phone: '+56 9 0000 0001'
     },
     {
         role: 'Tesorera Nacional',
@@ -162,32 +197,29 @@ const nationalBoard = [
         period: 'Directiva Nacional 2026',
         description:
             'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
-        photo: ''
+        photo: '',
+        email: 'tesoreria.dorcas@ipnchile.cl',
+        phone: '+56 9 0000 0002'
     }
 ]
 
+/*
+  La galería queda vacía por ahora.
+  Más adelante puede agregar cualquier tipo de contenido
+  simplemente incorporando objetos al arreglo.
+*/
+const galleryPhotos = []
+
+/*
+Ejemplo futuro:
 const galleryPhotos = [
     {
-        src: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80',
-        title: 'Reunión de coordinación',
-        description: 'Espacios de organización, comunión y planificación del trabajo ministerial.'
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&fit=crop&w=1200&q=80',
-        title: 'Jornada de servicio',
-        description: 'Instancias donde el amor cristiano se expresa en apoyo, orden y dedicación.'
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80',
-        title: 'Encuentro fraternal',
-        description: 'Momentos de unidad, compañerismo y fortalecimiento espiritual.'
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1200&q=80',
-        title: 'Actividad especial',
-        description: 'Espacios donde se refleja el compromiso, el servicio y el testimonio cristiano.'
+        src: '/images/departamentos/dorcas/actividad-1.jpg',
+        title: 'Encuentro nacional',
+        description: 'Jornada de comunión y servicio.'
     }
 ]
+*/
 </script>
 
 <style scoped>
@@ -232,6 +264,36 @@ const galleryPhotos = [
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.dorcas-hero__logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+}
+
+.dorcas-hero__logo {
+    width: 108px;
+    height: 108px;
+    object-fit: contain;
+    display: block;
+    border-radius: 22px;
+    padding: 0.75rem;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+        var(--theme-panel-bg-soft);
+    border: 1px solid var(--theme-border-subtle);
+    box-shadow:
+        var(--shadow-soft),
+        0 0 18px rgba(255, 255, 255, 0.06);
+    filter: brightness(0) invert(1) opacity(0.96);
+}
+
+.dorcas-hero__logo--placeholder {
+    display: grid;
+    place-items: center;
+    color: var(--theme-secondary);
+    font-size: 1.5rem;
 }
 
 .dorcas-hero__label {
@@ -328,29 +390,28 @@ const galleryPhotos = [
 }
 
 .official-card__photo {
-    width: 100%;
-    aspect-ratio: 4 / 4.7;
+    width: 96px;
+    height: 96px;
     object-fit: cover;
     display: block;
-    border-radius: var(--radius-md);
+    margin: 0 auto;
+    border-radius: 50%;
     border: 1px solid var(--theme-border-subtle);
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015)),
         var(--theme-panel-bg-soft);
 }
 
-.official-card__photo--placeholder {
+.official-card__photo--fallback {
     display: grid;
     place-items: center;
-    color: var(--theme-text-soft);
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    color: var(--theme-secondary);
+    font-size: 1.6rem;
 }
 
 .official-card__body {
     padding: 1.2rem 1.25rem 1.35rem;
+    text-align: center;
 }
 
 .official-card__role {
@@ -374,13 +435,71 @@ const galleryPhotos = [
 }
 
 .official-card__text {
-    margin: 0;
+    margin: 0 0 1rem;
     color: var(--theme-text-soft);
     line-height: 1.7;
 }
 
+.official-card__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--theme-border-subtle);
+}
+
+.official-card__contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    color: var(--theme-text-soft);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.official-card__contact-item a {
+    color: var(--theme-text);
+    text-decoration: none;
+}
+
+.official-card__contact-item a:hover {
+    color: var(--theme-secondary);
+}
+
 .dorcas-gallery-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dorcas-gallery-empty {
+    padding: 2rem;
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.dorcas-gallery-empty__icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: rgba(var(--theme-secondary-rgb), 0.12);
+    border: 1px solid rgba(var(--theme-secondary-rgb), 0.18);
+    color: var(--theme-secondary);
+    font-size: 1.4rem;
+}
+
+.dorcas-gallery-empty h3 {
+    margin-bottom: 0.75rem;
+}
+
+.dorcas-gallery-empty p {
+    margin: 0;
+    color: var(--theme-text-soft);
+    line-height: 1.75;
 }
 
 .dorcas-verse {
@@ -425,6 +544,11 @@ const galleryPhotos = [
 
     .dorcas-hero__actions {
         flex-direction: column;
+    }
+
+    .official-card__contact-item {
+        flex-direction: column;
+        gap: 0.3rem;
     }
 }
 </style>

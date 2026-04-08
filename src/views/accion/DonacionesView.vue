@@ -8,8 +8,8 @@
           <h1>Donaciones</h1>
           <p class="donaciones-hero__text">
             Para apoyar el ministerio y las numerosas iniciativas de nuestra Iglesia
-            Pentecostal Nazareth a nivel nacional, puede considerar los siguientes
-            datos bancarios oficiales.
+            Pentecostal Nazareth a nivel nacional, complete el siguiente formulario.
+            Al finalizar, se habilitarán los datos oficiales para realizar su aporte.
           </p>
         </div>
 
@@ -24,118 +24,184 @@
       </div>
     </section>
 
-    <!-- BLOQUE PRINCIPAL -->
+    <!-- FORMULARIO + DATOS -->
     <section class="section-container section-block">
       <div class="donaciones-layout">
-        <!-- ILUSTRACIÓN -->
-        <article class="glass-panel donaciones-visual">
-          <div class="donaciones-visual__icon-wrap">
-            <div class="donaciones-visual__icon-bg"></div>
-
-            <svg
-              class="donaciones-visual__icon"
-              viewBox="0 0 256 256"
-              aria-hidden="true"
-            >
-              <path
-                d="M72 152c10-6 26-14 45-23 15-8 31-15 43-18 7-2 13-1 16 4 4 5 2 11-3 14l-55 29c-4 2-5 7-3 10 3 4 8 5 12 3l48-20c10-4 18-3 26 2l23 16c4 3 5 8 2 12l-16 22c-3 4-8 5-12 2l-39-27-50 24c-9 4-20 3-28-4l-36-28c-4-3-5-8-2-12l10-13c4-5 10-8 16-8 12 0 25-2 43-15z"
-                fill="currentColor"
-                opacity="0.95"
-              />
-              <path
-                d="M52 176l-16 21c-3 4-2 10 2 13l28 22c4 3 10 2 13-2l17-22-44-32z"
-                fill="currentColor"
-                opacity="0.75"
-              />
-            </svg>
-          </div>
-
-          <div class="donaciones-visual__content">
-            <p class="section-eyebrow">Aporte voluntario</p>
-            <h2>Apoye el trabajo nacional de la IPN</h2>
+        <!-- FORMULARIO -->
+        <article class="glass-panel donaciones-form-card">
+          <div class="donaciones-form-card__header">
+            <p class="section-eyebrow">Paso 1</p>
+            <h2>Complete sus datos</h2>
             <p>
-              Si desea contribuir, utilice los datos oficiales indicados en esta sección.
-              Después de transferir, puede remitir el comprobante al correo informado.
+              Ingrese su nombre y correo electrónico para habilitar los datos oficiales
+              de donación en el siguiente paso.
             </p>
           </div>
+
+          <form class="donaciones-form" @submit.prevent="handleSubmit">
+            <div class="donaciones-form__field">
+              <label for="nombre" class="donaciones-form__label">Nombre</label>
+              <input
+                id="nombre"
+                v-model.trim="form.nombre"
+                type="text"
+                class="donaciones-form__input"
+                placeholder="Ingrese su nombre"
+                :disabled="isSubmitting"
+              />
+            </div>
+
+            <div class="donaciones-form__field">
+              <label for="correo" class="donaciones-form__label">Correo electrónico</label>
+              <input
+                id="correo"
+                v-model.trim="form.correo"
+                type="email"
+                class="donaciones-form__input"
+                placeholder="Ingrese su correo"
+                :disabled="isSubmitting"
+              />
+            </div>
+
+            <Transition name="fade">
+              <p v-if="formError" class="donaciones-form__error">
+                {{ formError }}
+              </p>
+            </Transition>
+
+            <Transition name="fade">
+              <p v-if="submitSuccess" class="donaciones-copy-feedback">
+                {{ submitSuccess }}
+              </p>
+            </Transition>
+
+            <div class="donaciones-form__actions">
+              <button
+                type="submit"
+                class="btn-primary donaciones-form__submit"
+                :disabled="isSubmitting"
+              >
+                {{ isSubmitting ? 'Enviando...' : 'Continuar' }}
+              </button>
+            </div>
+          </form>
+
+          <Transition name="fade">
+            <div v-if="showContactInfo" class="donaciones-form__success card">
+              <div class="donaciones-form__success-icon">
+                <font-awesome-icon :icon="['fas', 'check']" />
+              </div>
+
+              <h3>Datos habilitados correctamente</h3>
+              <p>
+                Ya puede revisar los datos oficiales de la cuenta para realizar su aporte.
+              </p>
+
+              <div class="donaciones-contact-preview">
+                <div class="donaciones-contact-preview__item">
+                  <span class="donaciones-contact-preview__label">Nombre</span>
+                  <span class="donaciones-contact-preview__value">{{ form.nombre }}</span>
+                </div>
+
+                <div class="donaciones-contact-preview__item">
+                  <span class="donaciones-contact-preview__label">Correo</span>
+                  <span class="donaciones-contact-preview__value">{{ form.correo }}</span>
+                </div>
+              </div>
+            </div>
+          </Transition>
         </article>
 
-        <!-- DATOS BANCARIOS -->
+        <!-- DATOS DE DONACIÓN -->
         <article class="glass-panel--strong donaciones-bank">
           <div class="donaciones-bank__header">
-            <p class="section-eyebrow">Datos bancarios</p>
-            <h2>Iglesia Pentecostal Nazareth</h2>
+            <p class="section-eyebrow">Paso 2</p>
+            <h2>Datos de donación</h2>
           </div>
 
-          <div class="donaciones-bank__grid">
-            <div class="donaciones-field">
-              <span class="donaciones-field__label">Banco</span>
-              <div class="donaciones-field__value-row">
-                <p class="donaciones-field__value">Banco de Chile</p>
-              </div>
+          <div v-if="!showContactInfo" class="donaciones-bank__locked">
+            <div class="donaciones-bank__locked-icon">
+              <font-awesome-icon :icon="['fas', 'envelope']" />
             </div>
 
-            <div class="donaciones-field">
-              <span class="donaciones-field__label">Tipo de cuenta</span>
-              <div class="donaciones-field__value-row">
-                <p class="donaciones-field__value">Cuenta Corriente</p>
-              </div>
-            </div>
-
-            <div class="donaciones-field">
-              <span class="donaciones-field__label">N° de cuenta</span>
-              <div class="donaciones-field__value-row">
-                <p class="donaciones-field__value">1800206401</p>
-                <button
-                  type="button"
-                  class="btn-secondary donaciones-copy-btn"
-                  @click="copyText('1800206401', 'Número de cuenta copiado')"
-                >
-                  Copiar
-                </button>
-              </div>
-            </div>
-
-            <div class="donaciones-field">
-              <span class="donaciones-field__label">RUT</span>
-              <div class="donaciones-field__value-row">
-                <p class="donaciones-field__value">70.307.300-K</p>
-                <button
-                  type="button"
-                  class="btn-secondary donaciones-copy-btn"
-                  @click="copyText('70.307.300-K', 'RUT copiado')"
-                >
-                  Copiar
-                </button>
-              </div>
-            </div>
-
-            <div class="donaciones-field">
-              <span class="donaciones-field__label">Correo</span>
-              <div class="donaciones-field__value-row donaciones-field__value-row--wrap">
-                <a
-                  href="mailto:ofrenda@ipnchile.cl"
-                  class="donaciones-field__link"
-                >
-                  ofrenda@ipnchile.cl
-                </a>
-                <button
-                  type="button"
-                  class="btn-secondary donaciones-copy-btn"
-                  @click="copyText('ofrenda@ipnchile.cl', 'Correo copiado')"
-                >
-                  Copiar
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="donaciones-note card">
-            <h3>Importante</h3>
+            <h3>Complete el formulario</h3>
             <p>
-              Si realiza una transferencia, procure enviar el comprobante al correo
-              indicado para facilitar la identificación y el registro del aporte.
+              Una vez que ingrese su nombre y correo electrónico, aquí se mostrarán
+              los datos oficiales de la cuenta para realizar su donación.
             </p>
+          </div>
+
+          <div v-else>
+            <div class="donaciones-bank__grid">
+              <div class="donaciones-field">
+                <span class="donaciones-field__label">Banco</span>
+                <div class="donaciones-field__value-row">
+                  <p class="donaciones-field__value">Banco de Chile</p>
+                </div>
+              </div>
+
+              <div class="donaciones-field">
+                <span class="donaciones-field__label">Tipo de cuenta</span>
+                <div class="donaciones-field__value-row">
+                  <p class="donaciones-field__value">Cuenta Corriente</p>
+                </div>
+              </div>
+
+              <div class="donaciones-field">
+                <span class="donaciones-field__label">N° de cuenta</span>
+                <div class="donaciones-field__value-row">
+                  <p class="donaciones-field__value">1800206401</p>
+                  <button
+                    type="button"
+                    class="btn-secondary donaciones-copy-btn"
+                    @click="copyText('1800206401', 'Número de cuenta copiado')"
+                  >
+                    Copiar
+                  </button>
+                </div>
+              </div>
+
+              <div class="donaciones-field">
+                <span class="donaciones-field__label">RUT</span>
+                <div class="donaciones-field__value-row">
+                  <p class="donaciones-field__value">70.307.300-K</p>
+                  <button
+                    type="button"
+                    class="btn-secondary donaciones-copy-btn"
+                    @click="copyText('70.307.300-K', 'RUT copiado')"
+                  >
+                    Copiar
+                  </button>
+                </div>
+              </div>
+
+              <div class="donaciones-field">
+                <span class="donaciones-field__label">Correo de respaldo</span>
+                <div class="donaciones-field__value-row donaciones-field__value-row--wrap">
+                  <a
+                    href="mailto:contacto@ipnchile.cl"
+                    class="donaciones-field__link"
+                  >
+                    contacto@ipnchile.cl
+                  </a>
+                  <button
+                    type="button"
+                    class="btn-secondary donaciones-copy-btn"
+                    @click="copyText('contacto@ipnchile.cl', 'Correo copiado')"
+                  >
+                    Copiar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="donaciones-note card">
+              <h3>Importante</h3>
+              <p>
+                Si realiza una transferencia, conserve su comprobante y utilice siempre
+                los datos oficiales indicados en esta sección.
+              </p>
+            </div>
           </div>
 
           <Transition name="fade">
@@ -146,45 +212,79 @@
         </article>
       </div>
     </section>
-
-    <!-- ORIENTACIÓN -->
-    <section class="section-container section-block">
-      <div class="donaciones-info-grid">
-        <article class="card donaciones-info-card">
-          <p class="section-eyebrow">Uso responsable</p>
-          <h3>Apoyo a la misión</h3>
-          <p>
-            Los aportes permiten respaldar actividades nacionales, encuentros,
-            apoyo ministerial y diversas necesidades relacionadas con la obra.
-          </p>
-        </article>
-
-        <article class="card donaciones-info-card">
-          <p class="section-eyebrow">Canal oficial</p>
-          <h3>Información clara y centralizada</h3>
-          <p>
-            Esta sección busca presentar de forma ordenada los datos oficiales
-            para evitar errores al momento de transferir.
-          </p>
-        </article>
-
-        <article class="card donaciones-info-card">
-          <p class="section-eyebrow">Confirmación</p>
-          <h3>Envío de comprobante</h3>
-          <p>
-            Para una mejor gestión, es recomendable remitir el respaldo del aporte
-            al correo oficial publicado en esta vista.
-          </p>
-        </article>
-      </div>
-    </section>
   </main>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+
+const FORM_ENDPOINT = 'https://formspree.io/f/xojpbdvq'
 
 const copyMessage = ref('')
+const formError = ref('')
+const submitSuccess = ref('')
+const isSubmitting = ref(false)
+const showContactInfo = ref(false)
+
+const form = reactive({
+  nombre: '',
+  correo: ''
+})
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+}
+
+async function handleSubmit() {
+  formError.value = ''
+  submitSuccess.value = ''
+
+  if (!form.nombre || !form.correo) {
+    formError.value = 'Debe completar su nombre y correo electrónico.'
+    return
+  }
+
+  if (!isValidEmail(form.correo)) {
+    formError.value = 'Debe ingresar un correo electrónico válido.'
+    return
+  }
+
+  isSubmitting.value = true
+
+  try {
+    const response = await fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nombre: form.nombre,
+        email: form.correo,
+        _subject: 'Nueva solicitud desde Donaciones IPN Chile',
+        origen: 'Formulario Donaciones IPN Chile'
+      })
+    })
+
+    const result = await response.json().catch(() => ({}))
+
+    if (!response.ok) {
+      if (result?.errors?.length) {
+        formError.value = result.errors.map(error => error.message).join(' ')
+      } else {
+        formError.value = 'No fue posible enviar el formulario. Intente nuevamente.'
+      }
+      return
+    }
+
+    showContactInfo.value = true
+    submitSuccess.value = 'Formulario enviado correctamente. Ya puede ver los datos de la cuenta.'
+  } catch (error) {
+    formError.value = 'Ocurrió un problema de conexión. Intente nuevamente.'
+  } finally {
+    isSubmitting.value = false
+  }
+}
 
 async function copyText(value, message) {
   try {
@@ -208,56 +308,63 @@ async function copyText(value, message) {
 .donaciones-page {
   min-height: 100vh;
   padding-bottom: 4rem;
+  background:
+    radial-gradient(circle at top center, rgba(203, 164, 94, 0.10), transparent 30%),
+    linear-gradient(180deg, #08131d 0%, #0d1d2c 55%, #07111b 100%);
 }
 
 .donaciones-hero {
   padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .donaciones-hero__panel {
   display: grid;
   grid-template-columns: 1.45fr 0.95fr;
   gap: 1.5rem;
-  padding: 2rem;
+  padding: 1.65rem;
 }
 
 .donaciones-hero__copy h1 {
-  margin-bottom: 1rem;
-  font-size: clamp(2.6rem, 5vw, 4.8rem);
+  margin-bottom: 0.85rem;
+  font-size: clamp(2.4rem, 5vw, 4.3rem);
   line-height: 1.02;
 }
 
 .donaciones-hero__text {
-  max-width: 65ch;
+  max-width: 62ch;
   margin-bottom: 0;
   color: var(--theme-text-soft);
-  font-size: 1.06rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.75;
 }
 
 .donaciones-hero__highlight {
-  padding: 1.5rem;
+  padding: 1.35rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .donaciones-hero__label {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.45rem;
   color: var(--theme-secondary);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .donaciones-hero__highlight h2 {
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.7rem;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  line-height: 1.12;
 }
 
 .donaciones-hero__highlight p:last-child {
   margin-bottom: 0;
   color: var(--theme-text-soft);
+  line-height: 1.7;
 }
 
 .donaciones-layout {
@@ -267,60 +374,188 @@ async function copyText(value, message) {
   align-items: stretch;
 }
 
-.donaciones-visual {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
+.donaciones-form-card,
+.donaciones-bank {
+  padding: 1.6rem;
   min-height: 100%;
 }
 
-.donaciones-visual__icon-wrap {
-  position: relative;
-  min-height: 320px;
+.donaciones-form-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.donaciones-form-card__header {
+  margin-bottom: 1.25rem;
+}
+
+.donaciones-form-card__header h2 {
+  margin-bottom: 0.65rem;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1.12;
+}
+
+.donaciones-form-card__header p {
+  margin: 0;
+  color: var(--theme-text-soft);
+  line-height: 1.75;
+}
+
+.donaciones-form {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.donaciones-form__field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.donaciones-form__label {
+  color: var(--theme-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.donaciones-form__input {
+  width: 100%;
+  min-height: 50px;
+  border-radius: 14px;
+  border: 1px solid var(--theme-border-subtle);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015)),
+    var(--theme-panel-bg-soft);
+  color: var(--theme-text);
+  padding: 0.9rem 1rem;
+  outline: none;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.donaciones-form__input:focus {
+  border-color: var(--theme-border-strong);
+  box-shadow: 0 0 0 3px rgba(var(--theme-secondary-rgb), 0.12);
+}
+
+.donaciones-form__error {
+  margin: 0;
+  color: #ffb0b0;
+  font-weight: 700;
+}
+
+.donaciones-form__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.donaciones-form__submit {
+  width: 100%;
+  min-height: 52px;
+}
+
+.donaciones-form__success {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+}
+
+.donaciones-form__success-icon {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1rem;
   display: grid;
   place-items: center;
+  border-radius: 16px;
+  background: rgba(68, 174, 110, 0.16);
+  color: #8ce3aa;
+  font-size: 1.2rem;
 }
 
-.donaciones-visual__icon-bg {
-  position: absolute;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, rgba(var(--theme-secondary-rgb), 0.16), transparent 68%);
-  filter: blur(8px);
+.donaciones-form__success h3 {
+  margin-bottom: 0.6rem;
 }
 
-.donaciones-visual__icon {
-  position: relative;
-  width: min(300px, 70%);
-  color: var(--theme-secondary);
-  opacity: 0.92;
-}
-
-.donaciones-visual__content h2 {
-  margin-bottom: 0.8rem;
-}
-
-.donaciones-visual__content p:last-child {
-  margin-bottom: 0;
+.donaciones-form__success p {
+  margin-bottom: 1rem;
   color: var(--theme-text-soft);
-  line-height: 1.8;
+  line-height: 1.7;
 }
 
-.donaciones-bank {
-  padding: 2rem;
+.donaciones-contact-preview {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.donaciones-contact-preview__item {
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--theme-border-subtle);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.donaciones-contact-preview__label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--theme-secondary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.donaciones-contact-preview__value {
+  color: var(--theme-text);
+  font-weight: 700;
+  word-break: break-word;
 }
 
 .donaciones-bank__header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .donaciones-bank__header h2 {
   margin-bottom: 0;
-  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.donaciones-bank__locked {
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.donaciones-bank__locked-icon {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 1rem;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: rgba(var(--theme-secondary-rgb), 0.12);
+  border: 1px solid rgba(var(--theme-secondary-rgb), 0.18);
+  color: var(--theme-secondary);
+  font-size: 1.35rem;
+}
+
+.donaciones-bank__locked h3 {
+  margin-bottom: 0.7rem;
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  line-height: 1.15;
+}
+
+.donaciones-bank__locked p {
+  margin: 0 auto;
+  max-width: 40ch;
+  color: var(--theme-text-soft);
+  line-height: 1.75;
 }
 
 .donaciones-bank__grid {
@@ -372,6 +607,7 @@ async function copyText(value, message) {
   font-size: 1.08rem;
   font-weight: 700;
   word-break: break-word;
+  text-decoration: none;
 }
 
 .donaciones-field__link:hover {
@@ -406,36 +642,24 @@ async function copyText(value, message) {
   font-weight: 700;
 }
 
-.donaciones-info-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.24s ease;
 }
 
-.donaciones-info-card {
-  padding: 1.5rem;
-  height: 100%;
-}
-
-.donaciones-info-card h3 {
-  margin-bottom: 0.7rem;
-}
-
-.donaciones-info-card p:last-child {
-  margin-bottom: 0;
-  color: var(--theme-text-soft);
-  line-height: 1.75;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 @media (max-width: 980px) {
   .donaciones-hero__panel,
-  .donaciones-layout,
-  .donaciones-info-grid {
+  .donaciones-layout {
     grid-template-columns: 1fr;
   }
 
-  .donaciones-visual__icon-wrap {
-    min-height: 240px;
+  .donaciones-bank__locked {
+    min-height: 280px;
   }
 }
 
@@ -445,18 +669,25 @@ async function copyText(value, message) {
   }
 
   .donaciones-hero__panel,
-  .donaciones-visual,
+  .donaciones-form-card,
   .donaciones-bank {
-    padding: 1.25rem;
+    padding: 1.2rem;
   }
 
-  .donaciones-field__value-row {
+  .donaciones-field__value-row,
+  .donaciones-form__actions {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   .donaciones-copy-btn {
     width: 100%;
+  }
+
+  .donaciones-hero__copy h1,
+  .donaciones-bank__header h2,
+  .donaciones-form-card__header h2 {
+    word-break: break-word;
   }
 }
 </style>

@@ -1,80 +1,115 @@
 <template>
     <main class="iglesias-page">
-        <header class="page-header">
-            <div class="section-container">
+        <header class="page-header container-fluid">
+            <div class="section-container text-center">
                 <p class="section-eyebrow">Red de Iglesias</p>
-                <h1>Nuestra <span>Presencia</span></h1>
-                <p class="page-description">
-                    Conozca las congregaciones de nuestra red a lo largo de Chile. Busque por ciudad,
-                    comuna o región, y acceda al detalle de cada iglesia.
+                <h1 class="fw-bold">Nuestra <span>Presencia</span></h1>
+                <p class="page-description mx-auto">
+                    Conozca las congregaciones de nuestra red a lo largo de Chile. Busque por nombre,
+                    comuna, región, dirección.
                 </p>
             </div>
         </header>
 
-        <section class="map-explorer">
+        <section class="map-explorer container-fluid">
             <div class="section-container">
-                <div class="top-bar glass-panel">
-                    <div class="view-switch">
-                        <button type="button" class="view-switch__btn" :class="{ active: vistaActiva === 'explorar' }"
-                            @click="vistaActiva = 'explorar'">
+                <div
+                    class="top-bar glass-panel d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 mb-4">
+
+                    <div class="view-switch d-flex gap-2">
+                        <button
+                            type="button"
+                            class="view-switch__btn"
+                            :class="{ active: vistaActiva === 'explorar' }"
+                            @click="vistaActiva = 'explorar'"
+                        >
                             Explorar mapa
                         </button>
 
-                        <button type="button" class="view-switch__btn" :class="{ active: vistaActiva === 'todas' }"
-                            @click="vistaActiva = 'todas'">
+                        <button
+                            type="button"
+                            class="view-switch__btn"
+                            :class="{ active: vistaActiva === 'todas' }"
+                            @click="vistaActiva = 'todas'"
+                        >
                             Ver todas
                         </button>
                     </div>
 
-                    <div class="search-sidebar">
-                        <div class="search-field compact">
+                    <div class="search-wrapper d-flex align-items-center gap-3">
+                        <div class="search-field">
                             <span class="search-field__icon">🔍</span>
-                            <input v-model="busqueda" type="text" placeholder="Buscar por ciudad, comuna o región..."
-                                aria-label="Buscar iglesias" />
-                        </div>
-
-                        <div class="search-meta">
-                            <span>
-                                {{ iglesiasFiltradas.length }} resultado<span
-                                    v-if="iglesiasFiltradas.length !== 1">s</span>
-                            </span>
-                            <button v-if="busqueda" class="clear-search-btn" type="button" @click="busqueda = ''">
-                                Limpiar
+                            <input
+                                v-model="busqueda"
+                                type="text"
+                                placeholder="Buscar iglesia, comuna, dirección..."
+                            />
+                            <button
+                                v-if="busqueda"
+                                class="clear-btn"
+                                type="button"
+                                @click="busqueda = ''"
+                            >
+                                ×
                             </button>
                         </div>
+
+                        <span class="results-counter d-none d-sm-block">
+                            {{ iglesiasFiltradas.length }} resultados
+                        </span>
                     </div>
                 </div>
 
-                <div v-if="vistaActiva === 'explorar'" class="explorer-grid">
+                <div v-if="vistaActiva === 'explorar'" class="explorer-layout">
                     <aside class="sidebar">
                         <div class="results-list custom-scrollbar">
-                            <div v-for="iglesia in iglesiasFiltradas" :key="iglesia.id" class="mini-card compact"
-                                :class="{ 'is-selected': iglesiaSeleccionada?.id === iglesia.id }">
-                                <button type="button" class="mini-card__main" @click="seleccionarIglesia(iglesia)">
+                            <div
+                                v-for="iglesia in iglesiasFiltradas"
+                                :key="iglesia.id"
+                                class="mini-card"
+                                :class="{ 'is-selected': iglesiaSeleccionada?.id === iglesia.id }"
+                            >
+                                <button
+                                    type="button"
+                                    class="mini-card__main"
+                                    @click="seleccionarIglesia(iglesia)"
+                                >
                                     <div class="card-inline-header">
-                                        <span class="church-tag">{{ iglesia.comuna }}</span>
+                                        <span class="church-tag">{{ iglesia.comuna || 'Sin comuna' }}</span>
                                         <h3>{{ iglesia.nombre }}</h3>
                                     </div>
 
-                                    <p class="mini-card__region">{{ iglesia.region }}</p>
-                                    <p class="mini-card__addr">{{ iglesia.direccion }}</p>
-                                    <p class="mini-card__pastor">Pastor: {{ iglesia.pastor }}</p>
+                                    <p class="mini-card__region">{{ iglesia.region || 'Sin región' }}</p>
+                                    <p class="mini-card__addr text-truncate">{{ iglesia.direccion || 'Sin dirección' }}</p>
+
+                                    <p
+                                        v-if="iglesia.googleMapsName"
+                                        class="mini-card__maps-name text-truncate"
+                                    >
+                                        {{ iglesia.googleMapsName }}
+                                    </p>
                                 </button>
 
                                 <div class="mini-card__footer">
-                                    <button type="button" class="mini-link-btn" @click="seleccionarIglesia(iglesia)">
-                                        Ver en mapa
+                                    <button
+                                        type="button"
+                                        class="mini-link-btn flex-grow-1"
+                                        @click="seleccionarIglesia(iglesia)"
+                                    >
+                                        Mapa
                                     </button>
 
-                                    <RouterLink :to="`/iglesias/${iglesia.slug}`"
-                                        class="mini-link-btn mini-link-btn--gold">
-                                        Ver detalle
+                                    <RouterLink
+                                        :to="`/iglesias/${iglesia.slug}`"
+                                        class="mini-link-btn mini-link-btn--gold flex-grow-1 text-center text-decoration-none"
+                                    >
+                                        Detalle
                                     </RouterLink>
                                 </div>
                             </div>
 
                             <div v-if="iglesiasFiltradas.length === 0" class="no-results-mini">
-                                <p>No se encontraron iglesias para “{{ busqueda }}”.</p>
+                                <p>No hay resultados para "{{ busqueda }}"</p>
                             </div>
                         </div>
                     </aside>
@@ -84,43 +119,45 @@
 
                         <Transition name="slide-up">
                             <div v-if="iglesiaSeleccionada" class="church-detail-panel glass-panel">
-                                <button class="close-btn" type="button" aria-label="Cerrar detalle"
-                                    @click="iglesiaSeleccionada = null">
+                                <button
+                                    type="button"
+                                    class="close-btn"
+                                    @click="iglesiaSeleccionada = null"
+                                >
                                     ×
                                 </button>
 
                                 <div class="detail-content-compact">
                                     <div class="detail-text">
-                                        <p class="section-eyebrow mini">{{ iglesiaSeleccionada.region }}</p>
-                                        <h2>{{ iglesiaSeleccionada.nombre }}</h2>
+                                        <p class="section-eyebrow mini mb-1">
+                                            {{ iglesiaSeleccionada.region || 'Sin región' }}
+                                        </p>
 
-                                        <div class="detail-meta">
-                                            <div class="detail-item">
-                                                <span class="detail-label">Dirección</span>
-                                                <p>{{ iglesiaSeleccionada.direccion }}</p>
-                                            </div>
+                                        <h2 class="mb-1">{{ iglesiaSeleccionada.nombre }}</h2>
 
-                                            <div class="detail-item">
-                                                <span class="detail-label">Comuna</span>
-                                                <p>{{ iglesiaSeleccionada.comuna }}</p>
-                                            </div>
-
-                                            <div class="detail-item">
-                                                <span class="detail-label">Pastor</span>
-                                                <p>{{ iglesiaSeleccionada.pastor }}</p>
-                                            </div>
-                                        </div>
+                                        <p
+                                            class="mb-0 text-white-50 small d-none d-md-block text-truncate"
+                                            style="max-width: 300px;"
+                                        >
+                                            {{ iglesiaSeleccionada.direccion || 'Sin dirección' }}
+                                        </p>
                                     </div>
 
-                                    <div class="detail-actions">
-                                        <RouterLink :to="`/iglesias/${iglesiaSeleccionada.slug}`"
-                                            class="btn-secondary btn-compact">
-                                            Ver detalle
+                                    <div class="detail-actions d-flex gap-2">
+                                        <RouterLink
+                                            :to="`/iglesias/${iglesiaSeleccionada.slug}`"
+                                            class="btn-secondary btn-compact flex-grow-1 text-center text-decoration-none"
+                                        >
+                                            Detalle
                                         </RouterLink>
 
-                                        <a :href="googleMapsUrl(iglesiaSeleccionada)" target="_blank"
-                                            rel="noopener noreferrer" class="btn-primary btn-compact">
-                                            Cómo llegar
+                                        <a
+                                            :href="googleMapsUrl(iglesiaSeleccionada)"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="btn-primary btn-compact flex-grow-1 text-center text-decoration-none"
+                                        >
+                                            Ruta
                                         </a>
                                     </div>
                                 </div>
@@ -129,50 +166,56 @@
                     </div>
                 </div>
 
-                <div v-else class="all-view">
-                    <div v-if="iglesiasFiltradas.length > 0" class="churches-grid">
-                        <article v-for="iglesia in iglesiasFiltradas" :key="iglesia.id"
-                            class="church-card-full glass-panel">
-                            <div class="church-card-full__image-wrap">
-                                <img :src="iglesia.foto" :alt="iglesia.nombre" class="church-card-full__image" />
-                            </div>
-
-                            <div class="church-card-full__body">
-                                <span class="church-tag">{{ iglesia.comuna }}</span>
-                                <h3>{{ iglesia.nombre }}</h3>
-                                <p class="church-card-full__region">{{ iglesia.region }}</p>
-
-                                <div class="church-card-full__meta">
-                                    <p><strong>Pastor:</strong> {{ iglesia.pastor }}</p>
-                                    <p><strong>Dirección:</strong> {{ iglesia.direccion }}</p>
-                                    <p v-if="iglesia.telefono"><strong>Teléfono:</strong> {{ iglesia.telefono }}</p>
-                                    <p v-if="iglesia.email"><strong>Email:</strong> {{ iglesia.email }}</p>
+                <div v-else class="all-view pb-5">
+                    <div v-if="iglesiasFiltradas.length > 0" class="row g-4">
+                        <div
+                            v-for="iglesia in iglesiasFiltradas"
+                            :key="iglesia.id"
+                            class="col-12 col-md-6 col-lg-4"
+                        >
+                            <article class="church-card-full glass-panel h-100">
+                                <div class="church-card-full__image-wrap">
+                                    <img
+                                        :src="getCardImage(iglesia)"
+                                        :alt="iglesia.nombre"
+                                        class="church-card-full__image"
+                                    />
                                 </div>
 
-                                <div class="church-card-full__socials" v-if="iglesia.redes">
-                                    <a v-if="iglesia.redes.facebook" :href="iglesia.redes.facebook" target="_blank"
-                                        rel="noopener noreferrer">Facebook</a>
-                                    <a v-if="iglesia.redes.instagram" :href="iglesia.redes.instagram" target="_blank"
-                                        rel="noopener noreferrer">Instagram</a>
-                                    <a v-if="iglesia.redes.youtube" :href="iglesia.redes.youtube" target="_blank"
-                                        rel="noopener noreferrer">YouTube</a>
-                                </div>
+                                <div class="church-card-full__body p-4">
+                                    <span class="church-tag">{{ iglesia.comuna || 'Sin comuna' }}</span>
+                                    <h3 class="mt-3">{{ iglesia.nombre }}</h3>
+                                    <p class="church-card-full__region mb-1">{{ iglesia.region || 'Sin región' }}</p>
+                                    <p
+                                        v-if="iglesia.googleMapsName"
+                                        class="church-card-full__maps-name mb-4"
+                                    >
+                                        {{ iglesia.googleMapsName }}
+                                    </p>
 
-                                <div class="church-card-full__actions">
-                                    <button type="button" class="btn-secondary" @click="verEnMapa(iglesia)">
-                                        Ver en mapa
-                                    </button>
+                                    <div class="church-card-full__actions d-flex gap-2">
+                                        <button
+                                            type="button"
+                                            class="btn-secondary flex-grow-1"
+                                            @click="verEnMapa(iglesia)"
+                                        >
+                                            Mapa
+                                        </button>
 
-                                    <RouterLink :to="`/iglesias/${iglesia.slug}`" class="btn-primary">
-                                        Ver detalle
-                                    </RouterLink>
+                                        <RouterLink
+                                            :to="`/iglesias/${iglesia.slug}`"
+                                            class="btn-primary flex-grow-1 text-center text-decoration-none"
+                                        >
+                                            Detalle
+                                        </RouterLink>
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
+                            </article>
+                        </div>
                     </div>
 
-                    <div v-else class="no-results-full glass-panel">
-                        <p>No se encontraron iglesias para “{{ busqueda }}”.</p>
+                    <div v-else class="no-results-mini">
+                        <p>No hay resultados para "{{ busqueda }}"</p>
                     </div>
                 </div>
             </div>
@@ -181,13 +224,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, nextTick } from 'vue'
+import { ref, onMounted, computed, watch, nextTick, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { iglesias } from '@/data/iglesias'
 
-// State
+const DEFAULT_FOTO = '/images/iglesias/default.jpg'
+const SANTIAGO_COORDS = [-33.4489, -70.6693]
+
 const busqueda = ref('')
 const vistaActiva = ref('explorar')
 const iglesiaSeleccionada = ref(null)
@@ -196,29 +241,6 @@ const listaIglesias = ref(iglesias)
 let map = null
 let markersLayer = null
 
-// Computed
-const iglesiasFiltradas = computed(() => {
-    const q = busqueda.value.toLowerCase().trim()
-    if (!q) return listaIglesias.value
-
-    return listaIglesias.value.filter((iglesia) =>
-        [
-            iglesia.nombre,
-            iglesia.comuna,
-            iglesia.region,
-            iglesia.direccion,
-            iglesia.pastor,
-            iglesia.telefono,
-            iglesia.email
-        ]
-            .filter(Boolean)
-            .join(' ')
-            .toLowerCase()
-            .includes(q)
-    )
-})
-
-// Icono personalizado
 const ipnIcon = L.icon({
     iconUrl: '/isotipo-ipn.png',
     iconSize: [34, 34],
@@ -227,11 +249,185 @@ const ipnIcon = L.icon({
     className: 'map-custom-icon'
 })
 
-// Corregido: String interpolation
-const googleMapsUrl = (iglesia) =>
-    `https://www.google.com/maps/search/?api=1&query=${iglesia.lat},${iglesia.lng}`
+const normalizarTexto = (texto = '') =>
+    texto
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim()
 
-// Map Logic
+const getCardImage = (iglesia) =>
+    iglesia.fotoIglesia ||
+    iglesia.foto ||
+    iglesia.fotoMini ||
+    DEFAULT_FOTO
+
+const getDireccionCompleta = (iglesia) => {
+    return [
+        iglesia.googleMapsName || '',
+        iglesia.nombre || '',
+        iglesia.direccion || '',
+        iglesia.comuna || '',
+        iglesia.region || '',
+        'Chile'
+    ]
+        .filter(Boolean)
+        .join(', ')
+}
+
+/**
+ * Prioridad:
+ * 1. Nombre Google Maps
+ * 2. Coordenadas
+ * 3. Dirección completa
+ */
+const googleMapsUrl = (iglesia) => {
+    // 1. Prioridad máxima: Nombre registrado en Google (asegura ver la "Ficha" del lugar)
+    if (iglesia?.googleMapsName) {
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(iglesia.googleMapsName)}`
+    }
+
+    // 2. Coordenadas: Precisión absoluta (con el nombre entre paréntesis para la etiqueta)
+    if (typeof iglesia?.lat === 'number' && typeof iglesia?.lng === 'number') {
+        // Al añadir (Nombre) al final de la lat/lng, Google suele poner un pin con ese texto
+        const label = iglesia.nombre ? `(${encodeURIComponent(iglesia.nombre)})` : ''
+        return `https://www.google.com/maps/search/?api=1&query=${iglesia.lat},${iglesia.lng}${label}`
+    }
+
+    // 3. Dirección: Como último recurso de búsqueda
+    const direccionCompleta = getDireccionCompleta(iglesia)
+
+    if (direccionCompleta) {
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccionCompleta)}`
+    }
+
+    return 'https://www.google.com/maps'
+}
+
+/**
+ * Detecta si el texto parece coordenadas:
+ * -33.4489, -70.6693
+ * -33.4489 -70.6693
+ * -33.4489;-70.6693
+ */
+const parseCoordinates = (input) => {
+    if (!input) return null
+
+    const cleaned = input
+        .trim()
+        .replace(/[;]+/g, ',')
+        .replace(/\s+/g, ' ')
+
+    let match = cleaned.match(/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/)
+
+    if (!match) {
+        match = cleaned.match(/^(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)$/)
+    }
+
+    if (!match) return null
+
+    const lat = Number(match[1])
+    const lng = Number(match[2])
+
+    if (
+        Number.isNaN(lat) ||
+        Number.isNaN(lng) ||
+        lat < -90 || lat > 90 ||
+        lng < -180 || lng > 180
+    ) {
+        return null
+    }
+
+    return { lat, lng }
+}
+
+/**
+ * Distancia entre dos coordenadas en kilómetros (Haversine)
+ */
+const distanceInKm = (lat1, lng1, lat2, lng2) => {
+    const toRad = (deg) => (deg * Math.PI) / 180
+    const R = 6371
+
+    const dLat = toRad(lat2 - lat1)
+    const dLng = toRad(lng2 - lng1)
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) *
+            Math.cos(toRad(lat2)) *
+            Math.sin(dLng / 2) *
+            Math.sin(dLng / 2)
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c
+}
+
+/**
+ * Retorna la iglesia más cercana a un punto
+ */
+const findNearestChurch = (lat, lng) => {
+    const conCoords = listaIglesias.value.filter(
+        (i) => typeof i.lat === 'number' && typeof i.lng === 'number'
+    )
+
+    if (!conCoords.length) return null
+
+    let nearest = null
+    let minDistance = Infinity
+
+    for (const iglesia of conCoords) {
+        const dist = distanceInKm(lat, lng, iglesia.lat, iglesia.lng)
+
+        if (dist < minDistance) {
+            minDistance = dist
+            nearest = {
+                ...iglesia,
+                distanceKm: dist
+            }
+        }
+    }
+
+    return nearest
+}
+
+const iglesiasFiltradas = computed(() => {
+    const raw = busqueda.value.trim()
+    const q = normalizarTexto(raw)
+
+    if (!q) return listaIglesias.value
+
+    // Búsqueda por coordenadas
+    const coords = parseCoordinates(raw)
+    if (coords) {
+        const nearest = findNearestChurch(coords.lat, coords.lng)
+
+        if (!nearest || nearest.distanceKm > 50) {
+            return []
+        }
+
+        return [nearest]
+    }
+
+    // Búsqueda textual: nombre, nombre Google Maps, aliases, ubicación, slug
+    return listaIglesias.value.filter((i) => {
+        const campos = [
+            i.nombre,
+            i.googleMapsName,
+            ...(i.searchAliases || []),
+            i.comuna,
+            i.region,
+            i.direccion,
+            i.slug
+        ]
+
+        return campos.some((campo) =>
+            normalizarTexto(campo).includes(q)
+        )
+    })
+})
+
 const initMap = async () => {
     await nextTick()
     if (map) return
@@ -239,469 +435,341 @@ const initMap = async () => {
     map = L.map('map', {
         zoomControl: true,
         attributionControl: false
-    }).setView([-35.6751, -71.543], 5)
+    }).setView(SANTIAGO_COORDS, 12)
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 18
     }).addTo(map)
 
     markersLayer = L.layerGroup().addTo(map)
-
     actualizarMarkers()
-    ajustarVistaMapa()
 
-    setTimeout(() => {
-        map.invalidateSize()
-    }, 200)
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                map.setView([pos.coords.latitude, pos.coords.longitude], 13)
+            },
+            () => {
+                console.log('Ubicación no disponible')
+            }
+        )
+    }
 }
 
 const actualizarMarkers = () => {
     if (!map || !markersLayer) return
+
     markersLayer.clearLayers()
 
-    iglesiasFiltradas.value.forEach((iglesia) => {
-        const marker = L.marker([iglesia.lat, iglesia.lng], { icon: ipnIcon })
+    iglesiasFiltradas.value.forEach((i) => {
+        if (typeof i.lat !== 'number' || typeof i.lng !== 'number') return
 
-        marker.bindPopup(`
-      <div style="min-width: 180px; color: #333;">
-        <strong>${iglesia.nombre}</strong><br />
-        ${iglesia.comuna}, ${iglesia.region}<br />
-        <small>${iglesia.direccion}</small>
-      </div>
-    `)
-
-        marker.on('click', () => {
-            seleccionarIglesia(iglesia)
-        })
-
-        marker.addTo(markersLayer)
-    })
-}
-
-const ajustarVistaMapa = () => {
-    if (!map || iglesiasFiltradas.value.length === 0) return
-
-    if (iglesiasFiltradas.value.length === 1) {
-        const iglesia = iglesiasFiltradas.value[0]
-        map.flyTo([iglesia.lat, iglesia.lng], 14, { duration: 1.1 })
-        return
-    }
-
-    const bounds = L.latLngBounds(
-        iglesiasFiltradas.value.map((iglesia) => [iglesia.lat, iglesia.lng])
-    )
-
-    map.fitBounds(bounds, {
-        padding: [40, 40]
+        L.marker([i.lat, i.lng], { icon: ipnIcon })
+            .on('click', () => seleccionarIglesia(i))
+            .addTo(markersLayer)
     })
 }
 
 const seleccionarIglesia = (iglesia) => {
     iglesiaSeleccionada.value = iglesia
-    if (!map) return
 
-    map.flyTo([iglesia.lat, iglesia.lng], 15, {
-        duration: 1.2
-    })
+    if (!map) return
+    if (typeof iglesia.lat !== 'number' || typeof iglesia.lng !== 'number') return
+
+    map.flyTo([iglesia.lat, iglesia.lng], 15, { duration: 1.2 })
 }
 
 const verEnMapa = async (iglesia) => {
     vistaActiva.value = 'explorar'
     await nextTick()
     seleccionarIglesia(iglesia)
-
-    setTimeout(() => {
-        map?.invalidateSize()
-    }, 150)
 }
 
-// Watchers
-watch(iglesiasFiltradas, (nuevasIglesias) => {
-    actualizarMarkers()
-    ajustarVistaMapa()
+const handleResize = () => {
+    if (map) map.invalidateSize()
+}
 
-    if (nuevasIglesias.length === 1) {
-        iglesiaSeleccionada.value = nuevasIglesias[0]
-    } else if (
-        iglesiaSeleccionada.value &&
-        !nuevasIglesias.some((i) => i.id === iglesiaSeleccionada.value.id)
-    ) {
+watch(iglesiasFiltradas, async (nuevas) => {
+    actualizarMarkers()
+
+    if (nuevas.length === 1) {
+        await nextTick()
+        seleccionarIglesia(nuevas[0])
+    } else {
         iglesiaSeleccionada.value = null
     }
 })
 
-watch(vistaActiva, async (nuevaVista) => {
-    if (nuevaVista === 'explorar') {
+watch(vistaActiva, async (valor) => {
+    if (valor === 'explorar') {
         await nextTick()
-        setTimeout(() => {
-            map?.invalidateSize()
-            ajustarVistaMapa()
-        }, 150)
+        setTimeout(handleResize, 100)
     }
 })
 
 onMounted(() => {
     initMap()
+    window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+
+    if (map) {
+        map.remove()
+        map = null
+        markersLayer = null
+    }
 })
 </script>
 
 <style scoped>
-/* Tu CSS existente se mantiene igual, es correcto y está bien estructurado */
 .iglesias-page {
-    padding-top: 110px;
+    padding-top: 100px;
+    background: linear-gradient(180deg, #0b1520 0%, #0e1e2e 100%);
     min-height: 100vh;
-    background:
-        radial-gradient(circle at top, rgba(203, 164, 94, 0.08), transparent 30%),
-        linear-gradient(180deg, #0b1520 0%, #0e1e2e 100%);
-    color: var(--theme-text);
+    color: white;
+}
+
+.section-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .page-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.page-header .section-container {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.page-header h1 {
-    margin: 0.35rem 0 0.75rem;
-    font-size: clamp(2rem, 3vw, 3.2rem);
-    line-height: 1.05;
-}
-
-.page-header h1 span {
-    color: var(--theme-secondary);
+    padding-bottom: 1.5rem;
 }
 
 .page-description {
     max-width: 760px;
-    margin: 0 auto;
-    color: var(--theme-text-soft);
-    font-size: 1rem;
-    line-height: 1.7;
 }
 
 .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 1rem;
-    padding: 1rem;
-    margin-bottom: 1.25rem;
+    padding: 0.8rem 1.2rem;
     border-radius: 20px;
-}
-
-.view-switch {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.view-switch__btn {
-    border: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(255, 255, 255, 0.03);
-    color: var(--theme-text);
-    padding: 0.8rem 1rem;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    font-weight: 700;
-}
-
-.view-switch__btn.active {
-    background: var(--theme-secondary);
-    color: #111;
-    border-color: var(--theme-secondary);
-}
-
-.explorer-grid {
-    display: grid;
-    grid-template-columns: 340px 1fr;
-    gap: 1.25rem;
-    align-items: start;
-    margin-bottom: 4rem;
-}
-
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.search-sidebar {
-    width: min(100%, 360px);
-}
-
-.search-field.compact {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.85rem 1rem;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.search-field__icon {
-    opacity: .8;
-    font-size: .95rem;
+.view-switch__btn {
+    height: 46px;
+    padding: 0 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: white;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
 }
 
-.search-field.compact input {
+.view-switch__btn.active {
+    background: #cba45e;
+    color: #111;
+    border-color: #cba45e;
+}
+
+.search-wrapper {
     flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: var(--theme-text);
-    font-size: .92rem;
+    max-width: 500px;
+    justify-content: flex-end;
 }
 
-.search-field.compact input::placeholder {
-    color: rgba(255, 255, 255, .45);
-}
-
-.search-meta {
+.search-field {
     display: flex;
-    justify-content: space-between;
-    margin-top: .8rem;
-    font-size: .78rem;
-    color: var(--theme-text-soft);
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0 1rem;
+    height: 46px;
+    width: 100%;
 }
 
-.clear-search-btn {
-    border: none;
+.search-field__icon {
+    opacity: 0.75;
+    font-size: 0.95rem;
+}
+
+.search-field input {
     background: transparent;
-    color: var(--theme-secondary);
+    border: none;
+    color: white;
+    padding: 0 0.8rem;
+    width: 100%;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.search-field input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.results-counter {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    white-space: nowrap;
+}
+
+.clear-btn {
+    background: none;
+    border: none;
+    color: white;
+    opacity: 0.5;
     cursor: pointer;
-    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.explorer-layout {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 1.5rem;
+    height: calc(100vh - 350px);
+    min-height: 550px;
+    margin-bottom: 4rem;
+    align-items: stretch;
+}
+
+.sidebar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .results-list {
-    max-height: 460px;
+    flex: 1;
     overflow-y: auto;
-    padding-right: .4rem;
-}
-
-.mini-card.compact {
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 16px;
-    margin-bottom: .7rem;
-    overflow: hidden;
-    transition: all .25s ease;
-}
-
-.mini-card.compact:hover,
-.mini-card.is-selected {
-    transform: translateY(-2px);
-    background: rgba(203, 164, 94, .08);
-    border-color: rgba(203, 164, 94, .75);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, .2);
-}
-
-.mini-card__main {
-    width: 100%;
-    text-align: left;
-    background: transparent;
-    border: none;
-    padding: 1rem;
-    color: inherit;
-    cursor: pointer;
-}
-
-.mini-card__footer {
-    display: flex;
-    justify-content: space-between;
-    gap: .75rem;
-    padding: 0 1rem 1rem;
-}
-
-.mini-link-btn {
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, .12);
-    background: rgba(255, 255, 255, .04);
-    color: var(--theme-text);
-    padding: .55rem .85rem;
-    border-radius: 10px;
-    font-size: .78rem;
-    font-weight: 700;
-    transition: all .25s ease;
-}
-
-.mini-link-btn--gold {
-    border-color: rgba(203, 164, 94, .55);
-    color: var(--theme-secondary);
-}
-
-.card-inline-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.church-tag {
-    display: inline-block;
-    width: fit-content;
-    padding: 0.28rem 0.65rem;
-    border-radius: 999px;
-    font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    background: var(--theme-secondary);
-    color: #111;
-    margin-bottom: 0.35rem;
-}
-
-.mini-card h3,
-.church-card-full h3 {
-    font-size: 1rem;
-    margin: .15rem 0 0;
-    font-family: var(--font-serif);
-}
-
-.mini-card__region,
-.church-card-full__region {
-    margin: .4rem 0 .2rem;
-    font-size: .76rem;
-    color: var(--theme-secondary);
-}
-
-.mini-card__addr,
-.mini-card__pastor {
-    font-size: .78rem;
-    color: var(--theme-text-soft);
-    margin: .12rem 0;
+    padding-right: 10px;
+    min-height: 0;
 }
 
 .map-container {
-    position: relative;
-    border-radius: 22px;
+    height: 100%;
+    border-radius: 24px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    height: 420px;
-    max-height: 420px;
-    margin-top: .5rem;
-    box-shadow:
-        0 20px 60px rgba(0, 0, 0, .45),
-        inset 0 0 0 1px rgba(255, 255, 255, .04);
+    position: relative;
 }
 
 .map-element {
     height: 100%;
     width: 100%;
-    background: #0b0d11;
+}
+
+.mini-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    transition: 0.3s;
+}
+
+.mini-card.is-selected {
+    border-color: #cba45e;
+    background: rgba(203, 164, 94, 0.1);
+}
+
+.mini-card__main {
+    width: 100%;
+    padding: 1.2rem;
+    background: none;
+    border: none;
+    text-align: left;
+    color: inherit;
+    cursor: pointer;
+}
+
+.mini-card h3 {
+    font-size: 1rem;
+    margin: 0.3rem 0;
+    font-weight: 700;
+}
+
+.mini-card__region {
+    margin: 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.mini-card__addr {
+    margin: 0.35rem 0 0;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.mini-card__maps-name {
+    margin: 0.35rem 0 0;
+    font-size: 0.78rem;
+    color: rgba(203, 164, 94, 0.9);
+}
+
+.mini-card__footer {
+    display: flex;
+    padding: 0 1.2rem 1.2rem;
+    gap: 0.5rem;
+}
+
+.card-inline-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.church-tag {
+    align-self: flex-start;
+    background: #cba45e;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 .church-detail-panel {
     position: absolute;
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-    z-index: 500;
-    padding: 1.1rem 1.2rem;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    padding: 1.2rem;
     border-radius: 18px;
-    backdrop-filter: blur(14px);
-    background: rgba(10, 18, 28, .78);
-    border: 1px solid rgba(255, 255, 255, .09);
+    backdrop-filter: blur(15px);
+    background: rgba(11, 21, 32, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.close-btn {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.9rem;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
 }
 
 .detail-content-compact {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 1.2rem;
+    align-items: center;
+    gap: 1rem;
+    padding-right: 1.2rem;
 }
 
 .detail-text h2 {
-    font-size: 1.35rem;
-    margin: .2rem 0 .7rem;
-}
-
-.section-eyebrow.mini {
-    font-size: .68rem;
-}
-
-.detail-meta {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: .9rem;
-}
-
-.detail-label {
-    font-size: .68rem;
-    text-transform: uppercase;
-    color: var(--theme-secondary);
-    font-weight: 700;
-}
-
-.detail-item p {
-    margin: 0;
-    color: var(--theme-text-soft);
-    font-size: .84rem;
-}
-
-.detail-actions,
-.church-card-full__actions {
-    display: flex;
-    gap: .75rem;
-    flex-wrap: wrap;
-}
-
-.btn-compact,
-.btn-primary,
-.btn-secondary {
-    padding: .7rem 1.1rem;
-    font-size: .8rem;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 700;
-    transition: all .25s ease;
-}
-
-.btn-primary {
-    background: var(--theme-secondary);
-    color: #111;
-    border: 1px solid var(--theme-secondary);
-}
-
-.btn-secondary {
-    background: rgba(255, 255, 255, .04);
-    color: var(--theme-text);
-    border: 1px solid rgba(255, 255, 255, .12);
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 14px;
-    width: 34px;
-    height: 34px;
-    border: none;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, .07);
-    color: white;
     font-size: 1.2rem;
-    cursor: pointer;
-}
-
-.all-view {
-    margin-bottom: 4rem;
-}
-
-.churches-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.25rem;
 }
 
 .church-card-full {
     overflow: hidden;
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .church-card-full__image-wrap {
@@ -716,76 +784,64 @@ onMounted(() => {
     display: block;
 }
 
-.church-card-full__body {
-    padding: 1rem;
+.church-card-full__region {
+    color: rgba(255, 255, 255, 0.65);
 }
 
-.church-card-full__meta {
-    margin: 0.85rem 0 1rem;
-    color: var(--theme-text-soft);
-    font-size: .88rem;
-    line-height: 1.6;
+.church-card-full__maps-name {
+    color: rgba(203, 164, 94, 0.9);
+    font-size: 0.85rem;
+    min-height: 2.4em;
 }
 
-.church-card-full__socials {
-    display: flex;
-    gap: .75rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-}
-
-.church-card-full__socials a {
-    color: var(--theme-secondary);
-    text-decoration: none;
-    font-size: .84rem;
-    font-weight: 700;
-}
-
-.no-results-mini,
-.no-results-full {
-    display: grid;
-    place-items: center;
-    min-height: 180px;
-    text-align: center;
-    color: var(--theme-text-soft);
-    border: 1px dashed rgba(255, 255, 255, 0.14);
+.no-results-mini {
+    padding: 1.5rem;
     border-radius: 16px;
-    background: rgba(255, 255, 255, 0.02);
-    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
 }
 
-:deep(.leaflet-top),
-:deep(.leaflet-bottom) {
-    z-index: 300;
-}
-
-:deep(.leaflet-top.leaflet-left) {
-    top: 70px;
-    left: 14px;
-}
-
-:deep(.leaflet-control-zoom) {
+.btn-primary {
+    background: #cba45e;
+    color: #000;
+    border: none;
+    font-weight: 700;
+    padding: 0.6rem 1.2rem;
     border-radius: 10px;
-    overflow: hidden;
 }
 
-:deep(.map-custom-icon) {
-    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, .35));
-}
-
-:deep(.leaflet-popup-content-wrapper) {
-    background: #12202f;
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
     color: #fff;
-    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 700;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
 }
 
-:deep(.leaflet-popup-tip) {
-    background: #12202f;
+.btn-compact {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+}
+
+.mini-link-btn {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mini-link-btn--gold {
+    border-color: #cba45e;
+    color: #cba45e;
 }
 
 .slide-up-enter-active,
 .slide-up-leave-active {
-    transition: all .4s cubic-bezier(.16, 1, .3, 1);
+    transition: all 0.4s ease;
 }
 
 .slide-up-enter-from,
@@ -794,84 +850,88 @@ onMounted(() => {
     opacity: 0;
 }
 
-/* Responsividad */
-@media (max-width: 1100px) {
-    .top-bar {
+@media (max-width: 991px) {
+    .explorer-layout {
+        display: flex;
         flex-direction: column;
-        align-items: stretch;
-    }
-
-    .search-sidebar {
-        width: 100%;
-    }
-
-    .explorer-grid {
-        grid-template-columns: 300px 1fr;
+        height: auto;
     }
 
     .map-container {
-        height: 380px;
-    }
-
-    .churches-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 900px) {
-    .explorer-grid {
-        grid-template-columns: 1fr;
+        order: 1;
+        height: 350px;
     }
 
     .sidebar {
-        order: 1;
-    }
-
-    .map-container {
         order: 2;
-        height: 340px;
     }
 
     .results-list {
         display: flex;
         overflow-x: auto;
-        gap: .8rem;
-        padding-bottom: .5rem;
+        overflow-y: hidden;
+        padding: 1rem 0;
+        gap: 1rem;
     }
 
-    .mini-card.compact {
-        min-width: 280px;
+    .mini-card {
+        flex: 0 0 280px;
         margin-bottom: 0;
-        flex-shrink: 0;
+    }
+
+    .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-wrapper {
+        max-width: 100%;
     }
 
     .detail-content-compact {
         flex-direction: column;
         align-items: stretch;
+        padding-right: 0;
     }
 
-    .detail-meta {
-        grid-template-columns: 1fr;
-    }
-
-    .churches-grid {
-        grid-template-columns: 1fr;
+    .detail-actions {
+        width: 100%;
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 576px) {
+    .iglesias-page {
+        padding-top: 88px;
+    }
+
+    .section-container {
+        padding: 0 14px;
+    }
+
+    .explorer-layout {
+        gap: 1rem;
+        min-height: auto;
+    }
+
     .map-container {
         height: 300px;
+        border-radius: 18px;
     }
 
-    .detail-text h2 {
-        font-size: 1.2rem;
+    .church-detail-panel {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        padding: 1rem;
     }
 
-    .mini-card__footer,
-    .church-card-full__actions,
-    .detail-actions {
-        flex-direction: column;
+    .view-switch {
+        width: 100%;
+    }
+
+    .view-switch__btn {
+        flex: 1;
+        padding: 0 0.8rem;
     }
 }
 </style>

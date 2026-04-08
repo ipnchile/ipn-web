@@ -5,14 +5,23 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
   faScroll,
   faBookBible,
-  faQuoteLeft
+  faQuoteLeft,
+  faChurch,
+  faLocationDot,
+  faClock,
+  faUserTie,
+  faUserNurse,
+  faUser,
+  faEnvelope,
+  faCalendarDays
 } from '@fortawesome/free-solid-svg-icons'
 
 /* ICONOS BRANDS */
 import {
   faFacebookF,
   faInstagram,
-  faYoutube
+  faYoutube,
+  faFacebook
 } from '@fortawesome/free-brands-svg-icons'
 
 library.add(
@@ -20,11 +29,20 @@ library.add(
   faScroll,
   faBookBible,
   faQuoteLeft,
+  faChurch,
+  faLocationDot,
+  faClock,
+  faUserTie,
+  faUserNurse,
+  faUser,
+  faEnvelope,
+  faCalendarDays,
 
   /* brands */
   faFacebookF,
   faInstagram,
-  faYoutube
+  faYoutube,
+  faFacebook
 )
 
 export { FontAwesomeIcon }

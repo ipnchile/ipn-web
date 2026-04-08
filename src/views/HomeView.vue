@@ -54,7 +54,7 @@
                     <h2 class="section-title">Áreas de servicio y crecimiento</h2>
                     <p class="section-description">
                         Conozca los distintos departamentos de la obra, cada uno con su
-                        identidad, propósito y labor dentro de la iglesia.
+                        identidad, propósito y labor dentro de la Iglesia.
                     </p>
                 </div>
 
@@ -111,7 +111,7 @@
 
                     <div class="cta-card__actions">
                         <RouterLink to="/iglesias" class="btn-primary">
-                            Encontrar iglesia
+                            Encontrar Iglesia
                         </RouterLink>
                         <RouterLink to="/contacto" class="btn-secondary">
                             Contactarnos
@@ -139,7 +139,7 @@ const mainSlides = [
         image: '/img/home/slide-2.jpg'
     },
     {
-        title: 'Una iglesia para toda la familia',
+        title: 'Una Iglesia para toda la familia',
         subtitle: 'Esperanza, oración y Palabra',
         image: '/img/home/slide-3.jpg'
     }

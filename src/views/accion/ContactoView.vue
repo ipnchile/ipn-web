@@ -33,7 +33,8 @@
                     <h2>Estamos para servirle</h2>
                     <p class="contact-info__text">
                         Puede usar este formulario para consultas, orientación o peticiones
-                        especiales. Su mensaje podrá ser derivado según el tipo de solicitud.
+                        especiales. Su mensaje será enviado de forma directa mediante
+                        el canal habilitado para contacto institucional.
                     </p>
 
                     <div class="contact-info__items">
@@ -66,7 +67,7 @@
                         <div class="contact-form__grid">
                             <div class="form-group">
                                 <label for="tipo">Tipo de solicitud</label>
-                                <select id="tipo" v-model="formulario.tipo" class="input" required>
+                                <select id="tipo" v-model="formulario.tipo" class="input" required :disabled="enviando">
                                     <option disabled value="">Seleccione una opción</option>
                                     <option value="contacto">Contacto general</option>
                                     <option value="oracion">Petición de oración</option>
@@ -75,7 +76,7 @@
 
                             <div class="form-group">
                                 <label for="region">Región</label>
-                                <select id="region" v-model="formulario.region" class="input" required>
+                                <select id="region" v-model="formulario.region" class="input" required :disabled="enviando">
                                     <option disabled value="">Seleccione su región</option>
                                     <option v-for="region in regionesChile" :key="region" :value="region">
                                         {{ region }}
@@ -87,34 +88,61 @@
                         <div class="contact-form__grid">
                             <div class="form-group">
                                 <label for="nombre">Nombre completo</label>
-                                <input id="nombre" v-model.trim="formulario.nombre" type="text" class="input"
-                                    placeholder="Ingrese su nombre" required />
+                                <input
+                                    id="nombre"
+                                    v-model.trim="formulario.nombre"
+                                    type="text"
+                                    class="input"
+                                    placeholder="Ingrese su nombre"
+                                    required
+                                    :disabled="enviando"
+                                />
                             </div>
 
                             <div class="form-group">
                                 <label for="email">Correo electrónico</label>
-                                <input id="email" v-model.trim="formulario.email" type="email" class="input"
-                                    placeholder="Ingrese su correo" required />
+                                <input
+                                    id="email"
+                                    v-model.trim="formulario.email"
+                                    type="email"
+                                    class="input"
+                                    placeholder="Ingrese su correo"
+                                    required
+                                    :disabled="enviando"
+                                />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="asunto">Asunto</label>
-                            <input id="asunto" v-model.trim="formulario.asunto" type="text" class="input" :placeholder="formulario.tipo === 'oracion'
+                            <input
+                                id="asunto"
+                                v-model.trim="formulario.asunto"
+                                type="text"
+                                class="input"
+                                :placeholder="formulario.tipo === 'oracion'
                                     ? 'Ej.: Petición de oración por salud'
-                                    : 'Ej.: Solicitud de información'
-                                " required />
+                                    : 'Ej.: Solicitud de información'"
+                                required
+                                :disabled="enviando"
+                            />
                         </div>
 
                         <div class="form-group">
                             <label for="mensaje">
                                 {{ formulario.tipo === 'oracion' ? 'Petición' : 'Mensaje' }}
                             </label>
-                            <textarea id="mensaje" v-model.trim="formulario.mensaje"
-                                class="input contact-form__textarea" :placeholder="formulario.tipo === 'oracion'
-                                        ? 'Escriba aquí su petición de oración'
-                                        : 'Escriba aquí su mensaje'
-                                    " rows="7" required></textarea>
+                            <textarea
+                                id="mensaje"
+                                v-model.trim="formulario.mensaje"
+                                class="input contact-form__textarea"
+                                :placeholder="formulario.tipo === 'oracion'
+                                    ? 'Escriba aquí su petición de oración'
+                                    : 'Escriba aquí su mensaje'"
+                                rows="7"
+                                required
+                                :disabled="enviando"
+                            ></textarea>
                         </div>
 
                         <div class="contact-form__actions">
@@ -141,6 +169,8 @@
 
 <script setup>
 import { computed, reactive, ref } from 'vue'
+
+const FORM_ENDPOINT = 'https://formspree.io/f/xojpbdvq'
 
 const enviando = ref(false)
 const mensajeEstado = ref('')
@@ -191,6 +221,10 @@ function limpiarFormulario() {
     tipoEstado.value = ''
 }
 
+function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+}
+
 async function enviarFormulario() {
     mensajeEstado.value = ''
     tipoEstado.value = ''
@@ -208,12 +242,19 @@ async function enviarFormulario() {
         return
     }
 
+    if (!isValidEmail(formulario.email)) {
+        mensajeEstado.value = 'Debe ingresar un correo electrónico válido.'
+        tipoEstado.value = 'error'
+        return
+    }
+
     enviando.value = true
 
     try {
-        const response = await fetch('/api/contacto', {
+        const response = await fetch(FORM_ENDPOINT, {
             method: 'POST',
             headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -222,12 +263,22 @@ async function enviarFormulario() {
                 nombre: formulario.nombre,
                 email: formulario.email,
                 asunto: formulario.asunto,
-                mensaje: formulario.mensaje
+                mensaje: formulario.mensaje,
+                _subject: `Nuevo mensaje de contacto IPN Chile - ${formulario.tipo === 'oracion' ? 'Petición de oración' : 'Contacto general'}`,
+                origen: 'Formulario de contacto IPN Chile'
             })
         })
 
+        const result = await response.json().catch(() => ({}))
+
         if (!response.ok) {
-            throw new Error('No fue posible enviar el formulario.')
+            if (result?.errors?.length) {
+                mensajeEstado.value = result.errors.map(error => error.message).join(' ')
+            } else {
+                mensajeEstado.value = 'No fue posible enviar el formulario. Intente nuevamente.'
+            }
+            tipoEstado.value = 'error'
+            return
         }
 
         mensajeEstado.value = 'Su mensaje fue enviado correctamente.'
@@ -368,7 +419,6 @@ async function enviarFormulario() {
     font-weight: 700;
 }
 
-/* Corrección puntual para los select sin cambiar su diseño general */
 .contact-form select.input {
     color: var(--theme-text);
     background-color: rgba(255, 255, 255, 0.06);
@@ -412,6 +462,16 @@ async function enviarFormulario() {
 
 .contact-form__status--error {
     color: #ffb4b4;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.24s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 
 @media (max-width: 980px) {

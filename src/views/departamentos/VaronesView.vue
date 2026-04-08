@@ -19,6 +19,18 @@
         </div>
 
         <aside class="card varones-hero__highlight">
+          <div class="varones-hero__logo-wrap">
+            <img
+              v-if="departmentLogo"
+              :src="departmentLogo"
+              alt="Logo oficial del Departamento de Varones"
+              class="varones-hero__logo"
+            />
+            <div v-else class="varones-hero__logo varones-hero__logo--placeholder">
+              <font-awesome-icon :icon="['fas', 'image']" />
+            </div>
+          </div>
+
           <p class="varones-hero__label">Lema del departamento</p>
           <h2>Hombres firmes en la fe</h2>
           <p>
@@ -97,8 +109,8 @@
               :alt="leader.name"
               class="official-card__photo"
             />
-            <div v-else class="official-card__photo official-card__photo--placeholder">
-              <span>Foto oficial</span>
+            <div v-else class="official-card__photo official-card__photo--fallback">
+              <font-awesome-icon :icon="['fas', 'user']" />
             </div>
           </div>
 
@@ -107,6 +119,13 @@
             <h3>{{ leader.name }}</h3>
             <p class="official-card__meta">{{ leader.period }}</p>
             <p class="official-card__text">{{ leader.description }}</p>
+
+            <div class="official-card__contact">
+              <div class="official-card__contact-item">
+                <font-awesome-icon :icon="['fas', 'envelope']" />
+                <a :href="`mailto:${leader.email}`">{{ leader.email }}</a>
+              </div>
+            </div>
           </div>
         </article>
       </div>
@@ -123,7 +142,7 @@
         </p>
       </div>
 
-      <div class="gallery-grid varones-gallery-grid">
+      <div v-if="galleryPhotos.length" class="gallery-grid varones-gallery-grid">
         <article
           v-for="photo in galleryPhotos"
           :key="photo.src"
@@ -135,6 +154,19 @@
             <p>{{ photo.description }}</p>
           </div>
         </article>
+      </div>
+
+      <div v-else class="glass-panel varones-gallery-empty">
+        <div class="varones-gallery-empty__icon">
+          <font-awesome-icon :icon="['fas', 'calendar-days']" />
+        </div>
+
+        <h3>Sin eventos aún</h3>
+        <p>
+          Por el momento no hay eventos o registros publicados.
+          Esta sección se irá actualizando con futuras actividades
+          del Departamento Nacional de Varones.
+        </p>
       </div>
     </section>
 
@@ -152,6 +184,8 @@
 </template>
 
 <script setup>
+import departmentLogo from '@/assets/img/departamentos/VARONES_NACIONAL.png'
+
 const nationalBoard = [
   {
     role: 'Jefe Nacional',
@@ -159,7 +193,9 @@ const nationalBoard = [
     period: 'Directiva Nacional 2026',
     description:
       'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional de Varones.',
-    photo: ''
+    photo: '',
+    email: 'jefe.varones@ipnchile.cl',
+    phone: '+56 9 0000 0000'
   },
   {
     role: 'Secretario Nacional',
@@ -167,7 +203,9 @@ const nationalBoard = [
     period: 'Directiva Nacional 2026',
     description:
       'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades.',
-    photo: ''
+    photo: '',
+    email: 'secretario.varones@ipnchile.cl',
+    phone: '+56 9 0000 0001'
   },
   {
     role: 'Tesorero Nacional',
@@ -175,32 +213,29 @@ const nationalBoard = [
     period: 'Directiva Nacional 2026',
     description:
       'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
-    photo: ''
+    photo: '',
+    email: 'tesoreria.varones@ipnchile.cl',
+    phone: '+56 9 0000 0002'
   }
 ]
 
+/*
+  La galería queda vacía por ahora.
+  Más adelante puede agregar cualquier tipo de contenido
+  simplemente incorporando objetos al arreglo.
+*/
+const galleryPhotos = []
+
+/*
+Ejemplo futuro:
 const galleryPhotos = [
   {
-    src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
-    title: 'Reunión de coordinación',
-    description: 'Espacios de planificación, organización y comunión fraternal.'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
-    title: 'Jornada de enseñanza',
-    description: 'Instancias dedicadas a la formación bíblica y al fortalecimiento espiritual.'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
-    title: 'Actividad especial',
-    description: 'Encuentros donde se promueve el servicio, la participación y la unidad.'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?auto=format&fit=crop&w=1200&q=80',
-    title: 'Tiempo de comunión',
-    description: 'Momentos que fortalecen los lazos cristianos entre los hermanos.'
+    src: '/images/departamentos/varones/actividad-1.jpg',
+    title: 'Encuentro nacional',
+    description: 'Jornada de comunión y servicio.'
   }
 ]
+*/
 </script>
 
 <style scoped>
@@ -245,6 +280,36 @@ const galleryPhotos = [
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.varones-hero__logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+
+.varones-hero__logo {
+  width: 108px;
+  height: 108px;
+  object-fit: contain;
+  display: block;
+  border-radius: 22px;
+  padding: 0.75rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    var(--theme-panel-bg-soft);
+  border: 1px solid var(--theme-border-subtle);
+  box-shadow:
+    var(--shadow-soft),
+    0 0 18px rgba(255, 255, 255, 0.06);
+  filter: brightness(0) invert(1) opacity(0.96);
+}
+
+.varones-hero__logo--placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--theme-secondary);
+  font-size: 1.5rem;
 }
 
 .varones-hero__label {
@@ -343,29 +408,28 @@ const galleryPhotos = [
 }
 
 .official-card__photo {
-  width: 100%;
-  aspect-ratio: 4 / 4.7;
+  width: 96px;
+  height: 96px;
   object-fit: cover;
   display: block;
-  border-radius: var(--radius-md);
+  margin: 0 auto;
+  border-radius: 50%;
   border: 1px solid var(--theme-border-subtle);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015)),
     var(--theme-panel-bg-soft);
 }
 
-.official-card__photo--placeholder {
+.official-card__photo--fallback {
   display: grid;
   place-items: center;
-  color: var(--theme-text-soft);
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  color: var(--theme-secondary);
+  font-size: 1.6rem;
 }
 
 .official-card__body {
   padding: 1.2rem 1.25rem 1.35rem;
+  text-align: center;
 }
 
 .official-card__role {
@@ -389,13 +453,71 @@ const galleryPhotos = [
 }
 
 .official-card__text {
-  margin: 0;
+  margin: 0 0 1rem;
   color: var(--theme-text-soft);
   line-height: 1.7;
 }
 
+.official-card__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--theme-border-subtle);
+}
+
+.official-card__contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  color: var(--theme-text-soft);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.official-card__contact-item a {
+  color: var(--theme-text);
+  text-decoration: none;
+}
+
+.official-card__contact-item a:hover {
+  color: var(--theme-secondary);
+}
+
 .varones-gallery-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.varones-gallery-empty {
+  padding: 2rem;
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.varones-gallery-empty__icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: rgba(var(--theme-secondary-rgb), 0.12);
+  border: 1px solid rgba(var(--theme-secondary-rgb), 0.18);
+  color: var(--theme-secondary);
+  font-size: 1.4rem;
+}
+
+.varones-gallery-empty h3 {
+  margin-bottom: 0.75rem;
+}
+
+.varones-gallery-empty p {
+  margin: 0;
+  color: var(--theme-text-soft);
+  line-height: 1.75;
 }
 
 .varones-verse {
@@ -439,6 +561,11 @@ const galleryPhotos = [
 
   .varones-hero__actions {
     flex-direction: column;
+  }
+
+  .official-card__contact-item {
+    flex-direction: column;
+    gap: 0.3rem;
   }
 }
 </style>

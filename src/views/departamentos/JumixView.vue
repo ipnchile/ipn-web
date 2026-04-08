@@ -20,6 +20,18 @@
                 </div>
 
                 <aside class="card jumix-hero__highlight">
+                    <div class="jumix-hero__logo-wrap">
+                        <img
+                            v-if="departmentLogo"
+                            :src="departmentLogo"
+                            alt="Logo oficial del Departamento JUMIX"
+                            class="jumix-hero__logo"
+                        />
+                        <div v-else class="jumix-hero__logo jumix-hero__logo--placeholder">
+                            <font-awesome-icon :icon="['fas', 'image']" />
+                        </div>
+                    </div>
+
                     <p class="jumix-hero__label">Enfoque del departamento</p>
                     <h2>Juventud con propósito</h2>
                     <p>
@@ -88,9 +100,14 @@
                     <div class="official-card__topbar"></div>
 
                     <div class="official-card__photo-wrap">
-                        <img v-if="leader.photo" :src="leader.photo" :alt="leader.name" class="official-card__photo" />
-                        <div v-else class="official-card__photo official-card__photo--placeholder">
-                            <span>Foto oficial</span>
+                        <img
+                            v-if="leader.photo"
+                            :src="leader.photo"
+                            :alt="leader.name"
+                            class="official-card__photo"
+                        />
+                        <div v-else class="official-card__photo official-card__photo--fallback">
+                            <font-awesome-icon :icon="['fas', 'user']" />
                         </div>
                     </div>
 
@@ -99,6 +116,13 @@
                         <h3>{{ leader.name }}</h3>
                         <p class="official-card__meta">{{ leader.period }}</p>
                         <p class="official-card__text">{{ leader.description }}</p>
+
+                        <div class="official-card__contact">
+                            <div class="official-card__contact-item">
+                                <font-awesome-icon :icon="['fas', 'envelope']" />
+                                <a :href="`mailto:${leader.email}`">{{ leader.email }}</a>
+                            </div>
+                        </div>
                     </div>
                 </article>
             </div>
@@ -115,7 +139,7 @@
                 </p>
             </div>
 
-            <div class="gallery-grid jumix-gallery-grid">
+            <div v-if="galleryPhotos.length" class="gallery-grid jumix-gallery-grid">
                 <article v-for="photo in galleryPhotos" :key="photo.src" class="gallery-card">
                     <img :src="photo.src" :alt="photo.title" class="gallery-image" />
                     <div class="gallery-content">
@@ -123,6 +147,19 @@
                         <p>{{ photo.description }}</p>
                     </div>
                 </article>
+            </div>
+
+            <div v-else class="glass-panel jumix-gallery-empty">
+                <div class="jumix-gallery-empty__icon">
+                    <font-awesome-icon :icon="['fas', 'calendar-days']" />
+                </div>
+
+                <h3>Sin eventos aún</h3>
+                <p>
+                    Por el momento no hay eventos o registros publicados.
+                    Esta sección se irá actualizando con futuras actividades
+                    del Departamento JUMIX.
+                </p>
             </div>
         </section>
 
@@ -140,6 +177,8 @@
 </template>
 
 <script setup>
+import departmentLogo from '@/assets/img/departamentos/JUMIX_NACIONAL.png'
+
 const nationalBoard = [
     {
         role: 'Jefe Nacional',
@@ -147,7 +186,9 @@ const nationalBoard = [
         period: 'Directiva Nacional 2026',
         description:
             'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional JUMIX.',
-        photo: ''
+        photo: '',
+        email: 'jefe.jumix@ipnchile.cl',
+        phone: '+56 9 0000 0000'
     },
     {
         role: 'Secretario Nacional',
@@ -155,7 +196,9 @@ const nationalBoard = [
         period: 'Directiva Nacional 2026',
         description:
             'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades juveniles.',
-        photo: ''
+        photo: '',
+        email: 'secretario.jumix@ipnchile.cl',
+        phone: '+56 9 0000 0001'
     },
     {
         role: 'Tesorero Nacional',
@@ -163,32 +206,29 @@ const nationalBoard = [
         period: 'Directiva Nacional 2026',
         description:
             'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
-        photo: ''
+        photo: '',
+        email: 'tesoreria.jumix@ipnchile.cl',
+        phone: '+56 9 0000 0002'
     }
 ]
 
+/*
+  La galería queda vacía por ahora.
+  Más adelante puede agregar cualquier tipo de contenido
+  simplemente incorporando objetos al arreglo.
+*/
+const galleryPhotos = []
+
+/*
+Ejemplo futuro:
 const galleryPhotos = [
     {
-        src: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&fit=crop&w=1200&q=80',
+        src: '/images/departamentos/jumix/actividad-1.jpg',
         title: 'Encuentro juvenil',
-        description: 'Instancias de comunión, enseñanza y fortalecimiento espiritual para la juventud.'
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
-        title: 'Jornada de enseñanza',
-        description: 'Espacios dedicados a la reflexión bíblica, orientación y crecimiento en la fe.'
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1200&q=80',
-        title: 'Actividad especial',
-        description: 'Momentos donde la juventud comparte, sirve y participa con entusiasmo.'
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
-        title: 'Tiempo de compañerismo',
-        description: 'La comunión juvenil fortalece los vínculos y la identidad cristiana.'
+        description: 'Jornada de comunión, enseñanza y servicio.'
     }
 ]
+*/
 </script>
 
 <style scoped>
@@ -242,6 +282,36 @@ const galleryPhotos = [
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.jumix-hero__logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+}
+
+.jumix-hero__logo {
+    width: 108px;
+    height: 108px;
+    object-fit: contain;
+    display: block;
+    border-radius: 22px;
+    padding: 0.75rem;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+        var(--theme-panel-bg-soft);
+    border: 1px solid var(--theme-border-subtle);
+    box-shadow:
+        var(--shadow-soft),
+        0 0 18px rgba(255, 255, 255, 0.06);
+    filter: brightness(0) invert(1) opacity(0.96);
+}
+
+.jumix-hero__logo--placeholder {
+    display: grid;
+    place-items: center;
+    color: var(--theme-secondary);
+    font-size: 1.5rem;
 }
 
 .jumix-hero__label {
@@ -338,29 +408,28 @@ const galleryPhotos = [
 }
 
 .official-card__photo {
-    width: 100%;
-    aspect-ratio: 4 / 4.7;
+    width: 96px;
+    height: 96px;
     object-fit: cover;
     display: block;
-    border-radius: var(--radius-md);
+    margin: 0 auto;
+    border-radius: 50%;
     border: 1px solid var(--theme-border-subtle);
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015)),
         var(--theme-panel-bg-soft);
 }
 
-.official-card__photo--placeholder {
+.official-card__photo--fallback {
     display: grid;
     place-items: center;
-    color: var(--theme-text-soft);
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    color: var(--theme-secondary);
+    font-size: 1.6rem;
 }
 
 .official-card__body {
     padding: 1.2rem 1.25rem 1.35rem;
+    text-align: center;
 }
 
 .official-card__role {
@@ -384,13 +453,71 @@ const galleryPhotos = [
 }
 
 .official-card__text {
-    margin: 0;
+    margin: 0 0 1rem;
     color: var(--theme-text-soft);
     line-height: 1.7;
 }
 
+.official-card__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--theme-border-subtle);
+}
+
+.official-card__contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    color: var(--theme-text-soft);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.official-card__contact-item a {
+    color: var(--theme-text);
+    text-decoration: none;
+}
+
+.official-card__contact-item a:hover {
+    color: var(--theme-secondary);
+}
+
 .jumix-gallery-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.jumix-gallery-empty {
+    padding: 2rem;
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.jumix-gallery-empty__icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: rgba(var(--theme-secondary-rgb), 0.12);
+    border: 1px solid rgba(var(--theme-secondary-rgb), 0.18);
+    color: var(--theme-secondary);
+    font-size: 1.4rem;
+}
+
+.jumix-gallery-empty h3 {
+    margin-bottom: 0.75rem;
+}
+
+.jumix-gallery-empty p {
+    margin: 0;
+    color: var(--theme-text-soft);
+    line-height: 1.75;
 }
 
 .jumix-verse {
@@ -435,6 +562,11 @@ const galleryPhotos = [
 
     .jumix-hero__actions {
         flex-direction: column;
+    }
+
+    .official-card__contact-item {
+        flex-direction: column;
+        gap: 0.3rem;
     }
 }
 </style>

@@ -23,43 +23,14 @@
       </div>
     </section>
 
-    <!-- RESUMEN -->
-    <section class="section-container section-block events-summary">
-      <div class="section-heading">
-        <p class="section-eyebrow">Resumen general</p>
-        <h2 class="section-title">Vista anual de actividades</h2>
-        <p class="section-description">
-          El calendario reúne las actividades nacionales informadas para el año 2026.
-          Puede revisar cada mes y abrir los eventos para ver su detalle.
-        </p>
-      </div>
-
-      <div class="events-summary__grid">
-        <article class="glass-panel--soft events-summary__card">
-          <h3>{{ totalEvents }}</h3>
-          <p>Actividades nacionales registradas</p>
-        </article>
-
-        <article class="glass-panel--soft events-summary__card">
-          <h3>{{ monthsWithEvents }}</h3>
-          <p>Meses con actividades programadas</p>
-        </article>
-
-        <article class="glass-panel--soft events-summary__card">
-          <h3>2026</h3>
-          <p>Calendario anual oficial</p>
-        </article>
-      </div>
-    </section>
-
     <!-- CALENDARIO -->
     <section class="section-container section-block">
       <div class="section-heading">
         <p class="section-eyebrow">Calendario anual</p>
         <h2 class="section-title">Actividades por mes</h2>
         <p class="section-description">
-          Seleccione una actividad para ver más información. Los meses sin actividades
-          programadas se muestran igualmente para mantener la vista completa del año.
+          Seleccione una actividad para ver más información. Cada evento se identifica
+          automáticamente como próximo, en curso o realizado según su fecha.
         </p>
       </div>
 
@@ -67,7 +38,9 @@
         <article
           v-for="month in calendar"
           :key="month.month"
+          :ref="setMonthRef(month.month)"
           class="annual-calendar__row card"
+          :class="{ 'annual-calendar__row--current': month.month === currentMonthName }"
         >
           <div class="annual-calendar__month">
             <span>{{ month.month }}</span>
@@ -80,11 +53,31 @@
                 :key="event.id"
                 type="button"
                 class="annual-calendar__event"
+                :class="eventStateClass(event)"
                 @click="openEvent(event)"
               >
-                <div class="annual-calendar__event-date">{{ event.dateLabel }}</div>
+                <div class="annual-calendar__event-date">
+                  <span>{{ event.dateLabel }}</span>
+
+                  <div
+                    class="annual-calendar__event-status"
+                    :class="eventStatusBadgeClass(event)"
+                  >
+                    <font-awesome-icon :icon="eventStatusIcon(event)" />
+                    <span>{{ eventStatusLabel(event) }}</span>
+                  </div>
+                </div>
+
                 <div class="annual-calendar__event-body">
-                  <h3>{{ event.title }}</h3>
+                  <h3>
+                    {{ event.title }}
+                    <span
+                      class="annual-calendar__event-check"
+                      :class="eventStatusTextClass(event)"
+                    >
+                      <font-awesome-icon :icon="eventStatusIcon(event)" />
+                    </span>
+                  </h3>
                   <p>{{ event.location }}</p>
                 </div>
               </button>
@@ -93,44 +86,6 @@
             <div v-else class="annual-calendar__empty">
               Sin actividades nacionales registradas
             </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- PRÓXIMOS / LISTADO -->
-    <section class="section-container section-block">
-      <div class="section-heading">
-        <p class="section-eyebrow">Listado</p>
-        <h2 class="section-title">Todas las actividades</h2>
-        <p class="section-description">
-          Vista detallada de las actividades nacionales incluidas en el calendario.
-        </p>
-      </div>
-
-      <div class="events-list">
-        <article
-          v-for="event in flatEvents"
-          :key="event.id"
-          class="events-list__card card"
-        >
-          <div class="events-list__date">
-            <span>{{ event.month }}</span>
-          </div>
-
-          <div class="events-list__body">
-            <p class="events-list__meta">{{ event.dateLabel }}</p>
-            <h3>{{ event.title }}</h3>
-            <p class="events-list__location">{{ event.location }}</p>
-            <p class="events-list__description">{{ event.description }}</p>
-
-            <button
-              type="button"
-              class="btn-secondary"
-              @click="openEvent(event)"
-            >
-              Ver detalle
-            </button>
           </div>
         </article>
       </div>
@@ -162,6 +117,9 @@
                 <p><strong>Fecha:</strong> {{ selectedEvent.dateLabel }}</p>
                 <p><strong>Lugar:</strong> {{ selectedEvent.location }}</p>
                 <p><strong>Tipo:</strong> {{ selectedEvent.type }}</p>
+                <p>
+                  <strong>Estado:</strong> {{ eventStatusLabel(selectedEvent) }}
+                </p>
               </div>
 
               <p class="event-modal__description">
@@ -181,9 +139,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 
 const selectedEvent = ref(null)
+const monthRefs = ref({})
 
 const calendar = [
   {
@@ -193,6 +152,8 @@ const calendar = [
         id: 1,
         month: 'ENERO',
         dateLabel: '10/01/2026',
+        startDate: '2026-01-10',
+        endDate: '2026-01-10',
         title: 'Convención Nacional JUMIX',
         location: 'IPN Putú',
         type: 'Congreso / Convención',
@@ -209,6 +170,8 @@ const calendar = [
         id: 2,
         month: 'FEBRERO',
         dateLabel: '06, 07 y 08 de febrero de 2026',
+        startDate: '2026-02-06',
+        endDate: '2026-02-08',
         title: 'Conferencia Anual de Pastores, Pastoras y Delegados',
         location: 'Chillán',
         type: 'Conferencia',
@@ -229,6 +192,8 @@ const calendar = [
         id: 3,
         month: 'ABRIL',
         dateLabel: '03 y 04 de abril de 2026',
+        startDate: '2026-04-03',
+        endDate: '2026-04-04',
         title: 'Congreso Nacional JUMIX',
         location: 'IPN Talagante - La Vid',
         type: 'Congreso',
@@ -253,6 +218,8 @@ const calendar = [
         id: 4,
         month: 'JULIO',
         dateLabel: '04/07/2026',
+        startDate: '2026-07-04',
+        endDate: '2026-07-04',
         title: 'Cierre 1er semestre SEM',
         location: 'Aurora, Talca',
         type: 'Cierre semestral',
@@ -273,6 +240,8 @@ const calendar = [
         id: 5,
         month: 'SEPTIEMBRE',
         dateLabel: '25, 26 y 27 de septiembre de 2026',
+        startDate: '2026-09-25',
+        endDate: '2026-09-27',
         title: 'Conferencias Semetrales Pastores y Pastoras 2026',
         location: 'IPN Nacimiento',
         type: 'Conferencia',
@@ -289,6 +258,8 @@ const calendar = [
         id: 6,
         month: 'OCTUBRE',
         dateLabel: '23 y 24 de octubre de 2026',
+        startDate: '2026-10-23',
+        endDate: '2026-10-24',
         title: 'Congreso Nacional de Dorcas',
         location: 'IPN El Monte',
         type: 'Congreso',
@@ -305,6 +276,8 @@ const calendar = [
         id: 7,
         month: 'NOVIEMBRE',
         dateLabel: '07/11/2026',
+        startDate: '2026-11-07',
+        endDate: '2026-11-07',
         title: 'Cierre 2do semestre SEM y Graduación 1a Generación',
         location: 'Aurora, Talca',
         type: 'Cierre / Graduación',
@@ -316,6 +289,8 @@ const calendar = [
         id: 8,
         month: 'NOVIEMBRE',
         dateLabel: '21 y 22 de noviembre de 2026',
+        startDate: '2026-11-21',
+        endDate: '2026-11-22',
         title: '3er Congreso Nacional Varones',
         location: 'IPN Quilicura',
         type: 'Congreso',
@@ -332,6 +307,8 @@ const calendar = [
         id: 9,
         month: 'DICIEMBRE',
         dateLabel: '1er fin de semana de diciembre de 2026',
+        startDate: '2026-12-05',
+        endDate: '2026-12-06',
         title: 'Encuentro de Matrimonios',
         location: 'Lugar por confirmar',
         type: 'Encuentro',
@@ -343,19 +320,92 @@ const calendar = [
   }
 ]
 
-const flatEvents = computed(() =>
-  calendar.flatMap(monthItem =>
-    monthItem.events.map(event => ({
-      ...event
-    }))
-  )
-)
+const monthOrder = [
+  'ENERO',
+  'FEBRERO',
+  'MARZO',
+  'ABRIL',
+  'MAYO',
+  'JUNIO',
+  'JULIO',
+  'AGOSTO',
+  'SEPTIEMBRE',
+  'OCTUBRE',
+  'NOVIEMBRE',
+  'DICIEMBRE'
+]
 
-const totalEvents = computed(() => flatEvents.value.length)
+const currentMonthName = monthOrder[new Date().getMonth()]
 
-const monthsWithEvents = computed(
-  () => calendar.filter(month => month.events.length > 0).length
-)
+function setMonthRef(month) {
+  return (el) => {
+    if (el) {
+      monthRefs.value[month] = el
+    }
+  }
+}
+
+function getTodayKey() {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function getEventStatus(event) {
+  const today = getTodayKey()
+
+  if (today < event.startDate) return 'upcoming'
+  if (today > event.endDate) return 'completed'
+  return 'ongoing'
+}
+
+function eventStatusLabel(event) {
+  const status = getEventStatus(event)
+
+  if (status === 'completed') return 'Realizado'
+  if (status === 'ongoing') return 'En curso'
+  return 'Próximo'
+}
+
+function eventStatusIcon(event) {
+  const status = getEventStatus(event)
+
+  if (status === 'completed') return ['fas', 'check']
+  if (status === 'ongoing') return ['fas', 'clock']
+  return ['fas', 'calendar-days']
+}
+
+function eventStateClass(event) {
+  const status = getEventStatus(event)
+
+  return {
+    'annual-calendar__event--done': status === 'completed',
+    'annual-calendar__event--ongoing': status === 'ongoing',
+    'annual-calendar__event--upcoming': status === 'upcoming'
+  }
+}
+
+function eventStatusBadgeClass(event) {
+  const status = getEventStatus(event)
+
+  return {
+    'annual-calendar__event-status--done': status === 'completed',
+    'annual-calendar__event-status--ongoing': status === 'ongoing',
+    'annual-calendar__event-status--upcoming': status === 'upcoming'
+  }
+}
+
+function eventStatusTextClass(event) {
+  const status = getEventStatus(event)
+
+  return {
+    'annual-calendar__event-check--done': status === 'completed',
+    'annual-calendar__event-check--ongoing': status === 'ongoing',
+    'annual-calendar__event-check--upcoming': status === 'upcoming'
+  }
+}
 
 function openEvent(event) {
   selectedEvent.value = event
@@ -366,6 +416,19 @@ function closeEvent() {
   selectedEvent.value = null
   document.body.style.overflow = ''
 }
+
+onMounted(async () => {
+  await nextTick()
+
+  const currentMonthElement = monthRefs.value[currentMonthName]
+
+  if (currentMonthElement) {
+    currentMonthElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    })
+  }
+})
 </script>
 
 <style scoped>
@@ -424,28 +487,6 @@ function closeEvent() {
   color: var(--theme-text-soft);
 }
 
-.events-summary__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-}
-
-.events-summary__card {
-  padding: 1.5rem;
-  text-align: center;
-}
-
-.events-summary__card h3 {
-  margin-bottom: 0.4rem;
-  font-size: clamp(2rem, 4vw, 3rem);
-  color: var(--theme-secondary);
-}
-
-.events-summary__card p {
-  margin: 0;
-  color: var(--theme-text-soft);
-}
-
 .annual-calendar {
   display: grid;
   gap: 1rem;
@@ -455,6 +496,13 @@ function closeEvent() {
   display: grid;
   grid-template-columns: 180px 1fr;
   overflow: hidden;
+  scroll-margin-top: 120px;
+}
+
+.annual-calendar__row--current {
+  box-shadow:
+    0 0 0 1px rgba(var(--theme-secondary-rgb), 0.22),
+    0 10px 26px rgba(0, 0, 0, 0.16);
 }
 
 .annual-calendar__month {
@@ -503,11 +551,61 @@ function closeEvent() {
   border-bottom: 0;
 }
 
+.annual-calendar__event--done {
+  background: rgba(68, 174, 110, 0.08);
+}
+
+.annual-calendar__event--done:hover {
+  background: rgba(68, 174, 110, 0.12);
+}
+
+.annual-calendar__event--ongoing {
+  background: rgba(228, 172, 66, 0.10);
+}
+
+.annual-calendar__event--ongoing:hover {
+  background: rgba(228, 172, 66, 0.16);
+}
+
+.annual-calendar__event--upcoming {
+  background: transparent;
+}
+
 .annual-calendar__event-date {
   padding: 1rem 1.1rem;
   font-weight: 700;
   color: var(--theme-secondary);
   border-right: 1px solid rgba(var(--theme-secondary-rgb), 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.annual-calendar__event-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.annual-calendar__event-status--done {
+  background: rgba(68, 174, 110, 0.16);
+  color: #8ce3aa;
+}
+
+.annual-calendar__event-status--ongoing {
+  background: rgba(228, 172, 66, 0.18);
+  color: #ffd784;
+}
+
+.annual-calendar__event-status--upcoming {
+  background: rgba(var(--theme-secondary-rgb), 0.16);
+  color: var(--theme-secondary);
 }
 
 .annual-calendar__event-body {
@@ -517,6 +615,25 @@ function closeEvent() {
 .annual-calendar__event-body h3 {
   margin-bottom: 0.35rem;
   font-size: 1.06rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.annual-calendar__event-check {
+  font-size: 0.92rem;
+}
+
+.annual-calendar__event-check--done {
+  color: #8ce3aa;
+}
+
+.annual-calendar__event-check--ongoing {
+  color: #ffd784;
+}
+
+.annual-calendar__event-check--upcoming {
+  color: var(--theme-secondary);
 }
 
 .annual-calendar__event-body p {
@@ -528,59 +645,6 @@ function closeEvent() {
   padding: 1rem 1.1rem;
   color: var(--theme-text-soft);
   font-style: italic;
-}
-
-.events-list {
-  display: grid;
-  gap: 1rem;
-}
-
-.events-list__card {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  overflow: hidden;
-}
-
-.events-list__date {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.25rem;
-  background: rgba(var(--theme-secondary-rgb), 0.1);
-  border-right: 1px solid var(--theme-border-subtle);
-}
-
-.events-list__date span {
-  color: var(--theme-secondary);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.events-list__body {
-  padding: 1.25rem;
-}
-
-.events-list__meta {
-  margin: 0 0 0.45rem;
-  color: var(--theme-secondary);
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.events-list__body h3 {
-  margin-bottom: 0.45rem;
-}
-
-.events-list__location {
-  margin: 0 0 0.8rem;
-  color: var(--theme-text);
-  font-weight: 600;
-}
-
-.events-list__description {
-  margin-bottom: 1rem;
-  color: var(--theme-text-soft);
-  line-height: 1.75;
 }
 
 .event-modal {
@@ -668,14 +732,11 @@ function closeEvent() {
 
 @media (max-width: 980px) {
   .events-hero__panel,
-  .events-summary__grid,
-  .annual-calendar__row,
-  .events-list__card {
+  .annual-calendar__row {
     grid-template-columns: 1fr;
   }
 
-  .annual-calendar__month,
-  .events-list__date {
+  .annual-calendar__month {
     border-right: 0;
     border-bottom: 1px solid var(--theme-border-soft);
   }

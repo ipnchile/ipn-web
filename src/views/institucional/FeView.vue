@@ -2,11 +2,7 @@
     <main class="institucional-page">
         <section class="hero-section">
             <div class="section-container">
-                <div
-                    ref="heroRef"
-                    class="hero-content reveal reveal-up"
-                    :class="{ 'is-visible': visible.hero }"
-                >
+                <div ref="heroRef" class="hero-content reveal reveal-up" :class="{ 'is-visible': visible.hero }">
                     <p class="section-eyebrow">Doctrina</p>
                     <h1>Lo que <span>Creemos</span></h1>
 
@@ -31,11 +27,8 @@
 
         <section class="intro-section">
             <div class="section-container">
-                <div
-                    ref="introRef"
-                    class="intro-card glass-panel reveal reveal-up"
-                    :class="{ 'is-visible': visible.intro }"
-                >
+                <div ref="introRef" class="intro-card glass-panel reveal reveal-up"
+                    :class="{ 'is-visible': visible.intro }">
                     <div class="intro-card__content">
                         <p class="section-eyebrow">Base Doctrinal</p>
                         <h2>Una fe afirmada en la Palabra de Dios</h2>
@@ -51,11 +44,8 @@
 
         <section class="beliefs-section">
             <div class="section-container">
-                <div
-                    ref="headingRef"
-                    class="section-heading reveal reveal-up"
-                    :class="{ 'is-visible': visible.heading }"
-                >
+                <div ref="headingRef" class="section-heading reveal reveal-up"
+                    :class="{ 'is-visible': visible.heading }">
                     <p class="section-eyebrow">Artículos de Fe</p>
                     <h2>Diez convicciones fundamentales</h2>
                     <p class="section-description">
@@ -65,13 +55,9 @@
                 </div>
 
                 <div class="belief-grid">
-                    <article
-                        v-for="belief in beliefs"
-                        :key="belief.id"
-                        :ref="(el) => setBeliefRef(el, belief.id)"
+                    <article v-for="belief in beliefs" :key="belief.id" :ref="(el) => setBeliefRef(el, belief.id)"
                         class="belief-card glass-panel reveal reveal-up"
-                        :class="{ 'is-visible': visibleBeliefs[belief.id] }"
-                    >
+                        :class="{ 'is-visible': visibleBeliefs[belief.id] }">
                         <div class="belief-number">
                             <font-awesome-icon :icon="['fas', belief.icon]" class="belief-number__icon" />
                             <span>{{ belief.number }}</span>
@@ -87,16 +73,9 @@
                             </span>
 
                             <div class="verse-list">
-                                <button
-                                    v-for="verse in belief.verses"
-                                    :key="verse.ref"
-                                    type="button"
-                                    class="verse-chip"
-                                    @mouseenter="showTooltip($event, verse)"
-                                    @mouseleave="hideTooltip"
-                                    @focus="showTooltip($event, verse)"
-                                    @blur="hideTooltip"
-                                >
+                                <button v-for="verse in belief.verses" :key="verse.ref" type="button" class="verse-chip"
+                                    @mouseenter="showTooltip($event, verse)" @mouseleave="hideTooltip"
+                                    @focus="showTooltip($event, verse)" @blur="hideTooltip">
                                     <font-awesome-icon :icon="['fas', 'quote-left']" class="verse-chip__icon" />
                                     {{ verse.ref }}
                                 </button>
@@ -107,14 +86,10 @@
             </div>
         </section>
 
-        <div
-            v-if="tooltip.visible"
-            class="verse-tooltip"
-            :style="{
-                top: `${tooltip.y}px`,
-                left: `${tooltip.x}px`,
-            }"
-        >
+        <div v-if="tooltip.visible" class="verse-tooltip" :style="{
+            top: `${tooltip.y}px`,
+            left: `${tooltip.x}px`,
+        }">
             <strong>{{ tooltip.ref }}</strong>
             <p>{{ tooltip.text }}</p>
         </div>
@@ -129,7 +104,6 @@ import { beliefs } from '@/data/beliefs'
 const heroRef = ref(null)
 const introRef = ref(null)
 const headingRef = ref(null)
-
 const beliefRefs = ref({})
 
 const visible = reactive({
@@ -162,16 +136,39 @@ const setBeliefRef = (el, id) => {
 
 const showTooltip = (event, verse) => {
     const rect = event.currentTarget.getBoundingClientRect()
+    const viewportWidth = window.innerWidth
+    const tooltipWidth = viewportWidth < 640 ? 260 : 320
+
+    let x = rect.left + rect.width / 2
+    let y = rect.top + window.scrollY - 12
+
+    const minX = tooltipWidth / 2 + 12
+    const maxX = viewportWidth - tooltipWidth / 2 - 12
+
+    if (x < minX) x = minX
+    if (x > maxX) x = maxX
 
     tooltip.visible = true
     tooltip.ref = verse.ref
     tooltip.text = verse.text || verse.content || 'Referencia bíblica'
-    tooltip.x = rect.left + rect.width / 2
-    tooltip.y = rect.top + window.scrollY - 12
+    tooltip.x = x
+    tooltip.y = y
 }
 
 const hideTooltip = () => {
     tooltip.visible = false
+}
+
+const updateVisibility = (target, state) => {
+    if (target === heroRef.value) visible.hero = state
+    if (target === introRef.value) visible.intro = state
+    if (target === headingRef.value) visible.heading = state
+
+    beliefs.forEach((belief) => {
+        if (target === beliefRefs.value[belief.id]) {
+            visibleBeliefs[belief.id] = state
+        }
+    })
 }
 
 onMounted(async () => {
@@ -193,26 +190,12 @@ onMounted(async () => {
     observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => {
-                if (!entry.isIntersecting) return
-
-                const target = entry.target
-
-                if (target === heroRef.value) visible.hero = true
-                if (target === introRef.value) visible.intro = true
-                if (target === headingRef.value) visible.heading = true
-
-                beliefs.forEach((belief) => {
-                    if (target === beliefRefs.value[belief.id]) {
-                        visibleBeliefs[belief.id] = true
-                    }
-                })
-
-                observer?.unobserve(target)
+                updateVisibility(entry.target, entry.isIntersecting)
             })
         },
         {
-            threshold: 0.16,
-            rootMargin: '0px 0px -40px 0px',
+            threshold: 0.22,
+            rootMargin: '0px 0px -8% 0px',
         }
     )
 
@@ -285,16 +268,13 @@ onBeforeUnmount(() => {
     max-width: 920px;
     margin: 0 auto;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .hero-content h1 {
-    margin: 0.4rem 0 1rem;
-    font-size: clamp(2.5rem, 5vw, 4.3rem);
-    line-height: 1.03;
-    letter-spacing: -0.02em;
+    margin: 0.45rem 0 1rem;
+    font-size: clamp(2.4rem, 5vw, 4.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
 }
 
 .hero-content h1 span {
@@ -302,32 +282,35 @@ onBeforeUnmount(() => {
 }
 
 .hero-text {
-    max-width: 780px;
+    max-width: 760px;
     margin: 0 auto;
     color: var(--theme-text-soft);
     line-height: 1.9;
-    font-size: 1.04rem;
+    font-size: 1.06rem;
 }
 
-/* =========================
-   SUBNAV
-   ========================= */
 .subnav {
     display: flex;
     justify-content: center;
-    gap: 0.8rem;
+    align-items: center;
+    gap: 0.9rem;
     flex-wrap: wrap;
-    margin-top: 1.5rem;
+    margin-top: 1.6rem;
 }
 
 .subnav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.85rem 1.2rem;
+    border-radius: 14px;
     text-decoration: none;
     color: var(--theme-text);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.03);
-    padding: 0.78rem 1.08rem;
-    border-radius: 999px;
     font-weight: 700;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(10px);
     transition:
         transform 0.25s ease,
         border-color 0.25s ease,
@@ -337,8 +320,8 @@ onBeforeUnmount(() => {
 
 .subnav-link:hover {
     transform: translateY(-2px);
-    border-color: rgba(203, 164, 94, 0.32);
-    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(203, 164, 94, 0.28);
+    background: rgba(255, 255, 255, 0.06);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
 }
 
@@ -450,20 +433,23 @@ onBeforeUnmount(() => {
     background: rgba(203, 164, 94, 0.12);
     color: var(--theme-secondary);
     border: 1px solid rgba(203, 164, 94, 0.2);
-    font-weight: 800;
-    letter-spacing: 0.08em;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .belief-number__icon {
-    font-size: 0.78rem;
-    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+.belief-number span {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
 }
 
 .belief-card h3 {
-    margin: 0 0 0.8rem;
-    font-size: 1.2rem;
-    line-height: 1.2;
+    margin: 0 0 0.7rem;
+    font-size: 1.22rem;
+    line-height: 1.3;
 }
 
 .belief-card p {
@@ -474,36 +460,41 @@ onBeforeUnmount(() => {
 
 .belief-support {
     margin-top: 1.15rem;
-    padding-top: 0.95rem;
-    border-top: 1px solid rgba(203, 164, 94, 0.14);
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .belief-support__label {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    font-size: 0.8rem;
-    font-weight: 700;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+    color: var(--theme-secondary);
+    font-size: 0.82rem;
+    font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--theme-secondary);
 }
 
 .verse-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.65rem;
-    margin-top: 0.9rem;
 }
 
 .verse-chip {
-    border: 1px solid rgba(203, 164, 94, 0.18);
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--theme-text);
-    padding: 0.6rem 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 38px;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid rgba(203, 164, 94, 0.16);
     border-radius: 999px;
+    background: rgba(203, 164, 94, 0.08);
+    color: var(--theme-text);
+    font-size: 0.87rem;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 0.9rem;
     transition:
         transform 0.2s ease,
         border-color 0.2s ease,
@@ -513,40 +504,40 @@ onBeforeUnmount(() => {
 .verse-chip:hover,
 .verse-chip:focus-visible {
     transform: translateY(-2px);
-    border-color: rgba(203, 164, 94, 0.4);
-    background: rgba(203, 164, 94, 0.08);
+    border-color: rgba(203, 164, 94, 0.32);
+    background: rgba(203, 164, 94, 0.13);
     outline: none;
 }
 
 .verse-chip__icon {
-    margin-right: 0.35rem;
     font-size: 0.72rem;
-    opacity: 0.8;
+    opacity: 0.85;
 }
 
+/* =========================
+   TOOLTIP
+   ========================= */
 .verse-tooltip {
     position: absolute;
-    z-index: 50;
+    z-index: 40;
+    width: min(320px, calc(100vw - 24px));
     transform: translate(-50%, -100%);
-    max-width: 340px;
-    width: max-content;
     padding: 0.9rem 1rem;
     border-radius: 16px;
-    background: rgba(7, 16, 24, 0.96);
+    background: rgba(8, 19, 29, 0.96);
     color: var(--theme-text);
     border: 1px solid rgba(203, 164, 94, 0.22);
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
     pointer-events: none;
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(12px);
 }
 
 .verse-tooltip strong {
     display: block;
     margin-bottom: 0.45rem;
     color: var(--theme-secondary);
-    font-size: 0.84rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-size: 0.88rem;
+    letter-spacing: 0.03em;
 }
 
 .verse-tooltip p {
@@ -571,23 +562,21 @@ onBeforeUnmount(() => {
     opacity: 0;
     transform: rotate(24deg);
     z-index: 1;
-    background: linear-gradient(
-        110deg,
-        transparent 0%,
-        transparent 38%,
-        rgba(203, 164, 94, 0.03) 44%,
-        rgba(203, 164, 94, 0.14) 49%,
-        rgba(255, 245, 220, 0.22) 50%,
-        rgba(203, 164, 94, 0.14) 51%,
-        rgba(203, 164, 94, 0.03) 56%,
-        transparent 62%,
-        transparent 100%
-    );
+    background: linear-gradient(110deg,
+            transparent 0%,
+            transparent 38%,
+            rgba(203, 164, 94, 0.03) 44%,
+            rgba(203, 164, 94, 0.14) 49%,
+            rgba(255, 245, 220, 0.22) 50%,
+            rgba(203, 164, 94, 0.14) 51%,
+            rgba(203, 164, 94, 0.03) 56%,
+            transparent 62%,
+            transparent 100%);
 }
 
 .reveal.is-visible.intro-card::after,
 .reveal.is-visible.belief-card::after {
-    animation: goldSweep 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: goldSweep 1.15s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes goldSweep {
@@ -611,11 +600,47 @@ onBeforeUnmount(() => {
 }
 
 /* =========================
+   HELPERS
+   ========================= */
+.section-eyebrow {
+    display: inline-block;
+    margin: 0 0 0.6rem;
+    color: var(--theme-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+/* =========================
    RESPONSIVE
    ========================= */
+@media (max-width: 1100px) {
+    .belief-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .hero-content {
+        max-width: 860px;
+    }
+}
+
 @media (max-width: 900px) {
     .belief-grid {
         grid-template-columns: 1fr;
+    }
+
+    .intro-card,
+    .belief-card {
+        padding: 1.3rem;
+    }
+
+    .hero-text,
+    .section-description,
+    .intro-card p:last-child,
+    .belief-card p {
+        line-height: 1.78;
     }
 }
 
@@ -626,16 +651,37 @@ onBeforeUnmount(() => {
 
     .hero-section {
         padding-top: 1rem;
+        padding-bottom: 2.25rem;
+    }
+
+    .intro-section,
+    .beliefs-section {
+        padding-bottom: 2.5rem;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(2rem, 9vw, 3rem);
+    }
+
+    .hero-text {
+        font-size: 0.98rem;
     }
 
     .intro-card,
     .belief-card {
-        padding: 1.15rem;
+        padding: 1.1rem;
+        border-radius: 20px;
+    }
+
+    .intro-card h2,
+    .section-heading h2 {
+        word-break: break-word;
     }
 
     .subnav {
         flex-direction: column;
         width: 100%;
+        align-items: stretch;
     }
 
     .subnav-link {
@@ -643,15 +689,28 @@ onBeforeUnmount(() => {
         text-align: center;
     }
 
-    .hero-text,
-    .section-description,
-    .intro-card p:last-child,
-    .belief-card p {
-        line-height: 1.75;
+    .belief-number {
+        min-width: 64px;
+        height: 48px;
+        padding: 0 0.8rem;
+    }
+
+    .belief-card h3 {
+        font-size: 1.08rem;
+    }
+
+    .verse-list {
+        gap: 0.55rem;
+    }
+
+    .verse-chip {
+        width: 100%;
+        justify-content: center;
+        border-radius: 14px;
     }
 
     .verse-tooltip {
-        max-width: 280px;
+        width: min(280px, calc(100vw - 24px));
     }
 
     .reveal,
@@ -661,7 +720,47 @@ onBeforeUnmount(() => {
     }
 }
 
+@media (max-width: 480px) {
+    .institucional-page {
+        padding-top: 88px;
+    }
+
+    .hero-content h1 {
+        margin-bottom: 0.8rem;
+        line-height: 1.05;
+    }
+
+    .section-eyebrow {
+        font-size: 0.72rem;
+        letter-spacing: 0.13em;
+    }
+
+    .intro-card,
+    .belief-card {
+        padding: 1rem;
+    }
+
+    .belief-support {
+        margin-top: 1rem;
+        padding-top: 0.9rem;
+    }
+
+    .belief-card p,
+    .intro-card p:last-child,
+    .section-description,
+    .hero-text {
+        font-size: 0.95rem;
+    }
+
+    .verse-chip {
+        min-height: 40px;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.82rem;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
+
     .reveal,
     .reveal-up,
     .reveal.is-visible,
