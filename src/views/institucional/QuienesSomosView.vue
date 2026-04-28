@@ -64,7 +64,7 @@
 
                 <div class="purpose-grid">
                     <article class="purpose-card glass-panel">
-                        <div class="purpose-icon">👁</div>
+                        <font-awesome-icon :icon="['fas', 'eye']" />
                         <p class="purpose-label">Visión</p>
                         <h3>Alcanzar vidas con el conocimiento de la salvación</h3>
                         <p>
@@ -76,7 +76,7 @@
                     </article>
 
                     <article class="purpose-card glass-panel">
-                        <div class="purpose-icon">🌍</div>
+                        <font-awesome-icon :icon="['fas', 'globe']" />
                         <p class="purpose-label">Misión</p>
                         <h3>Llevar el mensaje de Cristo a cada lugar</h3>
                         <p>
@@ -87,7 +87,7 @@
                     </article>
 
                     <article class="purpose-card glass-panel">
-                        <div class="purpose-icon">🤝</div>
+                        <font-awesome-icon :icon="['fas', 'heart']" />
                         <p class="purpose-label">Compromiso</p>
                         <h3>Servir con excelencia, equidad y amor fraternal</h3>
                         <p>
@@ -136,7 +136,7 @@
             <div class="section-container">
                 <div class="cards-grid">
                     <article class="info-card glass-panel">
-                        <div class="card-icon">✦</div>
+                        <font-awesome-icon :icon="['fas', 'book-bible']" />
                         <h3>Fundamento Bíblico</h3>
                         <p>
                             Reconocemos la Santa Biblia como la Palabra de Dios y como la regla suprema de fe,
@@ -145,7 +145,7 @@
                     </article>
 
                     <article class="info-card glass-panel">
-                        <div class="card-icon">✦</div>
+                        <font-awesome-icon :icon="['fas', 'cross']" />
                         <h3>Doctrina Pentecostal</h3>
                         <p>
                             Nuestra fe se enmarca en la doctrina evangélica pentecostal, afirmando la salvación
@@ -154,7 +154,7 @@
                     </article>
 
                     <article class="info-card glass-panel">
-                        <div class="card-icon">✦</div>
+                        <font-awesome-icon :icon="['fas', 'gavel']" />
                         <h3>Orden Institucional</h3>
                         <p>
                             Desarrollamos nuestra labor conforme a estatutos y reglamentos que resguardan la unidad,

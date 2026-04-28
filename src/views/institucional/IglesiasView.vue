@@ -17,21 +17,13 @@
                     class="top-bar glass-panel d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 mb-4">
 
                     <div class="view-switch d-flex gap-2">
-                        <button
-                            type="button"
-                            class="view-switch__btn"
-                            :class="{ active: vistaActiva === 'explorar' }"
-                            @click="vistaActiva = 'explorar'"
-                        >
+                        <button type="button" class="view-switch__btn" :class="{ active: vistaActiva === 'explorar' }"
+                            @click="vistaActiva = 'explorar'">
                             Explorar mapa
                         </button>
 
-                        <button
-                            type="button"
-                            class="view-switch__btn"
-                            :class="{ active: vistaActiva === 'todas' }"
-                            @click="vistaActiva = 'todas'"
-                        >
+                        <button type="button" class="view-switch__btn" :class="{ active: vistaActiva === 'todas' }"
+                            @click="vistaActiva = 'todas'">
                             Ver todas
                         </button>
                     </div>
@@ -39,17 +31,8 @@
                     <div class="search-wrapper d-flex align-items-center gap-3">
                         <div class="search-field">
                             <span class="search-field__icon">🔍</span>
-                            <input
-                                v-model="busqueda"
-                                type="text"
-                                placeholder="Buscar iglesia, comuna, dirección..."
-                            />
-                            <button
-                                v-if="busqueda"
-                                class="clear-btn"
-                                type="button"
-                                @click="busqueda = ''"
-                            >
+                            <input v-model="busqueda" type="text" placeholder="Buscar iglesia, comuna, dirección..." />
+                            <button v-if="busqueda" class="clear-btn" type="button" @click="busqueda = ''">
                                 ×
                             </button>
                         </div>
@@ -63,46 +46,31 @@
                 <div v-if="vistaActiva === 'explorar'" class="explorer-layout">
                     <aside class="sidebar">
                         <div class="results-list custom-scrollbar">
-                            <div
-                                v-for="iglesia in iglesiasFiltradas"
-                                :key="iglesia.id"
-                                class="mini-card"
-                                :class="{ 'is-selected': iglesiaSeleccionada?.id === iglesia.id }"
-                            >
-                                <button
-                                    type="button"
-                                    class="mini-card__main"
-                                    @click="seleccionarIglesia(iglesia)"
-                                >
+                            <div v-for="iglesia in iglesiasFiltradas" :key="iglesia.id" class="mini-card"
+                                :class="{ 'is-selected': iglesiaSeleccionada?.id === iglesia.id }">
+                                <button type="button" class="mini-card__main" @click="seleccionarIglesia(iglesia)">
                                     <div class="card-inline-header">
                                         <span class="church-tag">{{ iglesia.comuna || 'Sin comuna' }}</span>
                                         <h3>{{ iglesia.nombre }}</h3>
                                     </div>
 
                                     <p class="mini-card__region">{{ iglesia.region || 'Sin región' }}</p>
-                                    <p class="mini-card__addr text-truncate">{{ iglesia.direccion || 'Sin dirección' }}</p>
+                                    <p class="mini-card__addr text-truncate">{{ iglesia.direccion || 'Sin dirección' }}
+                                    </p>
 
-                                    <p
-                                        v-if="iglesia.googleMapsName"
-                                        class="mini-card__maps-name text-truncate"
-                                    >
+                                    <p v-if="iglesia.googleMapsName" class="mini-card__maps-name text-truncate">
                                         {{ iglesia.googleMapsName }}
                                     </p>
                                 </button>
 
                                 <div class="mini-card__footer">
-                                    <button
-                                        type="button"
-                                        class="mini-link-btn flex-grow-1"
-                                        @click="seleccionarIglesia(iglesia)"
-                                    >
+                                    <button type="button" class="mini-link-btn flex-grow-1"
+                                        @click="seleccionarIglesia(iglesia)">
                                         Mapa
                                     </button>
 
-                                    <RouterLink
-                                        :to="`/iglesias/${iglesia.slug}`"
-                                        class="mini-link-btn mini-link-btn--gold flex-grow-1 text-center text-decoration-none"
-                                    >
+                                    <RouterLink :to="`/iglesias/${iglesia.slug}`"
+                                        class="mini-link-btn mini-link-btn--gold flex-grow-1 text-center text-decoration-none">
                                         Detalle
                                     </RouterLink>
                                 </div>
@@ -119,11 +87,7 @@
 
                         <Transition name="slide-up">
                             <div v-if="iglesiaSeleccionada" class="church-detail-panel glass-panel">
-                                <button
-                                    type="button"
-                                    class="close-btn"
-                                    @click="iglesiaSeleccionada = null"
-                                >
+                                <button type="button" class="close-btn" @click="iglesiaSeleccionada = null">
                                     ×
                                 </button>
 
@@ -135,28 +99,21 @@
 
                                         <h2 class="mb-1">{{ iglesiaSeleccionada.nombre }}</h2>
 
-                                        <p
-                                            class="mb-0 text-white-50 small d-none d-md-block text-truncate"
-                                            style="max-width: 300px;"
-                                        >
+                                        <p class="mb-0 text-white-50 small d-none d-md-block text-truncate"
+                                            style="max-width: 300px;">
                                             {{ iglesiaSeleccionada.direccion || 'Sin dirección' }}
                                         </p>
                                     </div>
 
                                     <div class="detail-actions d-flex gap-2">
-                                        <RouterLink
-                                            :to="`/iglesias/${iglesiaSeleccionada.slug}`"
-                                            class="btn-secondary btn-compact flex-grow-1 text-center text-decoration-none"
-                                        >
+                                        <RouterLink :to="`/iglesias/${iglesiaSeleccionada.slug}`"
+                                            class="btn-secondary btn-compact flex-grow-1 text-center text-decoration-none">
                                             Detalle
                                         </RouterLink>
 
-                                        <a
-                                            :href="googleMapsUrl(iglesiaSeleccionada)"
-                                            target="_blank"
+                                        <a :href="googleMapsUrl(iglesiaSeleccionada)" target="_blank"
                                             rel="noopener noreferrer"
-                                            class="btn-primary btn-compact flex-grow-1 text-center text-decoration-none"
-                                        >
+                                            class="btn-primary btn-compact flex-grow-1 text-center text-decoration-none">
                                             Ruta
                                         </a>
                                     </div>
@@ -168,46 +125,33 @@
 
                 <div v-else class="all-view pb-5">
                     <div v-if="iglesiasFiltradas.length > 0" class="row g-4">
-                        <div
-                            v-for="iglesia in iglesiasFiltradas"
-                            :key="iglesia.id"
-                            class="col-12 col-md-6 col-lg-4"
-                        >
+                        <div v-for="iglesia in iglesiasFiltradas" :key="iglesia.id" class="col-12 col-md-6 col-lg-4">
                             <article class="church-card-full glass-panel h-100">
                                 <div class="church-card-full__image-wrap">
-                                    <img
-                                        :src="getCardImage(iglesia)"
-                                        :alt="iglesia.nombre"
-                                        class="church-card-full__image"
-                                    />
+                                    <img v-if="getCardImage(iglesia)" :src="getCardImage(iglesia)" :alt="iglesia.nombre"
+                                        class="church-card-full__image" @error="handleImageError" />
+
+                                    <div v-else class="church-card-full__placeholder">
+                                        <font-awesome-icon :icon="['fas', 'church']" class="placeholder-icon" />
+                                    </div>
                                 </div>
 
                                 <div class="church-card-full__body p-4">
                                     <span class="church-tag">{{ iglesia.comuna || 'Sin comuna' }}</span>
                                     <h3 class="mt-3">{{ iglesia.nombre }}</h3>
                                     <p class="church-card-full__region mb-1">{{ iglesia.region || 'Sin región' }}</p>
-                                    <p
-                                        v-if="iglesia.googleMapsName"
-                                        class="church-card-full__maps-name mb-4"
-                                    >
+                                    <p v-if="iglesia.googleMapsName" class="church-card-full__maps-name mb-4">
                                         {{ iglesia.googleMapsName }}
                                     </p>
 
-                                    <div class="church-card-full__actions d-flex gap-2">
-                                        <button
-                                            type="button"
-                                            class="btn-secondary flex-grow-1"
-                                            @click="verEnMapa(iglesia)"
-                                        >
-                                            Mapa
-                                        </button>
+                                    <div class="church-card-full__image-wrap">
+                                        <img v-if="getCardImage(iglesia)" :src="getCardImage(iglesia)"
+                                            :alt="iglesia.nombre" class="church-card-full__image"
+                                            @error="handleImageError" />
 
-                                        <RouterLink
-                                            :to="`/iglesias/${iglesia.slug}`"
-                                            class="btn-primary flex-grow-1 text-center text-decoration-none"
-                                        >
-                                            Detalle
-                                        </RouterLink>
+                                        <div class="church-card-full__placeholder">
+                                            <font-awesome-icon :icon="['fas', 'church']" class="placeholder-icon" />
+                                        </div>
                                     </div>
                                 </div>
                             </article>
@@ -230,7 +174,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { iglesias } from '@/data/iglesias'
 
-const DEFAULT_FOTO = '/images/iglesias/default.jpg'
+const DEFAULT_FOTO = ''
 const SANTIAGO_COORDS = [-33.4489, -70.6693]
 
 const busqueda = ref('')
@@ -248,6 +192,18 @@ const ipnIcon = L.icon({
     popupAnchor: [0, -30],
     className: 'map-custom-icon'
 })
+
+const handleImageError = (event) => {
+    event.target.style.display = 'none'
+
+    const placeholder = event.target
+        .closest('.church-card-full__image-wrap')
+        ?.querySelector('.church-card-full__placeholder')
+
+    if (placeholder) {
+        placeholder.style.display = 'flex'
+    }
+}
 
 const normalizarTexto = (texto = '') =>
     texto
@@ -356,9 +312,9 @@ const distanceInKm = (lat1, lng1, lat2, lng2) => {
     const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(toRad(lat1)) *
-            Math.cos(toRad(lat2)) *
-            Math.sin(dLng / 2) *
-            Math.sin(dLng / 2)
+        Math.cos(toRad(lat2)) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2)
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     return R * c
@@ -848,6 +804,33 @@ onUnmounted(() => {
 .slide-up-leave-to {
     transform: translateY(110%);
     opacity: 0;
+}
+
+.church-card-full__image-wrap {
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.church-card-full__placeholder {
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at center, rgba(203, 164, 94, 0.12), transparent 55%),
+        rgba(255, 255, 255, 0.035);
+}
+
+.church-card-full__image-wrap:not(:has(img)) .church-card-full__placeholder {
+    display: flex;
+}
+
+.placeholder-icon {
+    font-size: 3.5rem;
+    color: rgba(203, 164, 94, 0.85);
 }
 
 @media (max-width: 991px) {

@@ -18,8 +18,7 @@
           <h2>Información para la Iglesia y la Misión</h2>
           <p>
             Este espacio reunirá avisos internos, publicaciones futuras y contenido
-            audiovisual del canal oficial de la misión, permitiendo mantener una
-            comunicación clara, ordenada y oportuna.
+            audiovisual del canal oficial de la misión.
           </p>
         </aside>
       </div>
@@ -31,25 +30,16 @@
         <p class="section-eyebrow">Canal oficial</p>
         <h2 class="section-title">Videos de la misión</h2>
         <p class="section-description">
-          
+          Contenido audiovisual destacado del canal oficial de la misión.
         </p>
       </div>
 
       <div class="videos-grid">
-        <article
-          v-for="video in featuredVideos"
-          :key="video.id"
-          class="glass-panel video-card"
-        >
+        <article v-for="video in featuredVideos" :key="video.id" class="glass-panel video-card">
           <div class="video-card__embed">
-            <iframe
-              :src="video.embedUrl"
-              :title="video.title"
-              loading="lazy"
+            <iframe :src="video.embedUrl" :title="video.title" loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-              referrerpolicy="strict-origin-when-cross-origin"
-            ></iframe>
+              allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
           </div>
 
           <div class="video-card__body">
@@ -58,12 +48,7 @@
             <p class="video-card__summary">{{ video.summary }}</p>
 
             <div class="video-card__actions">
-              <a
-                :href="video.url"
-                class="btn-secondary"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a :href="video.url" class="btn-secondary" target="_blank" rel="noopener noreferrer">
                 Ver en YouTube
               </a>
             </div>
@@ -72,7 +57,7 @@
       </div>
     </section>
 
-    <!-- NOTICIAS -->
+    <!-- COMUNICADOS -->
     <section class="section-container section-block">
       <div class="section-heading">
         <p class="section-eyebrow">Publicaciones</p>
@@ -83,7 +68,25 @@
         </p>
       </div>
 
-      <div class="glass-panel news-empty">
+      <div v-if="comunicados.length" class="comunicados-grid">
+        <article v-for="item in comunicados" :key="item.id" class="comunicado-card">
+          <button class="comunicado-image-link" @click="openComunicado(item)">
+            <img :src="item.image" :alt="item.title" class="comunicado-image" loading="lazy" />
+          </button>
+
+          <div class="comunicado-content">
+            <p class="comunicado-date">{{ item.date }}</p>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+
+            <button class="btn-secondary" @click="openComunicado(item)">
+              Ver comunicado
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <div v-else class="glass-panel news-empty">
         <div class="news-empty__icon">
           <font-awesome-icon :icon="['fas', 'calendar-days']" />
         </div>
@@ -91,15 +94,37 @@
         <h3>Sin información por ahora</h3>
         <p>
           Actualmente no hay noticias o comunicados publicados en esta sección.
-          Próximamente se incorporarán avisos oficiales, publicaciones especiales
-          y novedades relevantes para la misión.
         </p>
       </div>
     </section>
+
+    <!-- MODAL COMUNICADO -->
+    <div v-if="selectedComunicado" class="comunicado-modal" @click.self="closeComunicado">
+      <div class="comunicado-modal__content">
+        <button class="comunicado-modal__close" @click="closeComunicado">
+          ×
+        </button>
+
+        <img :src="selectedComunicado.image" :alt="selectedComunicado.title" class="comunicado-modal__image" />
+      </div>
+    </div>
   </main>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { comunicados } from '@/data/comunicados'
+
+const selectedComunicado = ref(null)
+
+const openComunicado = (item) => {
+  selectedComunicado.value = item
+}
+
+const closeComunicado = () => {
+  selectedComunicado.value = null
+}
+
 const featuredVideos = [
   {
     id: 'jtSa6783f-g',
@@ -218,6 +243,116 @@ const featuredVideos = [
   margin-top: auto;
 }
 
+/* COMUNICADOS */
+.comunicados-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 430px);
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.comunicado-card {
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--theme-border-subtle);
+  background: var(--theme-panel-bg-soft);
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.comunicado-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--theme-border-soft);
+  box-shadow: var(--shadow-soft);
+}
+
+.comunicado-image-link {
+  width: 100%;
+  display: block;
+  border: 0;
+  padding: 0;
+  background: #111;
+  cursor: pointer;
+}
+
+.comunicado-image {
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+  display: block;
+  background: #111;
+}
+
+.comunicado-content {
+  padding: 1rem;
+  text-align: center;
+}
+
+.comunicado-date {
+  color: var(--theme-secondary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.comunicado-content h3 {
+  margin-bottom: 0.65rem;
+}
+
+.comunicado-content p:not(.comunicado-date) {
+  color: var(--theme-text-soft);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+/* MODAL */
+.comunicado-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comunicado-modal__content {
+  position: relative;
+  width: min(96vw, 980px);
+  max-height: 92vh;
+  border-radius: 20px;
+  background: #111;
+  border: 1px solid var(--theme-border-subtle);
+  overflow: hidden;
+}
+
+.comunicado-modal__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.comunicado-modal__image {
+  width: 100%;
+  max-height: 92vh;
+  object-fit: contain;
+  display: block;
+}
+
+/* EMPTY */
 .news-empty {
   padding: 2rem;
   text-align: center;
@@ -276,6 +411,18 @@ const featuredVideos = [
 
   .video-card__embed iframe {
     min-height: 220px;
+  }
+
+  .comunicado-image {
+    height: 240px;
+  }
+
+  .comunicado-modal {
+    padding: 0.75rem;
+  }
+
+  .comunicado-modal__content {
+    width: 100%;
   }
 
   .news-empty {

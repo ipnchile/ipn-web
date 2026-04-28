@@ -7,15 +7,20 @@ const routes = [
         name: 'home',
         component: () => import('../views/HomeView.vue'),
     },
-    // {
-    //     path: '/',
-    //     name: 'proximamente',
-    //     component: () => import('../views/ProximamenteView.vue'),
-    // },
     {
         path: '/quienes-somos',
         name: 'quienes-somos',
         component: () => import('../views/institucional/QuienesSomosView.vue'),
+    },
+    {
+        path: '/quienes-somos/imagen-corporativa',
+        name: 'imagen-corporativa',
+        component: () => import('../views/institucional/ImagenCorporativaView.vue'),
+    },
+    {
+        path: '/quienes-somos/organizacion',
+        name: 'organizacion-ipn',
+        component: () => import('../views/institucional/OrganizacionView.vue'),
     },
     {
         path: '/quienes-somos/gobierno',
@@ -26,6 +31,11 @@ const routes = [
         path: '/quienes-somos/fe',
         name: 'lo-que-creemos',
         component: () => import('../views/institucional/FeView.vue'),
+    },
+    {
+        path: '/sem',
+        name: 'sem',
+        component: () => import('../views/institucional/SemView.vue'),
     },
 
     // --- DEPARTAMENTOS ---
@@ -43,6 +53,11 @@ const routes = [
         path: '/departamentos/jumix',
         name: 'jumix',
         component: () => import('../views/departamentos/JumixView.vue'),
+    },
+    {
+        path: '/departamentos/rrpp',
+        name: 'rrpp',
+        component: () => import('../views/departamentos/ComunicacionesProtocoloView.vue'),
     },
 
     // --- ACTUALIDAD ---

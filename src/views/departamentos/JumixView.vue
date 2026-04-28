@@ -21,12 +21,8 @@
 
                 <aside class="card jumix-hero__highlight">
                     <div class="jumix-hero__logo-wrap">
-                        <img
-                            v-if="departmentLogo"
-                            :src="departmentLogo"
-                            alt="Logo oficial del Departamento JUMIX"
-                            class="jumix-hero__logo"
-                        />
+                        <img v-if="departmentLogo" :src="departmentLogo" alt="Logo oficial del Departamento JUMIX"
+                            class="jumix-hero__logo" />
                         <div v-else class="jumix-hero__logo jumix-hero__logo--placeholder">
                             <font-awesome-icon :icon="['fas', 'image']" />
                         </div>
@@ -100,12 +96,7 @@
                     <div class="official-card__topbar"></div>
 
                     <div class="official-card__photo-wrap">
-                        <img
-                            v-if="leader.photo"
-                            :src="leader.photo"
-                            :alt="leader.name"
-                            class="official-card__photo"
-                        />
+                        <img v-if="leader.photo" :src="leader.photo" :alt="leader.name" class="official-card__photo" />
                         <div v-else class="official-card__photo official-card__photo--fallback">
                             <font-awesome-icon :icon="['fas', 'user']" />
                         </div>
@@ -132,21 +123,42 @@
         <section id="galeria" class="section-container section-block">
             <div class="section-heading jumix-heading-center">
                 <p class="section-eyebrow">Galería</p>
-                <h2 class="section-title">Encuentros y actividades</h2>
+                <h2 class="section-title">Jumix Nacional 2026</h2>
                 <p class="section-description jumix-centered-text">
-                    Espacio para compartir registros de congresos, encuentros juveniles,
-                    jornadas especiales y actividades del departamento.
+                    Registro fotográfico por bloques del encuentro nacional.
                 </p>
             </div>
 
-            <div v-if="galleryPhotos.length" class="gallery-grid jumix-gallery-grid">
-                <article v-for="photo in galleryPhotos" :key="photo.src" class="gallery-card">
-                    <img :src="photo.src" :alt="photo.title" class="gallery-image" />
-                    <div class="gallery-content">
-                        <h3>{{ photo.title }}</h3>
-                        <p>{{ photo.description }}</p>
-                    </div>
-                </article>
+            <div class="jumix-gallery-toolbar">
+                <button v-for="block in galleryBlocks" :key="block.id" class="gallery-filter-btn"
+                    :class="{ active: selectedBlock === block.id }" @click="changeBlock(block.id)">
+                    {{ block.title }}
+                </button>
+            </div>
+
+            <div v-if="filteredPhotos.length" class="jumix-carousel">
+                <div class="jumix-main-photo">
+                    <img :src="currentPhoto.src" :alt="currentPhoto.title" loading="lazy" />
+
+                    <button class="jumix-nav jumix-nav--prev" @click="prevPhoto">‹</button>
+                    <button class="jumix-nav jumix-nav--next" @click="nextPhoto">›</button>
+                </div>
+
+                <Swiper class="jumix-thumbs-swiper" :modules="modules" :space-between="10" :slides-per-view="5"
+                    :free-mode="true" :breakpoints="{
+                        320: { slidesPerView: 3 },
+                        640: { slidesPerView: 5 },
+                        980: { slidesPerView: 7 },
+                        1200: { slidesPerView: 9 }
+                    }">
+                    <SwiperSlide v-for="(photo, index) in filteredPhotos" :key="`thumb-${photo.id}`"
+                        class="jumix-thumb-slide" :class="{ 'is-active': currentPhotoIndex === index }"
+                        @click="currentPhotoIndex = index">
+                        <button class="jumix-thumb-button" type="button">
+                            <img :src="photo.src" :alt="photo.title" loading="lazy" />
+                        </button>
+                    </SwiperSlide>
+                </Swiper>
             </div>
 
             <div v-else class="glass-panel jumix-gallery-empty">
@@ -154,11 +166,9 @@
                     <font-awesome-icon :icon="['fas', 'calendar-days']" />
                 </div>
 
-                <h3>Sin eventos aún</h3>
+                <h3>Sin fotografías disponibles</h3>
                 <p>
-                    Por el momento no hay eventos o registros publicados.
-                    Esta sección se irá actualizando con futuras actividades
-                    del Departamento JUMIX.
+                    Este bloque todavía no tiene fotografías publicadas.
                 </p>
             </div>
         </section>
@@ -177,7 +187,56 @@
 </template>
 
 <script setup>
+import { computed, ref, watch } from 'vue'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { FreeMode } from 'swiper/modules'
+
+import 'swiper/css'
+import 'swiper/css/free-mode'
+
 import departmentLogo from '@/assets/img/departamentos/JUMIX_NACIONAL.png'
+import { galleryBlocks, galleryPhotos } from '@/data/jumixGallery'
+
+const selectedBlock = ref(galleryBlocks[0]?.id || null)
+const currentPhotoIndex = ref(0)
+
+const modules = [FreeMode]
+
+const filteredPhotos = computed(() =>
+    galleryPhotos.filter((photo) => photo.blockId === selectedBlock.value)
+)
+
+const currentPhoto = computed(() =>
+    filteredPhotos.value[currentPhotoIndex.value] || filteredPhotos.value[0]
+)
+
+const changeBlock = (blockId) => {
+    selectedBlock.value = blockId
+    currentPhotoIndex.value = 0
+}
+
+const selectPhoto = (index) => {
+    currentPhotoIndex.value = index
+}
+
+const nextPhoto = () => {
+    if (!filteredPhotos.value.length) return
+
+    currentPhotoIndex.value =
+        (currentPhotoIndex.value + 1) % filteredPhotos.value.length
+}
+
+const prevPhoto = () => {
+    if (!filteredPhotos.value.length) return
+
+    currentPhotoIndex.value =
+        (currentPhotoIndex.value - 1 + filteredPhotos.value.length) %
+        filteredPhotos.value.length
+}
+
+watch(filteredPhotos, () => {
+    currentPhotoIndex.value = 0
+})
 
 const nationalBoard = [
     {
@@ -186,8 +245,8 @@ const nationalBoard = [
         period: 'Directiva Nacional',
         description:
             'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional JUMIX.',
-        photo: '',
-        email: 'jefe.jumix@ipnchile.cl'
+        photo: 'https://media.ipnchile.cl/perfiles/jumix/Jefe%20Nacional%20-%20Jumix.webp',
+        email: 'jumix.ipn@ipnchile.cl'
     },
     {
         role: 'Secretario Nacional',
@@ -195,8 +254,8 @@ const nationalBoard = [
         period: 'Directiva Nacional',
         description:
             'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades juveniles.',
-        photo: '',
-        email: 'secretario.jumix@ipnchile.cl'
+        photo: 'https://media.ipnchile.cl/perfiles/jumix/Secretario%20NAcional%20-%20%20Jumix.webp',
+        email: 'jumix.ipn@ipnchile.cl'
     },
     {
         role: 'Tesorero Nacional',
@@ -204,28 +263,10 @@ const nationalBoard = [
         period: 'Directiva Nacional',
         description:
             'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
-        photo: '',
-        email: 'tesoreria.jumix@ipnchile.cl'
+        photo: 'https://media.ipnchile.cl/perfiles/jumix/Tesorera%20Nacional%20-%20Jumix.webp',
+        email: 'jumix.ipn@ipnchile.cl'
     }
 ]
-
-/*
-  La galería queda vacía por ahora.
-  Más adelante puede agregar cualquier tipo de contenido
-  simplemente incorporando objetos al arreglo.
-*/
-const galleryPhotos = []
-
-/*
-Ejemplo futuro:
-const galleryPhotos = [
-    {
-        src: '/images/departamentos/jumix/actividad-1.jpg',
-        title: 'Encuentro juvenil',
-        description: 'Jornada de comunión, enseñanza y servicio.'
-    }
-]
-*/
 </script>
 
 <style scoped>
@@ -337,7 +378,8 @@ const galleryPhotos = [
     margin-inline: auto;
 }
 
-.jumix-purpose-grid {
+.jumix-purpose-grid,
+.jumix-board-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.2rem;
@@ -369,12 +411,6 @@ const galleryPhotos = [
     margin-bottom: 0;
     color: var(--theme-text-soft);
     line-height: 1.7;
-}
-
-.jumix-board-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.2rem;
 }
 
 .official-card {
@@ -483,8 +519,138 @@ const galleryPhotos = [
     color: var(--theme-secondary);
 }
 
-.jumix-gallery-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+/* GALERÍA */
+.jumix-gallery-toolbar {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.gallery-filter-btn {
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--theme-border-subtle);
+    background: var(--theme-panel-bg-soft);
+    color: var(--theme-text);
+    cursor: pointer;
+    font-weight: 700;
+    transition:
+        color var(--transition-base),
+        border-color var(--transition-base),
+        background var(--transition-base),
+        transform var(--transition-base);
+}
+
+.gallery-filter-btn:hover,
+.gallery-filter-btn.active {
+    border-color: var(--theme-secondary);
+    background: rgba(var(--theme-secondary-rgb), 0.16);
+    color: var(--theme-secondary);
+    transform: translateY(-2px);
+}
+
+.jumix-carousel {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.jumix-main-photo {
+    position: relative;
+    width: 100%;
+    height: min(72vh, 720px);
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid var(--theme-border-subtle);
+    background: #111;
+    box-shadow: var(--shadow-soft);
+}
+
+.jumix-main-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #111;
+}
+
+.jumix-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.58);
+    color: var(--theme-secondary);
+    font-size: 2.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.jumix-nav--prev {
+    left: 1rem;
+}
+
+.jumix-nav--next {
+    right: 1rem;
+}
+
+.jumix-thumbs-swiper {
+    margin-top: 1rem;
+    padding-bottom: 0.4rem;
+}
+
+.jumix-thumbs-swiper .swiper-slide {
+    height: 88px;
+    opacity: 0.45;
+    cursor: pointer;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    background: #111;
+    transition:
+        opacity var(--transition-base),
+        border-color var(--transition-base),
+        transform var(--transition-base);
+}
+
+.jumix-thumbs-swiper .swiper-slide:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+.jumix-thumbs-swiper .swiper-slide.is-active {
+    opacity: 1;
+    border-color: var(--theme-secondary);
+}
+
+.jumix-thumbs-swiper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.jumix-thumb-slide {
+    cursor: pointer;
+}
+
+.jumix-thumb-button {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.jumix-thumb-button img {
+    pointer-events: none;
 }
 
 .jumix-gallery-empty {
@@ -542,8 +708,7 @@ const galleryPhotos = [
 
     .jumix-hero__panel,
     .jumix-purpose-grid,
-    .jumix-board-grid,
-    .jumix-gallery-grid {
+    .jumix-board-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -564,6 +729,29 @@ const galleryPhotos = [
     .official-card__contact-item {
         flex-direction: column;
         gap: 0.3rem;
+    }
+
+    .jumix-main-photo {
+        height: 420px;
+        border-radius: 16px;
+    }
+
+    .jumix-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 2rem;
+    }
+
+    .jumix-nav--prev {
+        left: 0.5rem;
+    }
+
+    .jumix-nav--next {
+        right: 0.5rem;
+    }
+
+    .jumix-thumbs-swiper .swiper-slide {
+        height: 68px;
     }
 }
 </style>

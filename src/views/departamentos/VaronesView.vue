@@ -193,7 +193,7 @@ const nationalBoard = [
     period: 'Directiva Nacional',
     description:
       'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional de Varones.',
-    photo: '',
+    photo: 'https://media.ipnchile.cl/perfiles/varones/Hno%20Stalin%20-%20Jefe%20Nacional%20Varones.webp',
     email: 'jefe.varones@ipnchile.cl'
   },
   {
@@ -202,7 +202,7 @@ const nationalBoard = [
     period: 'Directiva Nacional',
     description:
       'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades.',
-    photo: '',
+    photo: 'https://media.ipnchile.cl/perfiles/varones/Hno%20Alvaro%20Gonzalez%20-%20Secretario%20Nacional.webp',
     email: 'secretario.varones@ipnchile.cl'
   },
   {
@@ -211,7 +211,7 @@ const nationalBoard = [
     period: 'Directiva Nacional',
     description:
       'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
-    photo: '',
+    photo: 'https://media.ipnchile.cl/perfiles/varones/Hno%20Claudio%20Ayala%20-%20Tesorero%20Nacional.webp',
     email: 'tesoreria.varones@ipnchile.cl'
   }
 ]

@@ -177,7 +177,7 @@ const nationalBoard = [
         period: 'Directiva Nacional',
         description:
             'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional Dorcas.',
-        photo: '',
+        photo: 'https://media.ipnchile.cl/perfiles/dorcas/Jefa%20Nacional.webp',
         email: 'jefa.dorcas@ipnchile.cl'
     },
     {
@@ -186,7 +186,7 @@ const nationalBoard = [
         period: 'Directiva Nacional',
         description:
             'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades.',
-        photo: '',
+        photo: 'https://media.ipnchile.cl/perfiles/dorcas/Secretaria%20Nacional.webp',
         email: 'secretaria.dorcas@ipnchile.cl'
     },
     {
@@ -195,7 +195,7 @@ const nationalBoard = [
         period: 'Directiva Nacional',
         description:
             'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
-        photo: '',
+        photo: 'https://media.ipnchile.cl/perfiles/dorcas/Tesorera%20Nacional.webp',
         email: 'tesoreria.dorcas@ipnchile.cl'
     }
 ]

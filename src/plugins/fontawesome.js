@@ -1,10 +1,15 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-/* ICONOS SOLID */
+/* =========================================
+   ICONOS SOLID
+   ========================================= */
 import {
   faScroll,
   faBookBible,
+  faBookOpen,
+  faGraduationCap,
+  faPersonChalkboard,
   faQuoteLeft,
   faChurch,
   faLocationDot,
@@ -12,11 +17,36 @@ import {
   faUserTie,
   faUserNurse,
   faUser,
+  faImage,
   faEnvelope,
-  faCalendarDays
+  faCalendarDays,
+
+  /* QUIÉNES SOMOS */
+  faEye,
+  faGlobe,
+  faHeart,
+  faCross,
+  faBook,
+  faGavel,
+
+  /* RRPP */
+  faBullhorn,
+  faClipboardList,
+
+  /* ORGANIZACIÓN */
+  faHandshake,
+  faLandmark,
+  faSitemap,
+  faScaleBalanced,
+  faUsers,
+  faBuildingColumns,
+  faPeopleGroup,
+  faUserShield
 } from '@fortawesome/free-solid-svg-icons'
 
-/* ICONOS BRANDS */
+/* =========================================
+   ICONOS BRANDS
+   ========================================= */
 import {
   faFacebookF,
   faInstagram,
@@ -24,10 +54,16 @@ import {
   faFacebook
 } from '@fortawesome/free-brands-svg-icons'
 
+/* =========================================
+   REGISTRO GLOBAL DE ICONOS
+   ========================================= */
 library.add(
-  /* solid */
+  /* BASE */
   faScroll,
   faBookBible,
+  faBookOpen,
+  faGraduationCap,
+  faPersonChalkboard,
   faQuoteLeft,
   faChurch,
   faLocationDot,
@@ -35,10 +71,33 @@ library.add(
   faUserTie,
   faUserNurse,
   faUser,
+  faImage,
   faEnvelope,
   faCalendarDays,
 
-  /* brands */
+  /* QUIÉNES SOMOS */
+  faEye,
+  faGlobe,
+  faHeart,
+  faCross,
+  faBook,
+  faGavel,
+
+  /* RRPP */
+  faBullhorn,
+  faClipboardList,
+
+  /* ORGANIZACIÓN */
+  faHandshake,
+  faLandmark,
+  faSitemap,
+  faScaleBalanced,
+  faUsers,
+  faBuildingColumns,
+  faPeopleGroup,
+  faUserShield,
+
+  /* BRANDS */
   faFacebookF,
   faInstagram,
   faYoutube,

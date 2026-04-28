@@ -257,13 +257,6 @@
 import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import fotoPresidente from '@/assets/img/directorio/2025-2028/PRESIDENTE.jpeg'
-import fotoVicepresidente from '@/assets/img/directorio/2025-2028/VICEPRESIDENTE.jpeg'
-import fotoSecretario from '@/assets/img/directorio/2025-2028/SECRETARIO.jpeg'
-import fotoTesorero from '@/assets/img/directorio/2025-2028/TESORERO.jpeg'
-import fotoProsecretario from '@/assets/img/directorio/2025-2028/PROSECRETARIO.jpeg'
-import fotoDirector from '@/assets/img/directorio/2025-2028/DIRECTOR.jpeg'
-
 
 
 
@@ -271,37 +264,37 @@ const directorioNacional = [
     {
         cargo: 'Pastor Presidente',
         nombre: 'Pr. Presbítero Rev. Rosamel Ceballo',
-        foto: fotoPresidente
+        foto: 'https://media.ipnchile.cl/perfiles/directorio/PRESIDENTE.webp'
     },
     {
         cargo: 'Pastor Vicepresidente',
         nombre: 'Pr. Presbítero Rev. Marco Alarcón',
-        foto: fotoVicepresidente
+        foto: 'https://media.ipnchile.cl/perfiles/directorio/VICEPRESIDENTE.webp'
     },
     {
         cargo: 'Pastor Secretario',
         nombre: 'Pr. Diacono Rev. Alejandro Molina',
-        foto: fotoSecretario
+        foto: 'https://media.ipnchile.cl/perfiles/directorio/SECRETARIO.webp'
     },
     {
         cargo: 'Pastor Tesorero',
         nombre: 'Pr. Presbítero Rev. Juan Montecino',
-        foto: fotoTesorero
+        foto: 'https://media.ipnchile.cl/perfiles/directorio/TESORERO.webp'
     },
     {
         cargo: 'Pastor Prosecretario',
         nombre: 'Pr. Diacono Rev. Andrés Sepulveda',
-        foto: fotoProsecretario
+        foto: 'https://media.ipnchile.cl/perfiles/directorio/PROSECRETARIO.webp'
     },
     {
         cargo: 'Pastor Protesorero',
         nombre: 'Pr. Presbítero Rev. Guillermo Herrada',
-        foto: ''
+        foto: 'https://media.ipnchile.cl/perfiles/directorio/PROTESORERO.webp'
     },
     {
         cargo: 'Pastor Director',
         nombre: 'Pr. Presbítero Rev. Pascual Silva',
-        foto: fotoDirector
+        foto: 'https://media.ipnchile.cl/perfiles/directorio/DIRECTOR.webp'
     }
 ]
 
@@ -309,27 +302,27 @@ const tribunalEtica = [
     {
         cargo: 'Director',
         nombre: 'Pr. Presbítero Rev. Hernan Sepulveda',
-        foto: ''
+        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Hernan%20Sepulveda.webp'
     },
     {
         cargo: 'Secretario',
         nombre: 'Pr. Presbítero Rev. Luis Mondaca',
-        foto: ''
+        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Luis%20Mondaca.webp'
     },
     {
         cargo: 'Director',
         nombre: 'Pr. Presbítero Rev. Raúl Vidal',
-        foto: ''
+        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Raul%20Vidal.webp'
     },
     {
         cargo: 'Director',
         nombre: 'Pr. Presbítero Rev. Nelsón Mondaca',
-        foto: ''
+        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pasto%20Nelson%20Mondaca.webp'
     },
     {
         cargo: 'Director',
         nombre: 'Pr. Presbítero Rev. Alex Brana',
-        foto: ''
+        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Alex%20Brana.webp'
     }
 ]
 

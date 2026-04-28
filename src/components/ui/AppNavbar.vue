@@ -1,13 +1,7 @@
 <template>
   <header class="navbar" :class="{ 'navbar--scrolled': isScrolled }">
     <div class="navbar__container">
-      <!-- LOGO -->
-      <RouterLink
-        to="/"
-        class="navbar__brand"
-        aria-label="Ir al inicio"
-        @click="closeAll"
-      >
+      <RouterLink to="/" class="navbar__brand" aria-label="Ir al inicio" @click="closeAll">
         <img
           class="navbar__logo"
           src="@/assets/img/logos/ipn-navbar-white.png"
@@ -15,25 +9,43 @@
         />
       </RouterLink>
 
-      <!-- NAVEGACIÓN DESKTOP -->
       <nav class="navbar__menu">
-        <RouterLink
-          to="/"
-          class="navbar__link"
-          :class="{ 'active': isRoute('/') }"
-        >
+        <RouterLink to="/" class="navbar__link" :class="{ active: isRoute('/') }">
           Inicio
         </RouterLink>
 
-        <RouterLink
-          to="/quienes-somos"
-          class="navbar__link"
-          :class="{ 'active': isSection('/quienes-somos') }"
+        <div
+          class="navbar__dropdown"
+          @mouseenter="handleMouseEnter('quienesSomos')"
+          @mouseleave="handleMouseLeave"
         >
-          Quiénes Somos
-        </RouterLink>
+          <button
+            type="button"
+            class="navbar__link navbar__dropdown-title"
+            :class="{ active: isSection('/quienes-somos') || dropdowns.quienesSomos }"
+            @click="toggleDropdown('quienesSomos')"
+          >
+            <span>Quiénes Somos</span>
+            <svg class="navbar__dropdown-icon" :class="{ open: dropdowns.quienesSomos }" viewBox="0 0 20 20">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
 
-        <!-- DROPDOWN DEPARTAMENTOS -->
+          <transition name="dropdown-fade">
+            <div v-if="dropdowns.quienesSomos" class="navbar__dropdown-content">
+              <RouterLink to="/quienes-somos" :class="{ active: isRoute('/quienes-somos') }">
+                Historia
+              </RouterLink>
+              <RouterLink to="/quienes-somos/imagen-corporativa" :class="{ active: isRoute('/quienes-somos/imagen-corporativa') }">
+                Nueva Imagen Corporativa
+              </RouterLink>
+              <RouterLink to="/quienes-somos/organizacion" :class="{ active: isRoute('/quienes-somos/organizacion') }">
+                Organización
+              </RouterLink>
+            </div>
+          </transition>
+        </div>
+
         <div
           class="navbar__dropdown"
           @mouseenter="handleMouseEnter('departamentos')"
@@ -42,29 +54,26 @@
           <button
             type="button"
             class="navbar__link navbar__dropdown-title"
-            :class="{ 'active': isSection('/departamentos') || dropdowns.departamentos }"
+            :class="{ active: isSection('/departamentos') || dropdowns.departamentos }"
             @click="toggleDropdown('departamentos')"
           >
             <span>Departamentos</span>
-            <svg 
-              class="navbar__dropdown-icon" 
-              :class="{ 'open': dropdowns.departamentos }" 
-              viewBox="0 0 20 20"
-            >
+            <svg class="navbar__dropdown-icon" :class="{ open: dropdowns.departamentos }" viewBox="0 0 20 20">
               <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
 
           <transition name="dropdown-fade">
             <div v-if="dropdowns.departamentos" class="navbar__dropdown-content">
-              <RouterLink to="/departamentos/varones" :class="{ 'active': isRoute('/departamentos/varones') }">Varones</RouterLink>
-              <RouterLink to="/departamentos/dorcas" :class="{ 'active': isRoute('/departamentos/dorcas') }">Dorcas</RouterLink>
-              <RouterLink to="/departamentos/jumix" :class="{ 'active': isRoute('/departamentos/jumix') }">Jumix</RouterLink>
+              <RouterLink to="/departamentos/varones" :class="{ active: isRoute('/departamentos/varones') }">Varones</RouterLink>
+              <RouterLink to="/departamentos/dorcas" :class="{ active: isRoute('/departamentos/dorcas') }">Dorcas</RouterLink>
+              <RouterLink to="/departamentos/jumix" :class="{ active: isRoute('/departamentos/jumix') }">Jumix</RouterLink>
+              <RouterLink to="/departamentos/rrpp" :class="{ active: isRoute('/departamentos/rrpp') }">RRPP</RouterLink>
+              <RouterLink to="/sem" :class="{ active: isRoute('/sem') }">Seminario Eclesiástico Mayor</RouterLink>
             </div>
           </transition>
         </div>
 
-        <!-- DROPDOWN ACTUALIDAD -->
         <div
           class="navbar__dropdown"
           @mouseenter="handleMouseEnter('actualidad')"
@@ -73,40 +82,28 @@
           <button
             type="button"
             class="navbar__link navbar__dropdown-title"
-            :class="{ 'active': isSection('/actualidad') || dropdowns.actualidad }"
+            :class="{ active: isSection('/actualidad') || dropdowns.actualidad }"
             @click="toggleDropdown('actualidad')"
           >
             <span>Actualidad</span>
-            <svg 
-              class="navbar__dropdown-icon" 
-              :class="{ 'open': dropdowns.actualidad }" 
-              viewBox="0 0 20 20"
-            >
+            <svg class="navbar__dropdown-icon" :class="{ open: dropdowns.actualidad }" viewBox="0 0 20 20">
               <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
 
           <transition name="dropdown-fade">
             <div v-if="dropdowns.actualidad" class="navbar__dropdown-content">
-              <RouterLink to="/actualidad/noticias" :class="{ 'active': isRoute('/actualidad/noticias') }">Noticias</RouterLink>
-              <RouterLink to="/actualidad/eventos" :class="{ 'active': isRoute('/actualidad/eventos') }">Eventos</RouterLink>
+              <RouterLink to="/actualidad/noticias" :class="{ active: isRoute('/actualidad/noticias') }">Noticias</RouterLink>
+              <RouterLink to="/actualidad/eventos" :class="{ active: isRoute('/actualidad/eventos') }">Eventos</RouterLink>
             </div>
           </transition>
         </div>
 
-        <RouterLink
-          to="/donaciones"
-          class="navbar__link"
-          :class="{ 'active': isRoute('/donaciones') }"
-        >
+        <RouterLink to="/donaciones" class="navbar__link" :class="{ active: isRoute('/donaciones') }">
           Donaciones
         </RouterLink>
 
-        <RouterLink
-          to="/contacto"
-          class="navbar__link"
-          :class="{ 'active': isRoute('/contacto') }"
-        >
+        <RouterLink to="/contacto" class="navbar__link" :class="{ active: isRoute('/contacto') }">
           Contacto
         </RouterLink>
 
@@ -115,7 +112,6 @@
         </RouterLink>
       </nav>
 
-      <!-- BOTÓN MÓVIL -->
       <button
         class="navbar__toggle"
         @click="toggleMenu"
@@ -126,18 +122,25 @@
       </button>
     </div>
 
-    <!-- MENÚ MÓVIL -->
     <transition name="mobile-fade">
       <div v-if="menuOpen" class="navbar__mobile">
         <div class="navbar__mobile-container">
-          <RouterLink to="/" :class="{ 'active': isRoute('/') }">Inicio</RouterLink>
-          <RouterLink to="/quienes-somos" :class="{ 'active': isSection('/quienes-somos') }">Quiénes Somos</RouterLink>
-          
+          <RouterLink to="/" :class="{ active: isRoute('/') }">Inicio</RouterLink>
+
+          <div class="navbar__mobile-section">
+            <span class="navbar__mobile-label">Quiénes Somos</span>
+            <RouterLink to="/quienes-somos">Historia</RouterLink>
+            <RouterLink to="/quienes-somos/imagen-corporativa">Nueva Imagen Corporativa</RouterLink>
+            <RouterLink to="/quienes-somos/organizacion">Organización</RouterLink>
+          </div>
+
           <div class="navbar__mobile-section">
             <span class="navbar__mobile-label">Departamentos</span>
             <RouterLink to="/departamentos/varones">Varones</RouterLink>
             <RouterLink to="/departamentos/dorcas">Dorcas</RouterLink>
             <RouterLink to="/departamentos/jumix">Jumix</RouterLink>
+            <RouterLink to="/departamentos/rrpp">RRPP</RouterLink>
+            <RouterLink to="/sem">Seminario Eclesiástico Mayor</RouterLink>
           </div>
 
           <div class="navbar__mobile-section">
@@ -146,9 +149,9 @@
             <RouterLink to="/actualidad/eventos">Eventos</RouterLink>
           </div>
 
-          <RouterLink to="/donaciones" :class="{ 'active': isRoute('/donaciones') }">Donaciones</RouterLink>
-          <RouterLink to="/contacto" :class="{ 'active': isRoute('/contacto') }">Contacto</RouterLink>
-          
+          <RouterLink to="/donaciones" :class="{ active: isRoute('/donaciones') }">Donaciones</RouterLink>
+          <RouterLink to="/contacto" :class="{ active: isRoute('/contacto') }">Contacto</RouterLink>
+
           <RouterLink to="/sumate" class="navbar__mobile-cta">
             Súmate
           </RouterLink>
@@ -166,60 +169,58 @@ const route = useRoute()
 const menuOpen = ref(false)
 const isScrolled = ref(false)
 
-// Estado unificado de dropdowns
 const dropdowns = reactive({
+  quienesSomos: false,
   departamentos: false,
   actualidad: false
 })
 
 let closeTimeout = null
 
-// Helpers de ruta
 const isRoute = (path) => route.path === path
 const isSection = (base) => route.path.startsWith(base)
 
-// Lógica de Menú y Dropdowns
+const closeDropdowns = () => {
+  Object.keys(dropdowns).forEach((key) => {
+    dropdowns[key] = false
+  })
+}
+
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
-  if (menuOpen.value) {
-    dropdowns.departamentos = false
-    dropdowns.actualidad = false
-  }
+  if (menuOpen.value) closeDropdowns()
 }
 
 const handleMouseEnter = (key) => {
   if (window.innerWidth > 1024) {
     clearTimeout(closeTimeout)
-    // Cerrar el otro antes de abrir el actual
-    Object.keys(dropdowns).forEach(k => dropdowns[k] = false)
+    closeDropdowns()
     dropdowns[key] = true
   }
 }
 
 const handleMouseLeave = () => {
   if (window.innerWidth > 1024) {
-    closeTimeout = setTimeout(() => {
-      dropdowns.departamentos = false
-      dropdowns.actualidad = false
-    }, 200)
+    closeTimeout = setTimeout(closeDropdowns, 200)
   }
 }
 
 const toggleDropdown = (key) => {
+  Object.keys(dropdowns).forEach((k) => {
+    if (k !== key) dropdowns[k] = false
+  })
   dropdowns[key] = !dropdowns[key]
 }
 
 const closeAll = () => {
   menuOpen.value = false
-  dropdowns.departamentos = false
-  dropdowns.actualidad = false
+  closeDropdowns()
 }
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 20
 }
 
-// Observadores
 watch(() => route.fullPath, closeAll)
 
 watch(menuOpen, (val) => {
