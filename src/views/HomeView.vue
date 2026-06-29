@@ -86,13 +86,23 @@
                         <p>Juventud con propósito, identidad en Cristo y pasión por servir.</p>
                     </RouterLink>
 
-                    <RouterLink to="/donaciones" class="logo-card">
+                    <RouterLink to="/departamentos/rrpp" class="logo-card">
                         <div class="logo-card__logo-wrap">
-                            <img src="@/assets/img/departamentos/APORTES_NACIONAL.png" alt="Logo Aportes IPN"
+                            <img src="@/assets/img/departamentos/RRPP_NACIONAL.png"
+                                alt="Logo Departamento de Comunicaciones y Protocolo"
                                 class="logo-card__logo logo-card__logo--wide" />
                         </div>
-                        <h3>Aportes</h3>
-                        <p>Una forma de apoyar con generosidad el avance de la obra de Dios.</p>
+                        <h3>RRPP</h3>
+                        <p>Comunicaciones, protocolo y relaciones públicas al servicio de la Iglesia.</p>
+                    </RouterLink>
+
+                    <RouterLink to="/sem" class="logo-card">
+                        <div class="logo-card__logo-wrap">
+                            <img src="@/assets/img/departamentos/SEM.png" alt="Logo Seminario Eclesiástico Mayor"
+                                class="logo-card__logo logo-card__logo--wide" />
+                        </div>
+                        <h3>SEM</h3>
+                        <p>Formación bíblica y eclesiástica para servir con doctrina y reverencia.</p>
                     </RouterLink>
                 </div>
             </div>
@@ -157,7 +167,7 @@ const mainSlides = [
 }
 
 .home-grid--departments {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
 }
 
 .cta-card {

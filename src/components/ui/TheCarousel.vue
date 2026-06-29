@@ -6,7 +6,15 @@
                     { active: index === currentSlide },
                     { 'carousel-slide--second': index === 1 }
                 ]">
-                    <img :src="slide.image" :alt="slide.title" class="carousel-image" />
+                    <picture class="carousel-picture">
+                        <source
+                            v-if="slide.webpSrcset"
+                            type="image/webp"
+                            :srcset="slide.webpSrcset"
+                            sizes="100vw"
+                        />
+                        <img :src="slide.image" :alt="slide.title" class="carousel-image" />
+                    </picture>
 
                     <div class="carousel-overlay"></div>
 
@@ -52,9 +60,20 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-import slide1 from '@/assets/img/carousel/slide1.jpeg'
-import slide2 from '@/assets/img/carousel/slide2.jpeg'
-import slide3 from '@/assets/img/carousel/slide3.jpeg'
+import slide1 from '@/assets/img/carousel/optimized/slide1-1920.jpg'
+import slide2 from '@/assets/img/carousel/optimized/slide2-1920.jpg'
+import slide3 from '@/assets/img/carousel/optimized/slide3-1920.jpg'
+import slide1Webp640 from '@/assets/img/carousel/optimized/slide1-640.webp'
+import slide1Webp1280 from '@/assets/img/carousel/optimized/slide1-1280.webp'
+import slide1Webp1920 from '@/assets/img/carousel/optimized/slide1-1920.webp'
+import slide2Webp640 from '@/assets/img/carousel/optimized/slide2-640.webp'
+import slide2Webp1280 from '@/assets/img/carousel/optimized/slide2-1280.webp'
+import slide2Webp1920 from '@/assets/img/carousel/optimized/slide2-1920.webp'
+import slide3Webp640 from '@/assets/img/carousel/optimized/slide3-640.webp'
+import slide3Webp1280 from '@/assets/img/carousel/optimized/slide3-1280.webp'
+import slide3Webp1920 from '@/assets/img/carousel/optimized/slide3-1920.webp'
+
+const imageSet = (...sources) => sources.join(', ')
 
 const currentSlide = ref(0)
 let autoplay = null
@@ -66,7 +85,12 @@ const slides = ref([
         description: 'Un espacio digital renovado para fortalecer la conexión, la identidad y la misión de nuestra comunidad.',
         buttonText: 'Conócenos',
         buttonLink: '/quienes-somos',
-        image: slide1
+        image: slide1,
+        webpSrcset: imageSet(
+            `${slide1Webp640} 640w`,
+            `${slide1Webp1280} 1280w`,
+            `${slide1Webp1920} 1920w`
+        )
     },
     {
         eyebrow: 'Ministerios y comunidad',
@@ -74,7 +98,12 @@ const slides = ref([
         description: 'Varones, Dorcas y Jumix forman parte de una visión viva, organizada y enfocada en servir.',
         buttonText: 'Ver departamentos',
         buttonLink: '/quienes-somos',
-        image: slide2
+        image: slide2,
+        webpSrcset: imageSet(
+            `${slide2Webp640} 640w`,
+            `${slide2Webp1280} 1280w`,
+            `${slide2Webp1920} 1920w`
+        )
     },
     {
         eyebrow: 'Súmate a la visión',
@@ -82,7 +111,12 @@ const slides = ref([
         description: 'Descubra una plataforma pensada para informar, conectar e inspirar a cada familia y generación.',
         buttonText: 'Súmate',
         buttonLink: '/sumate',
-        image: slide3
+        image: slide3,
+        webpSrcset: imageSet(
+            `${slide3Webp640} 640w`,
+            `${slide3Webp1280} 1280w`,
+            `${slide3Webp1920} 1920w`
+        )
     }
 ])
 
@@ -160,9 +194,17 @@ onBeforeUnmount(() => {
     z-index: 2;
 }
 
+.carousel-picture,
 .carousel-image {
     width: 100%;
     height: 100%;
+}
+
+.carousel-picture {
+    display: block;
+}
+
+.carousel-image {
     object-fit: cover;
     object-position: center center;
     display: block;

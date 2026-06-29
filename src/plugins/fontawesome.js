@@ -19,7 +19,11 @@ import {
   faUser,
   faImage,
   faEnvelope,
+  faBell,
+  faNewspaper,
   faCalendarDays,
+  faCalendarCheck,
+  faCircleInfo,
 
   /* QUIÉNES SOMOS */
   faEye,
@@ -73,7 +77,11 @@ library.add(
   faUser,
   faImage,
   faEnvelope,
+  faBell,
+  faNewspaper,
   faCalendarDays,
+  faCalendarCheck,
+  faCircleInfo,
 
   /* QUIÉNES SOMOS */
   faEye,

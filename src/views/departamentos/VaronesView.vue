@@ -103,15 +103,22 @@
           <div class="official-card__topbar"></div>
 
           <div class="official-card__photo-wrap">
-            <img
-              v-if="leader.photo"
-              :src="leader.photo"
-              :alt="leader.name"
-              class="official-card__photo"
-            />
-            <div v-else class="official-card__photo official-card__photo--fallback">
-              <font-awesome-icon :icon="['fas', 'user']" />
-            </div>
+            <button
+              type="button"
+              class="official-card__photo-button"
+              :aria-label="`Ver foto de ${leader.name}`"
+              @click="openLeaderModal(leader)"
+            >
+              <img
+                v-if="leader.photo"
+                :src="leader.photo"
+                :alt="leader.name"
+                class="official-card__photo"
+              />
+              <div v-else class="official-card__photo official-card__photo--fallback">
+                <font-awesome-icon :icon="['fas', 'user']" />
+              </div>
+            </button>
           </div>
 
           <div class="official-card__body">
@@ -180,10 +187,19 @@
         <span>1 Corintios 16:13</span>
       </div>
     </section>
+
+    <PersonProfileModal
+      v-if="selectedLeader"
+      :person="selectedLeader"
+      area="Departamento Nacional de Varones"
+      @close="selectedLeader = null"
+    />
   </main>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import departmentLogo from '@/assets/img/departamentos/VARONES_NACIONAL.png'
 
 const nationalBoard = [
@@ -215,6 +231,12 @@ const nationalBoard = [
     email: 'tesoreria.varones@ipnchile.cl'
   }
 ]
+
+const selectedLeader = ref(null)
+
+const openLeaderModal = (leader) => {
+  selectedLeader.value = leader
+}
 
 /*
   La galería queda vacía por ahora.

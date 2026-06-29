@@ -1,7 +1,45 @@
 /* =========================================
    1. IMPORTACIÓN DE FUENTES OFICIALES
    ========================================= */
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,700;1,400&display=swap");
+@font-face {
+  font-family: "Qurova";
+  src: url("/fonts/Qurova-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Qurova";
+  src: url("/fonts/Qurova-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FranciA";
+  src: url("/fonts/FranciA-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FranciA";
+  src: url("/fonts/FranciA-Semibold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FranciA";
+  src: url("/fonts/FranciA-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* =========================================
    2. VARIABLES GLOBALES BASE
@@ -21,9 +59,11 @@
   --ipn-white: #ffffff;
   --ipn-black: #050a10;
 
-  /* Tipografías */
-  --font-primary: "Montserrat", sans-serif;
-  --font-serif: "Lora", serif;
+  /* Tipografias oficiales */
+  --font-body: "FranciA", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Qurova", "FranciA", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-primary: var(--font-body);
+  --font-serif: var(--font-display);
 
   /* Radios */
   --radius-xs: 6px;
@@ -482,7 +522,7 @@ h5,
 h6,
 .section-title {
   margin-top: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-weight: 700;
   color: var(--theme-text-strong);
   line-height: 1.15;
@@ -923,6 +963,40 @@ tr:hover td {
   max-width: 22ch;
   font-size: 0.94rem;
   color: var(--theme-text-soft);
+}
+
+.official-card__photo-button {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.official-card__photo-button .official-card__photo {
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base),
+    filter var(--transition-base);
+}
+
+.official-card__photo-button:hover .official-card__photo,
+.official-card__photo-button:focus-visible .official-card__photo {
+  transform: translateY(-2px) scale(1.04);
+  border-color: var(--theme-border-strong);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.26),
+    0 0 0 5px rgba(var(--theme-secondary-rgb), 0.14);
+  filter: saturate(1.04);
+}
+
+.official-card__photo-button:focus-visible {
+  outline: none;
 }
 
 /* =========================================

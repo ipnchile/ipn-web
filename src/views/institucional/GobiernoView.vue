@@ -80,10 +80,12 @@
                         </p>
 
                         <div class="people-list-modern">
-                            <div
+                            <button
                                 v-for="persona in directorioNacional"
                                 :key="persona.cargo"
+                                type="button"
                                 class="person-item"
+                                @click="openPersonModal(persona, 'Directorio Nacional')"
                             >
                                 <div class="person-avatar">
                                     <img
@@ -103,7 +105,7 @@
                                         {{ persona.nombre || 'Información en actualización' }}
                                     </p>
                                 </div>
-                            </div>
+                            </button>
                         </div>
                     </article>
 
@@ -124,10 +126,12 @@
                         </p>
 
                         <div class="people-list-modern">
-                            <div
+                            <button
                                 v-for="persona in tribunalEtica"
                                 :key="persona.cargo + persona.nombre"
+                                type="button"
                                 class="person-item"
+                                @click="openPersonModal(persona, 'Tribunal de Ética y Disciplina')"
                             >
                                 <div class="person-avatar">
                                     <img
@@ -147,7 +151,7 @@
                                         {{ persona.nombre || 'Información en actualización' }}
                                     </p>
                                 </div>
-                            </div>
+                            </button>
                         </div>
                     </article>
                 </div>
@@ -250,6 +254,46 @@
                 </div>
             </div>
         </section>
+
+        <Transition name="person-modal-fade">
+            <div
+                v-if="selectedPerson"
+                class="person-modal"
+                role="dialog"
+                aria-modal="true"
+                :aria-label="`Información de ${selectedPerson.nombre || selectedPerson.cargo}`"
+                @click.self="closePersonModal"
+            >
+                <div class="person-modal__dialog glass-panel--strong">
+                    <button
+                        type="button"
+                        class="person-modal__close"
+                        aria-label="Cerrar"
+                        @click="closePersonModal"
+                    >
+                        ×
+                    </button>
+
+                    <div class="person-modal__photo-wrap">
+                        <img
+                            v-if="selectedPerson.foto"
+                            :src="selectedPerson.foto"
+                            :alt="selectedPerson.nombre || selectedPerson.cargo"
+                            class="person-modal__photo"
+                        />
+                        <div v-else class="person-modal__photo person-modal__photo--fallback">
+                            <font-awesome-icon :icon="['fas', 'user']" />
+                        </div>
+                    </div>
+
+                    <div class="person-modal__content">
+                        <p class="section-eyebrow">{{ selectedPerson.area }}</p>
+                        <h2>{{ selectedPerson.nombre || 'Información en actualización' }}</h2>
+                        <p class="person-modal__role">{{ selectedPerson.cargo }}</p>
+                    </div>
+                </div>
+            </div>
+        </Transition>
     </main>
 </template>
 
@@ -300,7 +344,7 @@ const directorioNacional = [
 
 const tribunalEtica = [
     {
-        cargo: 'Director',
+        cargo: 'Pastor Director',
         nombre: 'Pr. Presbítero Rev. Hernan Sepulveda',
         foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Hernan%20Sepulveda.webp'
     },
@@ -310,21 +354,44 @@ const tribunalEtica = [
         foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Luis%20Mondaca.webp'
     },
     {
-        cargo: 'Director',
+        cargo: 'Miembro del Tribunal',
         nombre: 'Pr. Presbítero Rev. Raúl Vidal',
         foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Raul%20Vidal.webp'
     },
     {
-        cargo: 'Director',
+        cargo: 'Miembro del Tribunal',
         nombre: 'Pr. Presbítero Rev. Nelsón Mondaca',
         foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pasto%20Nelson%20Mondaca.webp'
     },
     {
-        cargo: 'Director',
+        cargo: 'Miembro del Tribunal',
         nombre: 'Pr. Presbítero Rev. Alex Brana',
         foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Alex%20Brana.webp'
     }
 ]
+
+const selectedPerson = ref(null)
+let previousBodyOverflow = ''
+
+const openPersonModal = (persona, area) => {
+    previousBodyOverflow = document.body.style.overflow
+    selectedPerson.value = {
+        ...persona,
+        area,
+    }
+    document.body.style.overflow = 'hidden'
+}
+
+const closePersonModal = () => {
+    selectedPerson.value = null
+    document.body.style.overflow = previousBodyOverflow
+}
+
+const handleModalKeydown = (event) => {
+    if (event.key === 'Escape' && selectedPerson.value) {
+        closePersonModal()
+    }
+}
 
 const heroRef = ref(null)
 const introRef = ref(null)
@@ -357,6 +424,8 @@ const visible = reactive({
 let observer = null
 
 onMounted(() => {
+    window.addEventListener('keydown', handleModalKeydown)
+
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (prefersReducedMotion) {
@@ -417,6 +486,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     if (observer) observer.disconnect()
+    window.removeEventListener('keydown', handleModalKeydown)
+    document.body.style.overflow = previousBodyOverflow
 })
 </script>
 
@@ -663,13 +734,37 @@ onBeforeUnmount(() => {
 }
 
 .person-item {
+    width: 100%;
     display: flex;
     align-items: center;
+    text-align: left;
     gap: 0.9rem;
     padding: 0.75rem 0.85rem;
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    color: inherit;
+    cursor: pointer;
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.person-item:hover,
+.person-item:focus-visible {
+    transform: translateX(4px);
+    border-color: rgba(203, 164, 94, 0.32);
+    background: rgba(255, 255, 255, 0.065);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+}
+
+.person-item:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 3px rgba(203, 164, 94, 0.2),
+        0 12px 26px rgba(0, 0, 0, 0.18);
 }
 
 .person-avatar {
@@ -722,6 +817,124 @@ onBeforeUnmount(() => {
     color: var(--theme-text);
     line-height: 1.45;
     font-weight: 600;
+}
+
+/* =========================
+   MODAL PERSONA
+   ========================= */
+.person-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
+    background: rgba(3, 8, 13, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.person-modal__dialog {
+    position: relative;
+    width: min(920px, 100%);
+    max-height: min(760px, calc(100vh - 2.5rem));
+    display: grid;
+    grid-template-columns: minmax(260px, 0.88fr) minmax(280px, 1fr);
+    overflow: hidden;
+    border-radius: 24px;
+}
+
+.person-modal__close {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.34);
+    color: #fff;
+    font-size: 1.7rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.person-modal__close:hover,
+.person-modal__close:focus-visible {
+    transform: scale(1.04);
+    border-color: rgba(203, 164, 94, 0.45);
+    background: rgba(203, 164, 94, 0.22);
+    outline: none;
+}
+
+.person-modal__photo-wrap {
+    min-height: 520px;
+    background:
+        radial-gradient(circle at top, rgba(203, 164, 94, 0.15), transparent 58%),
+        rgba(255, 255, 255, 0.03);
+}
+
+.person-modal__photo {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center 16%;
+}
+
+.person-modal__photo--fallback {
+    display: grid;
+    place-items: center;
+    color: var(--theme-secondary);
+    font-size: 4rem;
+}
+
+.person-modal__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.person-modal__content h2 {
+    margin: 0.35rem 0 0.9rem;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.08;
+}
+
+.person-modal__role {
+    margin: 0;
+    color: var(--theme-text-soft);
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.person-modal-fade-enter-active,
+.person-modal-fade-leave-active {
+    transition: opacity 0.24s ease;
+}
+
+.person-modal-fade-enter-active .person-modal__dialog,
+.person-modal-fade-leave-active .person-modal__dialog {
+    transition: transform 0.24s ease, opacity 0.24s ease;
+}
+
+.person-modal-fade-enter-from,
+.person-modal-fade-leave-to {
+    opacity: 0;
+}
+
+.person-modal-fade-enter-from .person-modal__dialog,
+.person-modal-fade-leave-to .person-modal__dialog {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
 }
 
 /* =========================
@@ -876,6 +1089,34 @@ onBeforeUnmount(() => {
 
     .person-item {
         align-items: flex-start;
+        transform: none;
+    }
+
+    .person-item:hover,
+    .person-item:focus-visible {
+        transform: none;
+    }
+
+    .person-modal {
+        align-items: end;
+        padding: 0.75rem;
+    }
+
+    .person-modal__dialog {
+        grid-template-columns: 1fr;
+        width: 100%;
+        max-height: calc(100vh - 1.5rem);
+        overflow-y: auto;
+        border-radius: 20px;
+    }
+
+    .person-modal__photo-wrap {
+        min-height: 360px;
+        max-height: 56vh;
+    }
+
+    .person-modal__content {
+        padding: 1.35rem;
     }
 
     .reveal,

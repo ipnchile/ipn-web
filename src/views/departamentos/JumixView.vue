@@ -96,10 +96,17 @@
                     <div class="official-card__topbar"></div>
 
                     <div class="official-card__photo-wrap">
-                        <img v-if="leader.photo" :src="leader.photo" :alt="leader.name" class="official-card__photo" />
-                        <div v-else class="official-card__photo official-card__photo--fallback">
-                            <font-awesome-icon :icon="['fas', 'user']" />
-                        </div>
+                        <button
+                            type="button"
+                            class="official-card__photo-button"
+                            :aria-label="`Ver foto de ${leader.name}`"
+                            @click="openLeaderModal(leader)"
+                        >
+                            <img v-if="leader.photo" :src="leader.photo" :alt="leader.name" class="official-card__photo" />
+                            <div v-else class="official-card__photo official-card__photo--fallback">
+                                <font-awesome-icon :icon="['fas', 'user']" />
+                            </div>
+                        </button>
                     </div>
 
                     <div class="official-card__body">
@@ -183,6 +190,13 @@
                 <span>1 Timoteo 4:12</span>
             </div>
         </section>
+
+        <PersonProfileModal
+            v-if="selectedLeader"
+            :person="selectedLeader"
+            area="Departamento Nacional JUMIX"
+            @close="selectedLeader = null"
+        />
     </main>
 </template>
 
@@ -194,6 +208,7 @@ import { FreeMode } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/free-mode'
 
+import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import departmentLogo from '@/assets/img/departamentos/JUMIX_NACIONAL.png'
 import { galleryBlocks, galleryPhotos } from '@/data/jumixGallery'
 
@@ -201,6 +216,7 @@ const selectedBlock = ref(galleryBlocks[0]?.id || null)
 const currentPhotoIndex = ref(0)
 
 const modules = [FreeMode]
+const selectedLeader = ref(null)
 
 const filteredPhotos = computed(() =>
     galleryPhotos.filter((photo) => photo.blockId === selectedBlock.value)
@@ -232,6 +248,10 @@ const prevPhoto = () => {
     currentPhotoIndex.value =
         (currentPhotoIndex.value - 1 + filteredPhotos.value.length) %
         filteredPhotos.value.length
+}
+
+const openLeaderModal = (leader) => {
+    selectedLeader.value = leader
 }
 
 watch(filteredPhotos, () => {

@@ -95,11 +95,18 @@
                     <div class="official-card__topbar"></div>
 
                     <div class="official-card__photo-wrap">
-                        <img v-if="leader.photo" :src="leader.photo" :alt="leader.name" class="official-card__photo" />
+                        <button
+                            type="button"
+                            class="official-card__photo-button"
+                            :aria-label="`Ver foto de ${leader.name}`"
+                            @click="openLeaderModal(leader)"
+                        >
+                            <img v-if="leader.photo" :src="leader.photo" :alt="leader.name" class="official-card__photo" />
 
-                        <div v-else class="official-card__photo official-card__photo--fallback">
-                            <font-awesome-icon :icon="['fas', 'user']" />
-                        </div>
+                            <div v-else class="official-card__photo official-card__photo--fallback">
+                                <font-awesome-icon :icon="['fas', 'user']" />
+                            </div>
+                        </button>
                     </div>
 
                     <div class="official-card__body">
@@ -164,10 +171,19 @@
                 <span>Hechos 9:36</span>
             </div>
         </section>
+
+        <PersonProfileModal
+            v-if="selectedLeader"
+            :person="selectedLeader"
+            area="Departamento Nacional Dorcas"
+            @close="selectedLeader = null"
+        />
     </main>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import departmentLogo from '@/assets/img/departamentos/DORCAS_NACIONAL.png'
 
 const nationalBoard = [
@@ -182,11 +198,11 @@ const nationalBoard = [
     },
     {
         role: 'Secretaria Nacional',
-        name: 'Pra. Soraya Sepulveda',
+        name: 'Pra. Isabel González',
         period: 'Directiva Nacional',
         description:
             'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades.',
-        photo: 'https://media.ipnchile.cl/perfiles/dorcas/Secretaria%20Nacional.webp',
+        photo: 'https://pub-065eb4027e4242aea56805003b4c89aa.r2.dev/perfiles/dorcas/Secretaria%20Nacional.webp',
         email: 'secretaria.dorcas@ipnchile.cl'
     },
     {
@@ -199,6 +215,12 @@ const nationalBoard = [
         email: 'tesoreria.dorcas@ipnchile.cl'
     }
 ]
+
+const selectedLeader = ref(null)
+
+const openLeaderModal = (leader) => {
+    selectedLeader.value = leader
+}
 
 /*
   La galería queda vacía por ahora.

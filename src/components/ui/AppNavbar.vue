@@ -106,10 +106,65 @@
         <RouterLink to="/contacto" class="navbar__link" :class="{ active: isRoute('/contacto') }">
           Contacto
         </RouterLink>
-
         <RouterLink to="/sumate" class="navbar__cta">
           Súmate
         </RouterLink>
+
+        <div class="navbar__notifications">
+          <button
+            type="button"
+            class="navbar__notification-button"
+            :class="{ active: notificationOpen }"
+            :aria-label="`Notificaciones (${notificationItems.length})`"
+            @click="toggleNotifications"
+          >
+            <font-awesome-icon :icon="['fas', 'bell']" />
+            <span v-if="notificationItems.length" class="navbar__notification-badge">
+              {{ notificationItems.length }}
+            </span>
+          </button>
+
+          <transition name="dropdown-fade">
+            <div v-if="notificationOpen" class="navbar__notification-panel">
+              <div class="navbar__notification-header">
+                <p>Notificaciones</p>
+                <div class="navbar__notification-header-actions">
+                  <span>{{ notificationItems.length }}</span>
+                  <button
+                    v-if="notificationItems.length"
+                    type="button"
+                    class="navbar__notification-dismiss"
+                    aria-label="Descartar notificaciones"
+                    @click="dismissNotifications"
+                  >
+                    &times;
+                  </button>
+                </div>
+              </div>
+
+              <div v-if="notificationItems.length" class="navbar__notification-list">
+                <RouterLink
+                  v-for="item in notificationItems"
+                  :key="item.id"
+                  :to="item.to"
+                  class="navbar__notification-item"
+                >
+                  <span class="navbar__notification-item-icon">
+                    <font-awesome-icon :icon="item.icon" />
+                  </span>
+                  <span>
+                    <strong>{{ item.title }}</strong>
+                    <small>{{ item.description }}</small>
+                  </span>
+                </RouterLink>
+              </div>
+
+              <p v-else class="navbar__notification-empty">
+                Sin novedades por ahora.
+              </p>
+            </div>
+          </transition>
+        </div>
       </nav>
 
       <button
@@ -152,6 +207,17 @@
           <RouterLink to="/donaciones" :class="{ active: isRoute('/donaciones') }">Donaciones</RouterLink>
           <RouterLink to="/contacto" :class="{ active: isRoute('/contacto') }">Contacto</RouterLink>
 
+          <div v-if="notificationItems.length" class="navbar__mobile-section">
+            <span class="navbar__mobile-label">Notificaciones</span>
+            <RouterLink
+              v-for="item in notificationItems"
+              :key="`mobile-${item.id}`"
+              :to="item.to"
+            >
+              {{ item.title }}
+            </RouterLink>
+          </div>
+
           <RouterLink to="/sumate" class="navbar__mobile-cta">
             Súmate
           </RouterLink>
@@ -162,12 +228,16 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onBeforeUnmount, watch } from "vue"
+import { computed, ref, reactive, onMounted, onBeforeUnmount, watch } from "vue"
 import { useRoute } from "vue-router"
+import { comunicados } from "@/data/comunicados"
+import { allEvents } from "@/data/events"
 
 const route = useRoute()
 const menuOpen = ref(false)
 const isScrolled = ref(false)
+const notificationOpen = ref(false)
+const dismissedNotificationSignature = ref("")
 
 const dropdowns = reactive({
   quienesSomos: false,
@@ -176,6 +246,7 @@ const dropdowns = reactive({
 })
 
 let closeTimeout = null
+const notificationWindowDays = 30
 
 const isRoute = (path) => route.path === path
 const isSection = (base) => route.path.startsWith(base)
@@ -186,14 +257,110 @@ const closeDropdowns = () => {
   })
 }
 
+const getTodayKey = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, "0")
+  const day = String(now.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}
+
+const parseLocalDate = (dateKey) => {
+  const [year, month, day] = dateKey.split("-").map(Number)
+  return new Date(year, month - 1, day)
+}
+
+const daysBetween = (fromKey, toKey) => {
+  const from = parseLocalDate(fromKey)
+  const to = parseLocalDate(toKey)
+  return Math.ceil((to.getTime() - from.getTime()) / 86400000)
+}
+
+const recentNews = computed(() => {
+  const today = getTodayKey()
+
+  return comunicados
+    .filter((item) => {
+      const age = daysBetween(item.date, today)
+      return age >= 0 && age <= notificationWindowDays
+    })
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map((item) => ({
+      id: `news-${item.id}`,
+      type: "news",
+      title: item.title,
+      description: `Nueva noticia · ${item.date}`,
+      to: "/actualidad/noticias",
+      icon: ["fas", "newspaper"],
+    }))
+})
+
+const upcomingEvents = computed(() => {
+  const today = getTodayKey()
+
+  return allEvents
+    .filter((event) => {
+      const days = daysBetween(today, event.startDate)
+      return days >= 0 && days <= notificationWindowDays
+    })
+    .sort((a, b) => a.startDate.localeCompare(b.startDate))
+    .map((event) => {
+      const days = daysBetween(today, event.startDate)
+      const prefix = days === 0 ? "Hoy" : days === 1 ? "Mañana" : `En ${days} días`
+
+      return {
+        id: `event-${event.id}`,
+        type: "event",
+        title: event.title,
+        description: `${prefix} · ${event.location}`,
+        to: "/actualidad/eventos",
+        icon: ["fas", "calendar-check"],
+      }
+    })
+})
+
+const rawNotificationItems = computed(() => [
+  ...upcomingEvents.value,
+  ...recentNews.value,
+])
+
+const notificationSignature = computed(() =>
+  rawNotificationItems.value.map((item) => item.id).join("|")
+)
+
+const notificationItems = computed(() => {
+  if (
+    notificationSignature.value &&
+    notificationSignature.value === dismissedNotificationSignature.value
+  ) {
+    return []
+  }
+
+  return rawNotificationItems.value
+})
+
+const dismissNotifications = () => {
+  dismissedNotificationSignature.value = notificationSignature.value
+  notificationOpen.value = false
+}
+
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
-  if (menuOpen.value) closeDropdowns()
+  if (menuOpen.value) {
+    closeDropdowns()
+    notificationOpen.value = false
+  }
+}
+
+const toggleNotifications = () => {
+  closeDropdowns()
+  notificationOpen.value = !notificationOpen.value
 }
 
 const handleMouseEnter = (key) => {
   if (window.innerWidth > 1024) {
     clearTimeout(closeTimeout)
+    notificationOpen.value = false
     closeDropdowns()
     dropdowns[key] = true
   }
@@ -206,6 +373,8 @@ const handleMouseLeave = () => {
 }
 
 const toggleDropdown = (key) => {
+  notificationOpen.value = false
+
   Object.keys(dropdowns).forEach((k) => {
     if (k !== key) dropdowns[k] = false
   })
@@ -214,6 +383,7 @@ const toggleDropdown = (key) => {
 
 const closeAll = () => {
   menuOpen.value = false
+  notificationOpen.value = false
   closeDropdowns()
 }
 
@@ -379,7 +549,7 @@ onBeforeUnmount(() => {
   padding-left: 1.8rem;
 }
 
-/* --- CTA BOTÓN --- */
+/* --- CTA BOTON --- */
 .navbar__cta {
   border: 1px solid var(--theme-secondary, #cba45e);
   padding: 0.7rem 1.5rem;
@@ -398,7 +568,194 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 20px rgba(203, 164, 94, 0.4);
 }
 
-/* --- MÓVIL --- */
+/* --- NOTIFICACIONES --- */
+.navbar__notifications {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.navbar__notification-button {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(203, 164, 94, 0.28);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--theme-secondary, #cba45e);
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.navbar__notification-button:hover,
+.navbar__notification-button.active,
+.navbar__notification-button:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(203, 164, 94, 0.5);
+  background: rgba(203, 164, 94, 0.12);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+  outline: none;
+}
+
+.navbar__notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 0 0 2px rgba(14, 30, 46, 0.95);
+}
+
+.navbar__notification-panel {
+  position: absolute;
+  top: calc(100% + 15px);
+  right: 0;
+  width: min(360px, calc(100vw - 2rem));
+  overflow: hidden;
+  background: rgba(14, 30, 46, 0.98);
+  border: 1px solid rgba(203, 164, 94, 0.3);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  z-index: 1050;
+}
+
+.navbar__notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(203, 164, 94, 0.16);
+}
+
+.navbar__notification-header p {
+  margin: 0;
+  color: #fff;
+  font-weight: 800;
+}
+
+.navbar__notification-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.navbar__notification-header span {
+  min-width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(203, 164, 94, 0.16);
+  color: var(--theme-secondary, #cba45e);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.navbar__notification-dismiss {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.navbar__notification-dismiss:hover,
+.navbar__notification-dismiss:focus-visible {
+  border-color: rgba(203, 164, 94, 0.42);
+  background: rgba(203, 164, 94, 0.12);
+  color: #fff;
+  outline: none;
+}
+
+.navbar__notification-list {
+  display: grid;
+  max-height: min(360px, 65vh);
+  overflow-y: auto;
+}
+
+.navbar__notification-item {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.navbar__notification-item:last-child {
+  border-bottom: 0;
+}
+
+.navbar__notification-item:hover {
+  background: rgba(203, 164, 94, 0.1);
+  color: #fff;
+}
+
+.navbar__notification-item-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(203, 164, 94, 0.12);
+  color: var(--theme-secondary, #cba45e);
+}
+
+.navbar__notification-item strong,
+.navbar__notification-item small {
+  display: block;
+}
+
+.navbar__notification-item strong {
+  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+.navbar__notification-item small {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.navbar__notification-empty {
+  margin: 0;
+  padding: 1rem;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* --- MOVIL --- */
 .navbar__toggle {
   display: none;
   flex-direction: column;

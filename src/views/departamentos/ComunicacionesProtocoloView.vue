@@ -104,10 +104,17 @@
                     <div class="official-card__topbar"></div>
 
                     <div class="official-card__photo-wrap">
-                        <img v-if="leader.photo" :src="leader.photo" :alt="leader.name" class="official-card__photo" />
-                        <div v-else class="official-card__photo official-card__photo--fallback">
-                            <font-awesome-icon :icon="['fas', 'user']" />
-                        </div>
+                        <button
+                            type="button"
+                            class="official-card__photo-button"
+                            :aria-label="`Ver foto de ${leader.name}`"
+                            @click="openLeaderModal(leader)"
+                        >
+                            <img v-if="leader.photo" :src="leader.photo" :alt="leader.name" class="official-card__photo" />
+                            <div v-else class="official-card__photo official-card__photo--fallback">
+                                <font-awesome-icon :icon="['fas', 'user']" />
+                            </div>
+                        </button>
                     </div>
 
                     <div class="official-card__body">
@@ -137,10 +144,19 @@
                 <span>Departamento Nacional de RRPP IPN Chile</span>
             </div>
         </section>
+
+        <PersonProfileModal
+            v-if="selectedLeader"
+            :person="selectedLeader"
+            area="Departamento Nacional de RRPP"
+            @close="selectedLeader = null"
+        />
     </main>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import departmentLogo from '@/assets/img/departamentos/RRPP_NACIONAL.png'
 
 const nationalBoard = [
@@ -150,7 +166,7 @@ const nationalBoard = [
         period: 'Equipo Nacional',
         description:
             'Responsable de coordinar la comunicación institucional, protocolo y relaciones públicas a nivel nacional.',
-        photo: '',
+        photo: 'https://pub-065eb4027e4242aea56805003b4c89aa.r2.dev/perfiles/rrpp/Pastor%20Ivan.webp',
         email: 'rrpp@ipnchile.cl'
     },
     {
@@ -159,10 +175,16 @@ const nationalBoard = [
         period: 'Equipo Nacional',
         description:
             'Colabora en la organización protocolar de actividades, ceremonias y eventos oficiales.',
-        photo: '',
+        photo: 'https://pub-065eb4027e4242aea56805003b4c89aa.r2.dev/perfiles/rrpp/Pastor%20Mauricio.webp',
         email: 'protocolo@ipnchile.cl'
     }
 ]
+
+const selectedLeader = ref(null)
+
+const openLeaderModal = (leader) => {
+    selectedLeader.value = leader
+}
 
 const galleryPhotos = []
 </script>

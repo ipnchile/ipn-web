@@ -100,12 +100,19 @@
 
                 <div class="director-card glass-panel">
 
-                    <div class="director-avatar">
-                        <img v-if="director.foto" :src="director.foto" />
-                        <div v-else class="fallback">
-                            <font-awesome-icon :icon="['fas', 'user-tie']" />
+                    <button
+                        type="button"
+                        class="director-avatar-button"
+                        :aria-label="`Ver información de ${director.nombre}`"
+                        @click="selectedDirector = directorProfile"
+                    >
+                        <div class="director-avatar">
+                            <img v-if="director.foto" :src="director.foto" :alt="director.nombre" />
+                            <div v-else class="fallback">
+                                <font-awesome-icon :icon="['fas', 'user-tie']" />
+                            </div>
                         </div>
-                    </div>
+                    </button>
 
                     <div class="director-info">
                         <p class="section-eyebrow">Coordinación</p>
@@ -148,16 +155,36 @@
             </div>
         </section>
 
+        <PersonProfileModal
+            v-if="selectedDirector"
+            :person="selectedDirector"
+            area="Organización institucional"
+            @close="selectedDirector = null"
+        />
+
     </main>
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
+import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import isotipoLogo from '@/assets/img/logos/isotipo.png'
+
 const director = {
     cargo: 'Pastor Director de Departamentos',
     nombre: 'Pr. Presbítero Rev. Ricardo Alarcón',
-    foto: ''
+    foto: 'https://pub-065eb4027e4242aea56805003b4c89aa.r2.dev/perfiles/directorDepartamento/pastor%20ricardo%20alarcaon.webp'
 }
+
+const selectedDirector = ref(null)
+
+const directorProfile = computed(() => ({
+    name: director.nombre,
+    role: director.cargo,
+    photo: director.foto,
+    description:
+        'Responsable de coordinar y fortalecer el trabajo de los Departamentos Nacionales, asegurando unidad y desarrollo ministerial.'
+}))
 </script>
 
 <style scoped>
@@ -315,6 +342,19 @@ const director = {
     align-items: center;
 }
 
+.director-avatar-button {
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+}
+
+.director-avatar-button:focus-visible {
+    outline: 2px solid var(--theme-secondary);
+    outline-offset: 5px;
+}
+
 .director-avatar {
     width: 110px;
     height: 110px;
@@ -323,6 +363,17 @@ const director = {
     border: 1px solid rgba(203, 164, 94, 0.32);
     background: rgba(203, 164, 94, 0.1);
     overflow: hidden;
+    transition:
+        transform var(--transition-base),
+        border-color var(--transition-base),
+        box-shadow var(--transition-base);
+}
+
+.director-avatar-button:hover .director-avatar,
+.director-avatar-button:focus-visible .director-avatar {
+    transform: translateY(-3px) scale(1.03);
+    border-color: rgba(203, 164, 94, 0.62);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
 }
 
 .director-avatar img {
