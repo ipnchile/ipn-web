@@ -327,7 +327,7 @@ const directorioNacional = [
     },
     {
         cargo: 'Pastor Prosecretario',
-        nombre: 'Pr. Diacono Rev. Andrés Sepulveda',
+        nombre: 'Pr. Presbítero Abraham Jorquera',
         foto: 'https://media.ipnchile.cl/perfiles/directorio/PROSECRETARIO.webp'
     },
     {
