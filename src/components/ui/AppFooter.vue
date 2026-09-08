@@ -178,9 +178,9 @@
 
                     <span class="footer__dot"></span>
 
-                    <a href="#">
+                    <RouterLink to="/privacidad">
                         Privacidad
-                    </a>
+                    </RouterLink>
 
                 </div>
 

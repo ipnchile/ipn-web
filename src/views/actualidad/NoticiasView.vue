@@ -17,10 +17,51 @@
           <p class="news-hero__label">Sección informativa</p>
           <h2>Información para la Iglesia y la Misión</h2>
           <p>
-            Este espacio reunirá avisos internos, publicaciones futuras y contenido
+            Encuentre comunicados, noticias de nuestra misión y contenido
             audiovisual del canal oficial de la misión.
           </p>
         </aside>
+      </div>
+    </section>
+
+    <!-- COMUNICADOS -->
+    <section class="section-container section-block">
+      <div class="section-heading">
+        <p class="section-eyebrow">Publicaciones</p>
+        <h2 class="section-title">Noticias y comunicados</h2>
+        <p class="section-description">
+          Revise aquí los avisos oficiales, notas informativas y publicaciones
+          destacadas relacionadas con nuestra misión.
+        </p>
+      </div>
+
+      <div v-if="comunicados.length" class="comunicados-grid">
+        <article v-for="item in comunicados" :key="item.id" class="comunicado-card">
+          <button class="comunicado-image-link" @click="openComunicado(item)">
+            <img :src="item.thumbnail || item.image" :alt="item.title" class="comunicado-image" loading="lazy" />
+          </button>
+
+          <div class="comunicado-content">
+            <time class="comunicado-date" :datetime="item.date">{{ formatDate(item.date) }}</time>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+
+            <button class="btn-secondary" @click="openComunicado(item)">
+              Leer comunicado
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <div v-else class="glass-panel news-empty">
+        <div class="news-empty__icon">
+          <font-awesome-icon :icon="['fas', 'calendar-days']" />
+        </div>
+
+        <h3>Sin información por ahora</h3>
+        <p>
+          Actualmente no hay noticias o comunicados publicados en esta sección.
+        </p>
       </div>
     </section>
 
@@ -57,72 +98,49 @@
       </div>
     </section>
 
-    <!-- COMUNICADOS -->
-    <section class="section-container section-block">
-      <div class="section-heading">
-        <p class="section-eyebrow">Publicaciones</p>
-        <h2 class="section-title">Noticias y comunicados</h2>
-        <p class="section-description">
-          Revise aquí los avisos oficiales, notas informativas y publicaciones
-          destacadas relacionadas con nuestra misión.
-        </p>
-      </div>
-
-      <div v-if="comunicados.length" class="comunicados-grid">
-        <article v-for="item in comunicados" :key="item.id" class="comunicado-card">
-          <button class="comunicado-image-link" @click="openComunicado(item)">
-            <img :src="item.image" :alt="item.title" class="comunicado-image" loading="lazy" />
-          </button>
-
-          <div class="comunicado-content">
-            <p class="comunicado-date">{{ item.date }}</p>
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.description }}</p>
-
-            <button class="btn-secondary" @click="openComunicado(item)">
-              Ver comunicado
-            </button>
-          </div>
-        </article>
-      </div>
-
-      <div v-else class="glass-panel news-empty">
-        <div class="news-empty__icon">
-          <font-awesome-icon :icon="['fas', 'calendar-days']" />
-        </div>
-
-        <h3>Sin información por ahora</h3>
-        <p>
-          Actualmente no hay noticias o comunicados publicados en esta sección.
-        </p>
-      </div>
-    </section>
-
     <!-- MODAL COMUNICADO -->
+    <Teleport to="body">
     <div v-if="selectedComunicado" class="comunicado-modal" @click.self="closeComunicado">
-      <div class="comunicado-modal__content">
-        <button class="comunicado-modal__close" @click="closeComunicado">
+      <div ref="newsDialog" class="comunicado-modal__content" role="dialog" aria-modal="true" aria-labelledby="news-modal-title" tabindex="-1">
+        <button type="button" aria-label="Cerrar comunicado" class="comunicado-modal__close" @click="closeComunicado">
           ×
         </button>
 
+        <h2 id="news-modal-title" class="comunicado-modal__title">{{ selectedComunicado.title }}</h2>
         <img :src="selectedComunicado.image" :alt="selectedComunicado.title" class="comunicado-modal__image" />
+        <div class="comunicado-modal__text">
+          <p v-if="!selectedComunicado.paragraphs">{{ selectedComunicado.description }}</p>
+          <p v-for="paragraph in selectedComunicado.paragraphs || []" :key="paragraph">{{ paragraph }}</p>
+          <a v-if="selectedComunicado.source" :href="selectedComunicado.source.url" target="_blank" rel="noopener noreferrer">{{ selectedComunicado.source.label }}</a>
+          <RouterLink v-if="selectedComunicado.eventLink" :to="selectedComunicado.eventLink" class="btn-primary">Ver evento en el calendario</RouterLink>
+        </div>
       </div>
     </div>
+    </Teleport>
   </main>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { comunicados } from '@/data/comunicados'
+import { ref, nextTick, onBeforeUnmount } from 'vue'
+import { createModalController } from '@/utils/modal'
+import { usePublishedContent } from '@/composables/usePublishedContent'
+const { news: comunicados } = usePublishedContent()
 
 const selectedComunicado = ref(null)
+const newsDialog = ref(null)
+const modal = createModalController()
+onBeforeUnmount(() => modal.deactivate({ restoreFocus: false }))
+const formatDate = (value) => new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(value + 'T12:00:00'))
 
-const openComunicado = (item) => {
+const openComunicado = async (item) => {
   selectedComunicado.value = item
+  await nextTick()
+  if (selectedComunicado.value) modal.activate(newsDialog.value, closeComunicado)
 }
 
 const closeComunicado = () => {
   selectedComunicado.value = null
+  modal.deactivate()
 }
 
 const featuredVideos = [
@@ -138,6 +156,11 @@ const featuredVideos = [
 </script>
 
 <style scoped>
+.comunicado-modal__title { padding: 1.25rem 4.5rem 1.25rem 1.25rem; margin: 0; font-size: clamp(1.2rem, 3vw, 1.8rem); }
+.comunicado-modal__text { padding: 1.5rem; color: var(--theme-text-soft); line-height: 1.8; }
+.comunicado-modal__text a:not(.btn-primary) { color: var(--theme-secondary); text-decoration: underline; }
+.comunicado-date { display: block; }
+
 .news-page {
   min-height: 100vh;
   padding-bottom: 4rem;
@@ -326,7 +349,7 @@ const featuredVideos = [
   border-radius: 20px;
   background: #111;
   border: 1px solid var(--theme-border-subtle);
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .comunicado-modal__close {
@@ -347,7 +370,7 @@ const featuredVideos = [
 
 .comunicado-modal__image {
   width: 100%;
-  max-height: 92vh;
+  max-height: 65vh;
   object-fit: contain;
   display: block;
 }

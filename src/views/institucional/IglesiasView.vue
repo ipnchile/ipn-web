@@ -172,7 +172,7 @@ import { ref, onMounted, computed, watch, nextTick, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { iglesias } from '@/data/iglesias'
+import { useDirectory } from '@/composables/useDirectory'
 
 const DEFAULT_FOTO = ''
 const SANTIAGO_COORDS = [-33.4489, -70.6693]
@@ -180,7 +180,7 @@ const SANTIAGO_COORDS = [-33.4489, -70.6693]
 const busqueda = ref('')
 const vistaActiva = ref('explorar')
 const iglesiaSeleccionada = ref(null)
-const listaIglesias = ref(iglesias)
+const { churches: listaIglesias } = useDirectory()
 
 let map = null
 let markersLayer = null
@@ -390,11 +390,14 @@ const initMap = async () => {
 
     map = L.map('map', {
         zoomControl: true,
-        attributionControl: false
+        attributionControl: true
     }).setView(SANTIAGO_COORDS, 12)
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 18
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        referrerPolicy: 'strict-origin-when-cross-origin',
+        className: 'ipn-dark-tiles'
     }).addTo(map)
 
     markersLayer = L.layerGroup().addTo(map)
@@ -480,6 +483,11 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* El filtro afecta solo al fondo; conserva los colores de marcadores y controles. */
+:deep(.ipn-dark-tiles) {
+    filter: grayscale(100%) invert(100%) brightness(65%) contrast(90%);
+}
+
 .iglesias-page {
     padding-top: 100px;
     background: linear-gradient(180deg, #0b1520 0%, #0e1e2e 100%);

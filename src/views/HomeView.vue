@@ -1,6 +1,8 @@
 <template>
     <main class="home-page">
-        <TheCarousel :slides="mainSlides" :autoPlay="true" />
+        <PublishedBanner v-if="loaded && banner?.enabled" :banner="banner" />
+        <ConferenceBanner v-else-if="!loaded && septemberConfig.showConferenceBanner" />
+        <TheCarousel v-else />
         <HeroHome />
 
         <!-- BIENVENIDA -->
@@ -136,24 +138,12 @@
 <script setup>
 import TheCarousel from '@/components/ui/TheCarousel.vue'
 import HeroHome from '@/components/ui/HeroHome.vue'
+import ConferenceBanner from '@/components/ui/ConferenceBanner.vue'
+import { septemberConfig } from '@/config/seasonal'
+import PublishedBanner from '@/components/ui/PublishedBanner.vue'
+import { usePublishedContent } from '@/composables/usePublishedContent'
+const { loaded, banner } = usePublishedContent()
 
-const mainSlides = [
-    {
-        title: 'Iglesia Pentecostal Naciente',
-        subtitle: 'Una obra al servicio de Dios en Chile',
-        image: '/img/home/slide-1.jpg'
-    },
-    {
-        title: 'Comunión, doctrina y servicio',
-        subtitle: 'Creciendo juntos en la fe',
-        image: '/img/home/slide-2.jpg'
-    },
-    {
-        title: 'Una Iglesia para toda la familia',
-        subtitle: 'Esperanza, oración y Palabra',
-        image: '/img/home/slide-3.jpg'
-    }
-]
 </script>
 
 <style scoped>

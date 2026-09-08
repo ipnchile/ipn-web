@@ -75,6 +75,8 @@
               </p>
             </Transition>
 
+            <p>Los datos se envían mediante Formspree. Consulte la <RouterLink to="/privacidad">información de privacidad</RouterLink>.</p>
+
             <div class="donaciones-form__actions">
               <button
                 type="submit"

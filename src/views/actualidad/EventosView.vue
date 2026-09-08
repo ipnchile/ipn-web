@@ -14,7 +14,7 @@
 
         <aside class="card events-hero__highlight">
           <p class="events-hero__label">Calendario nacional</p>
-          <h2>Actividades Nacionales 2026</h2>
+          <h2>Actividades nacionales</h2>
           <p>
             Revise aquí el calendario anual con encuentros, congresos, conferencias y
             actividades relevantes de nuestra misión.
@@ -138,7 +138,8 @@
           class="event-modal"
           @click.self="closeEvent"
         >
-          <div class="event-modal__dialog glass-panel--strong">
+          <div ref="eventDialog" class="event-modal__dialog glass-panel--strong"
+            role="dialog" aria-modal="true" aria-labelledby="event-modal-title" tabindex="-1">
             <button
               type="button"
               class="event-modal__close"
@@ -150,7 +151,7 @@
 
             <div class="event-modal__content">
               <p class="section-eyebrow">{{ selectedEvent.month }}</p>
-              <h2>{{ selectedEvent.title }}</h2>
+              <h2 id="event-modal-title">{{ selectedEvent.title }}</h2>
 
               <div class="event-modal__meta">
                 <p><strong>Fecha:</strong> {{ selectedEvent.dateLabel }}</p>
@@ -160,6 +161,8 @@
                   <strong>Estado:</strong> {{ eventStatusLabel(selectedEvent) }}
                 </p>
               </div>
+
+              <img v-if="selectedEvent.image" :src="selectedEvent.image" :alt="selectedEvent.title" class="event-modal__poster" />
 
               <p class="event-modal__description">
                 {{ selectedEvent.description }}
@@ -178,8 +181,17 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref } from 'vue'
-import { calendar, monthOrder } from '@/data/events'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { monthOrder } from '@/data/events'
+import { usePublishedContent, loadPublishedContent } from '@/composables/usePublishedContent'
+const { calendar } = usePublishedContent()
+import { useRoute } from 'vue-router'
+const route = useRoute()
+import { createModalController } from '@/utils/modal'
+
+const eventDialog = ref(null)
+const modal = createModalController()
+onBeforeUnmount(() => modal.deactivate({ restoreFocus: false }))
 
 const selectedEvent = ref(null)
 const monthRefs = ref({})
@@ -210,7 +222,7 @@ function parseLocalDate(dateKey) {
 }
 
 const allEvents = computed(() =>
-  calendar.flatMap((month) => month.events)
+  calendar.value.flatMap((month) => month.events)
 )
 
 const nextUpcomingEvent = computed(() => {
@@ -288,18 +300,26 @@ function eventStatusTextClass(event) {
   }
 }
 
-function openEvent(event) {
+async function openEvent(event) {
   selectedEvent.value = event
-  document.body.style.overflow = 'hidden'
+  await nextTick()
+  if (selectedEvent.value && eventDialog.value) modal.activate(eventDialog.value, closeEvent)
 }
 
 function closeEvent() {
   selectedEvent.value = null
-  document.body.style.overflow = ''
+  modal.deactivate()
 }
 
 onMounted(async () => {
+  await loadPublishedContent()
   await nextTick()
+
+  const linkedEvent = allEvents.value.find(event => String(event.id) === route.query.evento)
+  if (linkedEvent) {
+    await openEvent(linkedEvent)
+    return
+  }
 
   const currentMonthElement = monthRefs.value[currentMonthName]
 
@@ -313,6 +333,8 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.event-modal__poster { display: block; width: 100%; max-height: 60vh; object-fit: contain; margin: 1.25rem 0; }
+
 .events-page {
   min-height: 100vh;
   padding-bottom: 4rem;

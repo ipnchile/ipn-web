@@ -1,3 +1,5 @@
+import { septemberMedia } from './septemberMedia.js'
+
 export const calendar = [
   {
     month: 'ENERO',
@@ -97,6 +99,7 @@ export const calendar = [
         startDate: '2026-09-25',
         endDate: '2026-09-27',
         title: 'Conferencias Semestrales Pastores y Pastoras 2026',
+        image: septemberMedia.conferencePoster,
         location: 'IPN Nacimiento',
         type: 'Conferencia',
         description:

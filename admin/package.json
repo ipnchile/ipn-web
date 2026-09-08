@@ -1,0 +1,23 @@
+{
+  "name": "ipn-admin",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "test": "node --test tests/*.test.js",
+    "dev": "wrangler dev",
+    "deploy": "node scripts/no-remote.mjs",
+    "db:local": "wrangler d1 migrations apply ipn-content --local",
+    "db:remote": "node scripts/no-remote.mjs"
+  },
+  "dependencies": {
+    "jose": "^6.1.0",
+    "vue": "^3.5.25"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.2",
+    "vite": "^7.3.1",
+    "wrangler": "^4.0.0",
+    "miniflare": "^4.0.0"
+  }
+}

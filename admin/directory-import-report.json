@@ -1,0 +1,611 @@
+{
+  "churches": 41,
+  "people": 91,
+  "unresolvedPhotos": [
+    {
+      "record": "ipn-quilicura",
+      "original": "/images/iglesias/quilicura.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Rosamel Antonio Ceballo Garrido",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Miriam Verónica Morales Acosta",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-maipu-centro",
+      "original": "/images/iglesias/maipu.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Iván Alexis González Rodríguez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-maipu-conquistadores",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Juan Carlos Fernandez Sarmiento",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Irene Alicia Muñoz Bugueño",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-talagante-esmeralda",
+      "original": "/images/iglesias/talagante.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Manuel Ismael Burgos Arteaga",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Erika Liliana Vergara Guajardo",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-el-monte",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Joel Antonio Díaz González",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Piris Carolina Carrasco Henríquez",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-isla-de-maipo",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Manuel Antonio González Núñez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Aida Isabel Guzmán Palma",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-puente-alto",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Ricardo Eladio Alarcon Bucarey",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Jacqueline Patricia Fuentes Erices",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-san-antonio-naltagua",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Jose Guillermo Herrada Gonzalez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Ana Lucia Medina Cisterna",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-templo-la-vid",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Marco Antonio Alarcon Rojas",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Evita del Pilar Vidal Lefno",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-templo-adonai",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Raúl Fernando Vidal Lefno",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Olga Inés Ñancupil Millahual",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-rancagua-villa-cordillera",
+      "original": "/images/iglesias/rancagua.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Mauricio Esteban Carrasco Valenzuela",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Michelle Fernanda Durán Villarroel",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-graneros",
+      "original": "/images/iglesias/graneros.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Tito Sanhueza Fuentealba",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Ruth Inés Peña Báez",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-rancagua-san-luis",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Pedro Juan Pérez Figueroa",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Rosa Ester Vicencio Molina",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-rancagua-manantial",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. José Francisco Astorga palomera",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Janett del Carmen Peña Baez",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-rancagua-dintrans",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Sergio Antonio Muñoz Quezada",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Mariluz Aida Durán Soto",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-putu-emanuel",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Alejandro Javier Molina Cabezas",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Silvana Roco Gutierrez",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-talca-aurora",
+      "original": "/images/iglesias/talca.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. José González Yévenes",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Marisol Lara Gutiérrez",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-molina-centro",
+      "original": "/images/iglesias/molina.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Luis Adriano Soto Palma",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "María Cecilia León Illanes",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-curico-manuel-rodriguez",
+      "original": "/images/iglesias/curico.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Jose Daniel Hernandez Caceres",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Cristina Enriqueta Gonzalez Gatica",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-maule",
+      "original": "/images/iglesias/maule.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Manuel Jesus Apablaza Diaz",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-pichingal-molina",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Pedro Segundo Bastias Rodriguez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Jova Adriana Alcapan Colipan",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-chillan-betel",
+      "original": "/images/iglesias/chillan.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Hernan sepulveda martinez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Isabel gonzalez salazar",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-san-carlos-monte-hebron",
+      "original": "/images/iglesias/san-carlos.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Alexis Antonio Guzmán Ramírez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Victoria Emilia Sepúlveda Andrade",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-chacayal",
+      "original": "/images/iglesias/los-angeles.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Andrés Enmanuel Sepúlveda Ramírez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Jessica Loreto Fuentes Pacheco",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-ralco-alto-biobio",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Luis Francisco manquepi Vita",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Juana Dorila tranamil Almendra",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-curanilahue-heras",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Freddy Giovanni Gonzalez Rebolledo",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Natalia Jacqueline Guzmán Hidalgo",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-rio-bueno",
+      "original": "/images/iglesias/rio-bueno.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Alex Bernardo Brana Ramirez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Patricia Laura Ramirez Silva",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-el-trigal",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Abraham Marcelo jorquera prieto",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Jessica Jeanette Morales morales",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-constitucion",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Sergio Narciso Rodriguez Espinosa",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "GLORIA ALEJANDRA GUTIERREZ CARRASCO",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-angol-centro",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Nelson Eduardo Mondaca Vallejos",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Magaly Jacqueline Reyes Benavides",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-junquillar",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Joel Roco Chavez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Silvia Gutiérrez Rojas",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-renaico",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Daniel Dagoberto Soto leon",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Norma Luis Aguilera Espinosa",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-tijeral",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Luis Armando Mondaca Poblete",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Verónica Edith Godoy Barra",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-antihuala",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Leonel Isaac Molina Medina",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Damaris Jacqueline Sáez Medina",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-nontuela",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Juan Hugo Reyes Araneda",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Marcela Alejandra Vargas maraboli",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-sargento-aldea-curanilahue",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Jorge Washington Antiman Gomez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Lila del Carmen Caamaño Hernandez",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-manantial-de-vida",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Luis Alberto Araya Baeza",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-linares",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Walter Enrique Vergara Ramirez",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Jacqueline del Pilar González Fuentes",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-jehova-jireh",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. JUAN MIGUEL MONTECINO CASTILLO",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "SORAYA PROSPERINA SEPÚLVEDA POBLETE",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-rocas-de-santo-domingo",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Fernando Ramón Arriagada Alvaerz",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Ana María Rojas Palma",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "ipn-vegas-blanca",
+      "original": "/images/iglesias/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Pr. Juan antonio mora benavides",
+      "original": "/images/pastores/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    },
+    {
+      "record": "Daniela Denisse santana gonzales",
+      "original": "/images/pastoras/default.jpg",
+      "reason": "Ruta local sin archivo en public; no se inventa URL de R2"
+    }
+  ],
+  "notes": [
+    "Nombres y correos se conservaron de los archivos; su exactitud institucional requiere revisión.",
+    "Autoridades con nombres abreviados se mantienen como registros independientes; no se infieren identidades compartidas.",
+    "No se subieron imágenes ni se aplicaron migraciones remotas."
+  ]
+}

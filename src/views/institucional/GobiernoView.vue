@@ -298,77 +298,17 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useDirectory } from '@/composables/useDirectory'
+const { authorities } = useDirectory()
 
 
 
 
-const directorioNacional = [
-    {
-        cargo: 'Pastor Presidente',
-        nombre: 'Pr. Presbítero Rev. Rosamel Ceballo',
-        foto: 'https://media.ipnchile.cl/perfiles/directorio/PRESIDENTE.webp'
-    },
-    {
-        cargo: 'Pastor Vicepresidente',
-        nombre: 'Pr. Presbítero Rev. Marco Alarcón',
-        foto: 'https://media.ipnchile.cl/perfiles/directorio/VICEPRESIDENTE.webp'
-    },
-    {
-        cargo: 'Pastor Secretario',
-        nombre: 'Pr. Diacono Rev. Alejandro Molina',
-        foto: 'https://media.ipnchile.cl/perfiles/directorio/SECRETARIO.webp'
-    },
-    {
-        cargo: 'Pastor Tesorero',
-        nombre: 'Pr. Presbítero Rev. Juan Montecino',
-        foto: 'https://media.ipnchile.cl/perfiles/directorio/TESORERO.webp'
-    },
-    {
-        cargo: 'Pastor Prosecretario',
-        nombre: 'Pr. Presbítero Abraham Jorquera',
-        foto: 'https://media.ipnchile.cl/perfiles/directorio/PROSECRETARIO.webp'
-    },
-    {
-        cargo: 'Pastor Protesorero',
-        nombre: 'Pr. Presbítero Rev. Guillermo Herrada',
-        foto: 'https://media.ipnchile.cl/perfiles/directorio/PROTESORERO.webp'
-    },
-    {
-        cargo: 'Pastor Director',
-        nombre: 'Pr. Presbítero Rev. Pascual Silva',
-        foto: 'https://media.ipnchile.cl/perfiles/directorio/DIRECTOR.webp'
-    }
-]
+const directorioNacional = computed(() => authorities.value.filter(p => p.area === 'directorio'))
 
-const tribunalEtica = [
-    {
-        cargo: 'Pastor Director',
-        nombre: 'Pr. Presbítero Rev. Hernan Sepulveda',
-        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Hernan%20Sepulveda.webp'
-    },
-    {
-        cargo: 'Secretario',
-        nombre: 'Pr. Presbítero Rev. Luis Mondaca',
-        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Luis%20Mondaca.webp'
-    },
-    {
-        cargo: 'Miembro del Tribunal',
-        nombre: 'Pr. Presbítero Rev. Raúl Vidal',
-        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Raul%20Vidal.webp'
-    },
-    {
-        cargo: 'Miembro del Tribunal',
-        nombre: 'Pr. Presbítero Rev. Nelsón Mondaca',
-        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pasto%20Nelson%20Mondaca.webp'
-    },
-    {
-        cargo: 'Miembro del Tribunal',
-        nombre: 'Pr. Presbítero Rev. Alex Brana',
-        foto: 'https://media.ipnchile.cl/perfiles/tribunal/Pastor%20Alex%20Brana.webp'
-    }
-]
+const tribunalEtica = computed(() => authorities.value.filter(p => p.area === 'tribunal'))
 
 const selectedPerson = ref(null)
 let previousBodyOverflow = ''

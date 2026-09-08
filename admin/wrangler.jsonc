@@ -1,0 +1,43 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ipn-admin",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-08-06",
+  "account_id": "e225e8b28b9744c25c9b696a1d11ef23",
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "admin.ipnchile.cl",
+      "custom_domain": true
+    }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "vars": {
+    "ADMIN_ORIGIN": "https://admin.ipnchile.cl",
+    "PUBLIC_ORIGIN": "https://ipn-admin.master-ipnchile.workers.dev",
+    "ACCESS_ISSUER": "https://winter-moon-3de6.cloudflareaccess.com",
+    "ACCESS_AUD": "4606d22037e807ad3433ffa5adefa540ae89d1305deac50fd53571019fed83f6",
+    "ADMIN_EMAILS": "master.ipnchile@gmail.com",
+    "EDITOR_EMAILS": "",
+    "ALLOW_MEDIA_UPLOADS": "false"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ipn-content",
+      "database_id": "80b4598b-6ee2-4aa8-8c30-6fbd45aadf7e",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "DRAFT_MEDIA",
+      "bucket_name": "ipn-admin-private"
+    }
+  ]
+}

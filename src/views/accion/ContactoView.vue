@@ -145,7 +145,9 @@
                             ></textarea>
                         </div>
 
-                        <div class="contact-form__actions">
+                        <p>Los datos se envían mediante Formspree. Consulte la <RouterLink to="/privacidad">información de privacidad</RouterLink>.</p>
+
+            <div class="contact-form__actions">
                             <button type="submit" class="btn-primary" :disabled="enviando">
                                 {{ enviando ? 'Enviando...' : 'Enviar mensaje' }}
                             </button>
