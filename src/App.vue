@@ -10,10 +10,12 @@ import ScrollToTopButton from '@/components/ui/ScrollToTopButton.vue'
 import { useDirectory } from '@/composables/useDirectory'
 import { usePublishedContent } from '@/composables/usePublishedContent'
 import { resolvePageMetadata, updatePageMetadata } from '@/utils/seo'
+import { syncSiteIdentity } from '@/utils/structuredData'
 const route = useRoute()
 const { churches } = useDirectory()
 const { calendar } = usePublishedContent()
 watchEffect(() => {
+    syncSiteIdentity(route.name === 'home')
     updatePageMetadata(resolvePageMetadata(route, { churches: churches.value, events: calendar.value.flatMap(month => month.events) }))
 })
 

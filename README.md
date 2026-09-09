@@ -69,3 +69,13 @@ public/robots.txt permite el rastreo público. public/_redirects configura el fa
 Publicación: revisar pruebas y build, subir a main para activar Netlify, comprobar HTTP y contenido de robots.txt/sitemap.xml, abrir rutas directamente y comprobar metadatos tras navegar. Después enviar https://ipnchile.cl/sitemap.xml en Search Console y solicitar una vez la indexación de la portada actualizada. No se garantizan posiciones. Los rastreadores sociales que no ejecutan JavaScript seguirán viendo los metadatos de portada del HTML base; esta integración conserva la SPA y no requiere SSR.
 
 Mientras el Worker no esté desplegado, deje VITE_CONTENT_API y VITE_DIRECTORY_API sin configurar: la web utiliza los datos públicos incluidos y no intenta consultar el servicio pendiente. Al habilitarlo, configure ambos endpoints públicos en Netlify y vuelva a compilar.
+
+## Identidad estructurada del sitio
+
+src/utils/structuredData.js define un único grafo JSON-LD WebSite/Organization con identificadores estables, nombres oficiales, logo y perfiles sociales existentes. vite.config.js lo incluye en el HTML inicial de dist/index.html (también al desarrollar). App.vue reutiliza el bloque en portada, lo retira en otras rutas y lo restaura al regresar. La SPA sirve el mismo HTML base al abrir otras rutas directamente; ese HTML contiene la identidad global hasta que Vue resuelve la ruta. No contiene datos particulares de iglesias o eventos y no requiere SSR.
+
+El logo es el isotipo institucional existente en /isotipo-ipn.png; no se ha rediseñado. Los datos no incluyen domicilios, teléfonos ni fechas adicionales. Se conservan los metadatos, canonical y sitemap anteriores.
+
+Referencias oficiales: https://developers.google.com/search/docs/appearance/site-names y https://developers.google.com/search/docs/appearance/structured-data/organization. La coherencia de identidad no garantiza que Google deje de corregir una consulta ni posiciones en resultados.
+
+Acción manual pendiente del propietario: usar “IPN Chile — Iglesia Pentecostal Nazareth” y enlazar https://ipnchile.cl/ en las biografías oficiales de Facebook, Instagram y YouTube. Esta implementación no modifica cuentas externas.

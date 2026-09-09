@@ -8,7 +8,7 @@
                     <h1>¿Quiénes <span>Somos?</span></h1>
 
                     <p class="hero-text">
-                        La Iglesia Pentecostal Nazareth es una comunidad cristiana evangélica de derecho público,
+                        La Iglesia Pentecostal Nazareth (IPN Chile) es una comunidad cristiana evangélica de derecho público,
                         llamada a anunciar el Evangelio de Jesucristo, vivir conforme a la Palabra de Dios
                         y servir con fidelidad, amor y reverencia.
                     </p>
