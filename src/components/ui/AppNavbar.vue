@@ -16,6 +16,7 @@
 
         <div
           class="navbar__dropdown"
+          @keydown.esc="closeDropdowns"
           @mouseenter="handleMouseEnter('quienesSomos')"
           @mouseleave="handleMouseLeave"
         >
@@ -23,6 +24,9 @@
             type="button"
             class="navbar__link navbar__dropdown-title"
             :class="{ active: isSection('/quienes-somos') || dropdowns.quienesSomos }"
+            :aria-expanded="dropdowns.quienesSomos"
+            aria-controls="nav-quienesSomos"
+            @keydown.esc="closeDropdowns"
             @click="toggleDropdown('quienesSomos')"
           >
             <span>Quiénes Somos</span>
@@ -32,7 +36,7 @@
           </button>
 
           <transition name="dropdown-fade">
-            <div v-if="dropdowns.quienesSomos" class="navbar__dropdown-content">
+            <div v-show="dropdowns.quienesSomos" id="nav-quienesSomos" class="navbar__dropdown-content">
               <RouterLink to="/quienes-somos" :class="{ active: isRoute('/quienes-somos') }">
                 Historia
               </RouterLink>
@@ -48,6 +52,7 @@
 
         <div
           class="navbar__dropdown"
+          @keydown.esc="closeDropdowns"
           @mouseenter="handleMouseEnter('departamentos')"
           @mouseleave="handleMouseLeave"
         >
@@ -55,6 +60,9 @@
             type="button"
             class="navbar__link navbar__dropdown-title"
             :class="{ active: isSection('/departamentos') || dropdowns.departamentos }"
+            :aria-expanded="dropdowns.departamentos"
+            aria-controls="nav-departamentos"
+            @keydown.esc="closeDropdowns"
             @click="toggleDropdown('departamentos')"
           >
             <span>Departamentos</span>
@@ -64,7 +72,7 @@
           </button>
 
           <transition name="dropdown-fade">
-            <div v-if="dropdowns.departamentos" class="navbar__dropdown-content">
+            <div v-show="dropdowns.departamentos" id="nav-departamentos" class="navbar__dropdown-content">
               <RouterLink to="/departamentos/varones" :class="{ active: isRoute('/departamentos/varones') }">Varones</RouterLink>
               <RouterLink to="/departamentos/dorcas" :class="{ active: isRoute('/departamentos/dorcas') }">Dorcas</RouterLink>
               <RouterLink to="/departamentos/jumix" :class="{ active: isRoute('/departamentos/jumix') }">Jumix</RouterLink>
@@ -76,6 +84,7 @@
 
         <div
           class="navbar__dropdown"
+          @keydown.esc="closeDropdowns"
           @mouseenter="handleMouseEnter('actualidad')"
           @mouseleave="handleMouseLeave"
         >
@@ -83,6 +92,9 @@
             type="button"
             class="navbar__link navbar__dropdown-title"
             :class="{ active: isSection('/actualidad') || dropdowns.actualidad }"
+            :aria-expanded="dropdowns.actualidad"
+            aria-controls="nav-actualidad"
+            @keydown.esc="closeDropdowns"
             @click="toggleDropdown('actualidad')"
           >
             <span>Actualidad</span>
@@ -92,7 +104,7 @@
           </button>
 
           <transition name="dropdown-fade">
-            <div v-if="dropdowns.actualidad" class="navbar__dropdown-content">
+            <div v-show="dropdowns.actualidad" id="nav-actualidad" class="navbar__dropdown-content">
               <RouterLink to="/actualidad/noticias" :class="{ active: isRoute('/actualidad/noticias') }">Noticias</RouterLink>
               <RouterLink to="/actualidad/eventos" :class="{ active: isRoute('/actualidad/eventos') }">Eventos</RouterLink>
             </div>
@@ -169,6 +181,8 @@
 
       <button
         class="navbar__toggle"
+        :aria-expanded="menuOpen"
+        aria-controls="nav-mobile"
         @click="toggleMenu"
         :class="{ 'navbar__toggle--active': menuOpen }"
         :aria-label="menuOpen ? 'Cerrar menú' : 'Abrir menú'"
@@ -178,7 +192,7 @@
     </div>
 
     <transition name="mobile-fade">
-      <div v-if="menuOpen" class="navbar__mobile">
+      <div v-show="menuOpen" id="nav-mobile" class="navbar__mobile">
         <div class="navbar__mobile-container">
           <RouterLink to="/" :class="{ active: isRoute('/') }">Inicio</RouterLink>
 

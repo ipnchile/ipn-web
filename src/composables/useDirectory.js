@@ -3,8 +3,9 @@ import initial from '@/data/directory.json'
 import { projectChurches, projectAuthorities } from '../utils/directory.js'
 const data = shallowRef(initial)
 let pending, loadedAt = 0, attemptedAt = 0
-const endpoint = import.meta.env.VITE_DIRECTORY_API || 'https://ipn-admin.master-ipnchile.workers.dev/public/directory'
+const endpoint = import.meta.env.VITE_DIRECTORY_API || ''
 export async function loadDirectory() {
+  if (!endpoint) return
   if (pending) return pending
   if (Date.now() - Math.max(loadedAt,attemptedAt) < 60000) return
   attemptedAt = Date.now()

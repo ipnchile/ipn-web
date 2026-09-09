@@ -87,13 +87,12 @@
 
           <div class="annual-calendar__content">
             <template v-if="month.events.length">
-              <button
+              <RouterLink
                 v-for="event in month.events"
                 :key="event.id"
-                type="button"
                 class="annual-calendar__event"
                 :class="eventStateClass(event)"
-                @click="openEvent(event)"
+                :to="{ path: '/actualidad/eventos', query: { evento: String(event.id) } }"
               >
                 <div class="annual-calendar__event-date">
                   <span>{{ event.dateLabel }}</span>
@@ -119,7 +118,7 @@
                   </h3>
                   <p>{{ event.location }}</p>
                 </div>
-              </button>
+              </RouterLink>
             </template>
 
             <div v-else class="annual-calendar__empty">
@@ -181,12 +180,13 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { monthOrder } from '@/data/events'
 import { usePublishedContent, loadPublishedContent } from '@/composables/usePublishedContent'
 const { calendar } = usePublishedContent()
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
 import { createModalController } from '@/utils/modal'
 
 const eventDialog = ref(null)
@@ -300,16 +300,31 @@ function eventStatusTextClass(event) {
   }
 }
 
-async function openEvent(event) {
+function openEvent(event) {
+  return router.push({ query: { ...route.query, evento: String(event.id) } })
+}
+
+async function showEvent(event) {
   selectedEvent.value = event
   await nextTick()
   if (selectedEvent.value && eventDialog.value) modal.activate(eventDialog.value, closeEvent)
 }
 
 function closeEvent() {
-  selectedEvent.value = null
-  modal.deactivate()
+  const query = { ...route.query }
+  delete query.evento
+  router.replace({ query })
 }
+
+watch(() => [route.query.evento, allEvents.value], () => {
+  if (route.name !== 'eventos') return
+  const event = allEvents.value.find(item => String(item.id) === route.query.evento)
+  if (event) showEvent(event)
+  else {
+    selectedEvent.value = null
+    modal.deactivate()
+  }
+}, { immediate: true, flush: 'post' })
 
 onMounted(async () => {
   await loadPublishedContent()
@@ -317,7 +332,7 @@ onMounted(async () => {
 
   const linkedEvent = allEvents.value.find(event => String(event.id) === route.query.evento)
   if (linkedEvent) {
-    await openEvent(linkedEvent)
+    await showEvent(linkedEvent)
     return
   }
 

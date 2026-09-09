@@ -14,7 +14,7 @@
                     </h1>
 
                     <p class="hero-text">
-                        Somos una obra cristiana con presencia en distintas ciudades de Chile.
+                        Somos la Iglesia Pentecostal Nazareth (IPN Chile), una obra cristiana con presencia en distintas ciudades de Chile.
                         Queremos recibirle con amor, predicar fielmente la Palabra de Dios
                         y acompañarle en su crecimiento espiritual.
                     </p>

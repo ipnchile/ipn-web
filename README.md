@@ -20,7 +20,7 @@ El script lint valida sintaxis JavaScript y compila los componentes Vue; no apli
 
 ## Estructura y contenido
 
-- src/router/index.js: rutas y títulos/descripciones de página.
+- src/router/routes.js: rutas y títulos/descripciones de página.
 - src/views: páginas institucionales, departamentos, actualidad y contacto.
 - src/components/ui: navegación, pie, carrusel y elementos compartidos.
 - src/data: iglesias, eventos, comunicados, creencias y galería.
@@ -28,7 +28,7 @@ El script lint valida sintaxis JavaScript y compila los componentes Vue; no apli
 - src/style.css: estilos globales y colores por departamento mediante data-department.
 - public: fuentes, iconos y archivos estáticos.
 
-El contenido se mantiene en archivos locales; no hay un panel de administración en este repositorio. Para añadir una página, registre su ruta y sus metadatos. Contacto y Donaciones usan Formspree; el destino se define con FORM_ENDPOINT en cada vista. No envíe solicitudes reales al ejecutar pruebas. La página /privacidad describe los datos transmitidos; debe actualizarse cuando cambien los formularios o los servicios utilizados.
+El contenido público inicial se mantiene en archivos locales; el panel separado se encuentra en admin/. Para añadir una página, registre su ruta y sus metadatos. Contacto y Donaciones usan Formspree; el destino se define con FORM_ENDPOINT en cada vista. No envíe solicitudes reales al ejecutar pruebas. La página /privacidad describe los datos transmitidos; debe actualizarse cuando cambien los formularios o los servicios utilizados.
 
 ## Publicación
 
@@ -57,3 +57,15 @@ Los dos comunicados están en src/data/comunicados.js. El texto histórico del M
 ## Panel de administración
 
 El directorio `admin/` contiene el panel Vue 3, el Worker protegido por Cloudflare Access, migraciones D1 y pruebas de seguridad. Consulte [la guía del panel](admin/README.md) para instalación, uso y publicación. El sitio público consulta solo contenido publicado; admite configurar `VITE_CONTENT_API`. El panel y el sitio se despliegan por separado. No hay despliegue automático asociado a estos cambios locales.
+
+## SEO y descubrimiento de páginas
+
+Las rutas y sus metadatos se declaran en src/router/routes.js, compartido por Vue Router y el generador del sitemap. src/utils/seo.js resuelve títulos, descripciones, canonical y Open Graph/Twitter; App.vue los sincroniza con la ruta y el contenido público, incluidas iglesias y eventos. Los parámetros de seguimiento no forman parte del canonical; evento identifica un evento publicado. Las páginas inexistentes usan noindex sin canonical.
+
+npm run build genera dist/sitemap.xml con las rutas estáticas indexables, los slugs reales del directorio y los eventos publicados. Sin endpoints configurados se usa el contenido público incluido en src/data. Si VITE_DIRECTORY_API o VITE_CONTENT_API están configurados, el generador consulta esos endpoints públicos y falla si no puede obtenerlos: nunca consulta el API administrativo ni incluye borradores. Al publicar o retirar contenido remoto hay que volver a ejecutar la compilación de Netlify para actualizar el sitemap. No se usa la fecha del evento ni la fecha de compilación como lastmod.
+
+public/robots.txt permite el rastreo público. public/_redirects configura el fallback de Netlify sin forzarlo sobre archivos existentes: robots.txt y sitemap.xml se sirven como archivos reales. El contenido privado sigue dependiendo de los controles de Access y del Worker, nunca de robots.txt.
+
+Publicación: revisar pruebas y build, subir a main para activar Netlify, comprobar HTTP y contenido de robots.txt/sitemap.xml, abrir rutas directamente y comprobar metadatos tras navegar. Después enviar https://ipnchile.cl/sitemap.xml en Search Console y solicitar una vez la indexación de la portada actualizada. No se garantizan posiciones. Los rastreadores sociales que no ejecutan JavaScript seguirán viendo los metadatos de portada del HTML base; esta integración conserva la SPA y no requiere SSR.
+
+Mientras el Worker no esté desplegado, deje VITE_CONTENT_API y VITE_DIRECTORY_API sin configurar: la web utiliza los datos públicos incluidos y no intenta consultar el servicio pendiente. Al habilitarlo, configure ambos endpoints públicos en Netlify y vuelva a compilar.

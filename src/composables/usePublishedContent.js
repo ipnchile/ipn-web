@@ -4,8 +4,9 @@ import { calendar as initialCalendar, monthOrder } from '@/data/events'
 const content = shallowRef(null)
 let inFlight = null
 let lastLoaded = 0
-const endpoint = import.meta.env.VITE_CONTENT_API || 'https://ipn-admin.master-ipnchile.workers.dev/public/content'
+const endpoint = import.meta.env.VITE_CONTENT_API || ''
 export async function loadPublishedContent() {
+  if (!endpoint) return
   if (inFlight) return inFlight
   if (content.value && Date.now() - lastLoaded < 60000) return
   inFlight = (async () => {

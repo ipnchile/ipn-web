@@ -7,7 +7,15 @@ import SeptemberDecor from '@/components/ui/SeptemberDecor.vue'
 import AppFooter from '@/components/ui/AppFooter.vue'
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton.vue'
 
+import { useDirectory } from '@/composables/useDirectory'
+import { usePublishedContent } from '@/composables/usePublishedContent'
+import { resolvePageMetadata, updatePageMetadata } from '@/utils/seo'
 const route = useRoute()
+const { churches } = useDirectory()
+const { calendar } = usePublishedContent()
+watchEffect(() => {
+    updatePageMetadata(resolvePageMetadata(route, { churches: churches.value, events: calendar.value.flatMap(month => month.events) }))
+})
 
 const currentDepartment = computed(() => {
     const path = route.path.toLowerCase()
