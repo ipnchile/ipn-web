@@ -7,7 +7,8 @@ export default defineConfig({
   plugins: [vue(), {
     name: 'ipn-local-admin', apply: 'serve',
     async configureServer(server) {
-      const { createLocalAdmin } = await import('./admin/scripts/local-admin.mjs')
+      const localModule = new URL('./admin/scripts/local-admin.mjs', import.meta.url).href
+      const { createLocalAdmin } = await import(/* @vite-ignore */ localModule)
       const local = await createLocalAdmin()
       server.middlewares.use(local.middleware)
       server.httpServer?.once('close', () => { void local.dispose() })
