@@ -11,6 +11,8 @@
       <p>El formulario envía su nombre y correo electrónico como solicitud de información y, cuando el envío se completa, muestra los datos de la cuenta para realizar un aporte. Este formulario no procesa pagos ni solicita datos de tarjetas.</p>
       <h2>Servicio de recepción</h2>
       <p>Los formularios transmiten la información a Formspree, un servicio externo de recepción de formularios. Puede consultar su <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">información de privacidad</a>.</p>
+      <h2>Videos y transmisiones</h2>
+      <p>La previa y las transmisiones utilizan un reproductor de YouTube. Al abrirse el video, incluso automáticamente al ingresar, su navegador se conecta con YouTube y comparte información técnica y de reproducción con ese servicio. Puede cerrar el reproductor para detenerlo. Consulte la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">política de privacidad de Google</a>.</p>
       <h2>Consultas sobre sus datos</h2>
       <p>Si necesita consultar por la información que ha enviado o solicitar su corrección o eliminación, escriba a <a href="mailto:contacto@ipnchile.cl">contacto@ipnchile.cl</a>.</p>
       <RouterLink to="/contacto" class="btn-secondary">Ir a contacto</RouterLink>

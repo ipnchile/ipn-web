@@ -1,5 +1,7 @@
 <script setup>
+import ContentPreview from './ContentPreview.vue'
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
+const previewOpen = ref(false)
 const props = defineProps({me:Object})
 const records=ref([]), kind=ref('church'), query=ref(''), selected=ref(null), form=ref(null), busy=ref(false), error=ref(''), message=ref(''), baseline=ref('')
 const dirty=computed(() => form.value && JSON.stringify(form.value)!==baseline.value)
@@ -14,6 +16,7 @@ async function request(path='',method='GET',body) {
 }
 async function run(fn) { busy.value=true; error.value=''; message.value=''; try { await fn() } catch(e) { error.value=e.message } finally { busy.value=false } }
 const canLeave=()=>!dirty.value || window.confirm('¿Descartar los cambios sin guardar?')
+defineExpose({ canLeave })
 function choose(row) {
   if (!canLeave()) return
   selected.value=row
@@ -44,6 +47,7 @@ onBeforeUnmount(()=>window.removeEventListener('beforeunload',unload))
       </aside>
       <section class="editor"><p v-if="!form">Seleccione un registro para consultar o actualizar sus datos.</p>
         <form v-else @submit.prevent="save"><fieldset :disabled="busy || props.me.role!=='admin'">
+          <button type="button" @click="previewOpen = true">Vista previa</button>
           <h2>{{ selected.id?'Editar registro':'Nuevo registro' }}</h2>
           <label>Nombre público<input v-model="form.nombre" required maxlength="200"></label>
           <label>URL pública de la fotografía en R2<input v-model="form.foto_url" type="url" placeholder="https://media.ipnchile.cl/…" maxlength="1000"></label><p>La imagen permanece en R2. Aquí se guarda únicamente el enlace.</p>
@@ -68,5 +72,6 @@ onBeforeUnmount(()=>window.removeEventListener('beforeunload',unload))
         </fieldset></form>
       </section>
     </div>
+    <ContentPreview v-if="previewOpen && form" :kind="selected.kind" :draft="form" :published="selected.published" @close="previewOpen = false" />
   </section>
 </template>

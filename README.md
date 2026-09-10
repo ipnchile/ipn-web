@@ -62,13 +62,13 @@ El directorio `admin/` contiene el panel Vue 3, el Worker protegido por Cloudfla
 
 Las rutas y sus metadatos se declaran en src/router/routes.js, compartido por Vue Router y el generador del sitemap. src/utils/seo.js resuelve títulos, descripciones, canonical y Open Graph/Twitter; App.vue los sincroniza con la ruta y el contenido público, incluidas iglesias y eventos. Los parámetros de seguimiento no forman parte del canonical; evento identifica un evento publicado. Las páginas inexistentes usan noindex sin canonical.
 
-npm run build genera dist/sitemap.xml con las rutas estáticas indexables, los slugs reales del directorio y los eventos publicados. Sin endpoints configurados se usa el contenido público incluido en src/data. Si VITE_DIRECTORY_API o VITE_CONTENT_API están configurados, el generador consulta esos endpoints públicos y falla si no puede obtenerlos: nunca consulta el API administrativo ni incluye borradores. Al publicar o retirar contenido remoto hay que volver a ejecutar la compilación de Netlify para actualizar el sitemap. No se usa la fecha del evento ni la fecha de compilación como lastmod.
+El sitemap se sirve dinámicamente desde el Worker mediante /sitemap.xml. Incluye rutas estáticas y eventos e iglesias publicados en D1. Publicar o retirar contenido actualiza el sitemap sin compilaciones. No se inventan fechas lastmod.
 
 public/robots.txt permite el rastreo público. public/_redirects configura el fallback de Netlify sin forzarlo sobre archivos existentes: robots.txt y sitemap.xml se sirven como archivos reales. El contenido privado sigue dependiendo de los controles de Access y del Worker, nunca de robots.txt.
 
 Publicación: revisar pruebas y build, subir a main para activar Netlify, comprobar HTTP y contenido de robots.txt/sitemap.xml, abrir rutas directamente y comprobar metadatos tras navegar. Después enviar https://ipnchile.cl/sitemap.xml en Search Console y solicitar una vez la indexación de la portada actualizada. No se garantizan posiciones. Los rastreadores sociales que no ejecutan JavaScript seguirán viendo los metadatos de portada del HTML base; esta integración conserva la SPA y no requiere SSR.
 
-Mientras el Worker no esté desplegado, deje VITE_CONTENT_API y VITE_DIRECTORY_API sin configurar: la web utiliza los datos públicos incluidos y no intenta consultar el servicio pendiente. Al habilitarlo, configure ambos endpoints públicos en Netlify y vuelva a compilar.
+La web consulta /public/content y /public/directory. En desarrollo los sirve el adaptador local; en Netlify, public/_redirects los envía al Worker. Desplegar el Worker y aplicar sus migraciones antes del despliegue inicial de la web. Las variables VITE_CONTENT_API y VITE_DIRECTORY_API solo son necesarias para cambiar estos destinos.
 
 ## Identidad estructurada del sitio
 
@@ -79,3 +79,23 @@ El logo es el isotipo institucional existente en /isotipo-ipn.png; no se ha redi
 Referencias oficiales: https://developers.google.com/search/docs/appearance/site-names y https://developers.google.com/search/docs/appearance/structured-data/organization. La coherencia de identidad no garantiza que Google deje de corregir una consulta ni posiciones en resultados.
 
 Acción manual pendiente del propietario: usar “IPN Chile — Iglesia Pentecostal Nazareth” y enlazar https://ipnchile.cl/ en las biografías oficiales de Facebook, Instagram y YouTube. Esta implementación no modifica cuentas externas.
+
+## Video de conferencias
+
+El modal global abre la previa VEPseBfwQZE tras consultar el contenido publicado (máximo 5 segundos si falla la API). Cada video/modo abre una vez por carga del sitio; navegar no lo reabre. Cerrar elimina el iframe y detiene el audio. El botón permanece en todas las páginas. Los cambios publicados se consultan cada minuto y al volver a la pestaña. Se conserva el último contenido válido ante fallos de red.
+
+En el mantenedor: Banner de inicio → Video de conferencias. Seleccione previa, en vivo o desactivado; ingrese los enlaces; guarde y publique. La configuración es independiente de la casilla Mostrar banner. Retirar toda la publicación del banner también oculta el video cuando responde la API. Las publicaciones antiguas sin configuración usan la previa incluida. No hay programación ni detección automática del estado del directo: al finalizar debe cambiar el modo y publicar.
+
+El autoplay se solicita con sonido, con controles y enlace alternativo a YouTube. El navegador puede exigir una pulsación; el canal debe permitir inserción. Referencia: https://developers.google.com/youtube/player_parameters. El reproductor se carga desde youtube-nocookie.com.
+
+Desplegar sitio y mantenedor juntos para habilitar edición. No requiere migración D1 ni claves de YouTube.
+
+## Contenido sin despliegues
+
+Biblioteca de videos tiene documentos publicados en D1, con enlace YouTube validado, título, descripción, categoría, orden y botón opcional. Las migraciones 0005/0006 conservan documentos e historial e importan los dos videos existentes una vez. Se mantienen los datos locales iniciales como respaldo si la API no responde; una biblioteca publicada vacía sí se muestra vacía. El video de entrada es independiente.
+
+El sitemap no usa un archivo de dist ni solicita recompilaciones. /sitemap.xml se reescribe hacia /public/sitemap.xml del Worker y lee solo publicaciones actuales. Retirar eventos e iglesias los quita del siguiente sitemap. Los videos se muestran en la página de Noticias, sin inventar páginas individuales.
+
+La puesta en marcha exige aplicar las migraciones D1, desplegar el Worker/panel y desplegar una vez la web con las reglas de proxy. Después publicar contenidos no llama a Netlify ni a un build hook. Solo cambiar código/diseño requiere despliegue. No se ha hecho push, migración remota ni despliegue desde esta tarea.
+
+Referencias: https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/ y https://developers.cloudflare.com/d1/sql-api/foreign-keys/.

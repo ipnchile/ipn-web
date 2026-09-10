@@ -2,7 +2,7 @@
 
 Panel Vue 3 separado del sitio público. Cloudflare Access protege `admin.ipnchile.cl`; el Worker vuelve a verificar firma RS256, emisor, audiencia, expiración y correo de cada sesión. La lista de roles está en las variables del Worker: `ADMIN_EMAILS` y `EDITOR_EMAILS` (correos separados por coma). No se guardan contraseñas ni claves de R2 en el navegador.
 
-## Estado de esta integración
+## Estado inicial de esta integración (histórico)
 
 Preparación completada el 7 de septiembre de 2026, **sin despliegue por indicación del usuario**. No se hizo commit ni push a GitHub ni publicación en Netlify.
 
@@ -56,7 +56,7 @@ La lectura pública utiliza `https://ipn-admin.master-ipnchile.workers.dev/publi
 - Los planes están sujetos a las cuotas de Cloudflare. No se configuran ampliaciones de pago automáticamente.
 - `.wrangler`, `.dev.vars` y credenciales deben permanecer fuera de Git.
 
-## Directorio público — preparación local, coste cero pendiente de verificar
+## Directorio público — notas de la preparación inicial
 
 Se añadieron 41 iglesias y 91 registros de personas en las migraciones 0003/0004. Los datos provienen del sitio existente; no se verificaron identidades ni direcciones contra fuentes externas. Las autoridades con nombres abreviados siguen separadas hasta confirmar sus correspondencias. El informe directory-import-report.json enumera 120 rutas locales de fotografías inexistentes: quedaron vacías, con el marcador visual del sitio; las fotos institucionales que ya tienen URL de R2 se conservaron.
 
@@ -69,3 +69,21 @@ Los scripts npm run deploy y npm run db:remote están bloqueados. No se aplicó 
 Antes de cualquier publicación se requiere verificar Workers Free/D1 y resolver con el propietario la condición de coste cero: D1/Workers Free bloquean al superar sus cuotas, mientras R2 factura almacenamiento y operaciones excedentes. Una alerta no es un tope de gasto. Esta preparación no garantiza una factura de cero ni modifica el contrato de R2 existente. No habilitar servicios pagados ni eludir los bloqueos.
 
 Referencias: https://developers.cloudflare.com/d1/platform/limits/ y https://developers.cloudflare.com/r2/pricing/ (revisadas el 7 de septiembre de 2026).
+
+## Acceso local y vista previa
+
+Compile el panel con npm run admin:build, luego inicie npm run dev desde la raíz. Abra http://localhost:5173/mantenedor/ (o el puerto mostrado por Vite). El menú conserva la sección mediante #news, #event, #banner o #directory. Vista previa muestra borrador sin guardar o versión publicada, con tamaños escritorio y móvil. Es una representación del contenido; no publica.
+
+El adaptador de desarrollo usa las mismas validaciones y operaciones del Worker con D1/R2 locales persistentes en admin/.wrangler/local-admin. Solo acepta conexiones loopback y conserva la validación de origen para escrituras. No contacta Cloudflare ni modifica producción. Las migraciones iniciales se aplican una vez a esa base local. Publicar actualiza el sitio local; recargue la página para comprobarlo.
+
+El Worker de producción mantiene Cloudflare Access y el dominio previsto admin.ipnchile.cl. El adaptador local solo se carga desde Vite en desarrollo. No se ha desplegado el dominio ni hecho push.
+
+## Biblioteca y sitemap dinámicos
+
+La sección Biblioteca de videos permite crear, previsualizar, guardar, publicar y retirar videos con historial. Aplique 0005_video_library.sql y 0006_initial_videos.sql al poner en marcha el Worker. La ampliación de documents conserva su contenido y las referencias de history mediante restricciones diferidas. /public/sitemap.xml consulta eventos e iglesias publicados en cada solicitud. Ninguna publicación invoca un despliegue de Netlify.
+
+## Publicación autorizada — 10 de septiembre de 2026
+
+Worker y dominio admin.ipnchile.cl desplegados. Migraciones 0003 a 0006 aplicadas a D1 remoto; verificadas 3 noticias, 9 eventos, 2 videos y 41 iglesias. La entrada administrativa redirige a Cloudflare Access. API pública y sitemap responden correctamente. No se cambiaron suscripciones ni se habilitaron cargas adicionales de R2 (ALLOW_MEDIA_UPLOADS=false). Los bloqueos npm de operaciones remotas permanecen como protección para ejecuciones futuras; esta publicación se ejecutó con autorización expresa del propietario.
+
+Versión Worker: 1fa0990b-ee77-4554-85bb-efcc95a11d38. La web se publica mediante GitHub/Netlify con las reglas de proxy incluidas. El inicio de sesión interactivo requiere el correo autorizado y el segundo factor del propietario.

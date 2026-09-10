@@ -1,3 +1,4 @@
+import { sitemapXml } from './sitemap.js'
 import { directoryAdmin, directoryPublic } from './directory.js'
 import { authenticate, checkMutation, requireAdmin, HttpError } from './auth.js'
 import { kinds, validateContent, mediaIds, publicData } from './content.js'
@@ -5,7 +6,7 @@ import { kinds, validateContent, mediaIds, publicData } from './content.js'
 const json = (data, status = 200, extra = {}) => Response.json(data, { status, headers: { 'Cache-Control':'no-store', ...extra } })
 const securityHeaders = {
   'X-Content-Type-Options':'nosniff', 'Referrer-Policy':'same-origin', 'X-Frame-Options':'DENY',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://media.ipnchile.cl; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://media.ipnchile.cl; connect-src 'self'; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
   'Permissions-Policy':'camera=(), microphone=(), geolocation=()', 'X-Robots-Tag':'noindex, nofollow'
 }
 async function boundedBody(request, limit) {
@@ -56,13 +57,15 @@ export async function revise(db, row, draft, published, identity, action) {
 function dto(row) { return {...row, draft: JSON.parse(row.draft), published: row.published ? JSON.parse(row.published) : null} }
 async function publicRoute(request, env, url) {
   if (!['GET','HEAD'].includes(request.method)) throw new HttpError(405,'Método no permitido.')
+  if (url.pathname === '/public/sitemap.xml') return new Response(request.method === 'HEAD' ? null : await sitemapXml(env.DB),{headers:{'Content-Type':'application/xml; charset=utf-8','Cache-Control':'no-store'}})
   if (url.pathname === '/public/directory') return json(await directoryPublic(env.DB),200,{'Access-Control-Allow-Origin':'*'})
   if (url.pathname === '/public/content') {
     const {results} = await env.DB.prepare('SELECT id,kind,published FROM documents WHERE published IS NOT NULL ORDER BY updated_at DESC').all()
-    const output = {news:[],events:[],banner:null}
+    const output = {news:[],events:[],videos:[],banner:null}
     for (const row of results) {
       const item = publicData(row,env.PUBLIC_ORIGIN)
       if (row.kind === 'banner') output.banner = item
+      else if (row.kind === 'video') output.videos.push(item)
       else output[row.kind === 'news' ? 'news' : 'events'].push(item)
     }
     return json(output,200,{'Access-Control-Allow-Origin':'*'})

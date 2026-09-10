@@ -1,10 +1,13 @@
 <script setup>
+import { defaultConferenceVideo } from '../../src/utils/conferenceVideo.js'
+import ContentPreview from './ContentPreview.vue'
 import DirectoryPanel from './DirectoryPanel.vue'
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
-const section = ref('content')
+const section = ref('content'), previewOpen = ref(false), directoryPanel = ref(null)
+const publicSite = computed(() => me.value?.local ? '/' : 'https://ipnchile.cl/')
 const me = ref(null), documents = ref([]), selected = ref(null), form = ref(null), history = ref([])
 const filter = ref('news'), busy = ref(false), message = ref(''), error = ref(''), baseline = ref('')
-const labels = {news:'Noticias',event:'Eventos',banner:'Banner de inicio'}
+const labels = {news:'Noticias',event:'Eventos',banner:'Banner y video de entrada',video:'Biblioteca de videos'}
 const filtered = computed(() => documents.value.filter(d => d.kind === filter.value))
 const dirty = computed(() => form.value && JSON.stringify(form.value) !== baseline.value)
 const imageUrl = value => value?.startsWith('asset:') ? `/api/media/${value.slice(6)}` : value
@@ -24,18 +27,27 @@ function canLeave() { return !dirty.value || window.confirm('Tiene cambios sin g
 function setForm(row) {
   selected.value = row
   form.value = JSON.parse(JSON.stringify(row.draft))
+  if (row.kind === 'banner') form.value.conferenceVideo = { ...defaultConferenceVideo, ...form.value.conferenceVideo }
+  if (row.kind === 'video') form.value.action = {label:'',to:'',...form.value.action}
   form.value.bodyText = (form.value.paragraphs || []).join('\n\n')
   baseline.value = JSON.stringify(form.value)
   history.value = []
 }
 function edit(row) { if (canLeave()) setForm(row) }
-function changeFilter(kind) { if (canLeave()) { filter.value = kind; selected.value = null; form.value = null; history.value = [] } }
+function navigate(kind) {
+  if (busy.value || !canLeave() || (section.value === 'directory' && directoryPanel.value?.canLeave() === false)) return
+  section.value = kind === 'directory' ? 'directory' : 'content'
+  if (kind !== 'directory') filter.value = kind
+  selected.value = null; form.value = null; history.value = []
+  window.history.replaceState(null,'', '#' + kind)
+  if (kind === 'banner') create()
+}
 function create() {
   if (!canLeave()) return
   if (filter.value === 'banner' && filtered.value.length) { setForm(filtered.value[0]); return }
-  setForm({kind:filter.value,revision:0,draft:{title:'',description:'',image:'',thumbnail:'',date:new Intl.DateTimeFormat('en-CA',{timeZone:'America/Santiago'}).format(new Date()),paragraphs:[],startDate:'',endDate:'',location:'',type:'',notes:'',dateLabel:'',enabled:true,link:''}})
+  setForm({kind:filter.value,revision:0,draft:{title:'',description:'',image:'',thumbnail:'',date:new Intl.DateTimeFormat('en-CA',{timeZone:'America/Santiago'}).format(new Date()),paragraphs:[],startDate:'',endDate:'',location:'',type:'',notes:'',dateLabel:'',enabled:true,link:'',videoUrl:'',category:'',order:0,action:null}})
 }
-async function refresh() { documents.value = await api('/documents') }
+async function refresh() { documents.value = await api('/documents'); if (section.value === 'content' && filter.value === 'banner' && !form.value) create() }
 function payload() {
   const value = JSON.parse(JSON.stringify(form.value))
   value.paragraphs = value.bodyText.split(/\n\s*\n/).map(x => x.trim()).filter(Boolean)
@@ -71,35 +83,47 @@ async function upload(event, field = 'image') {
 }
 async function loadHistory() { await run(async () => { history.value = await api(`/documents/${selected.value.id}/history`) }) }
 function beforeUnload(event) { if (dirty.value) { event.preventDefault(); event.returnValue = '' } }
-onMounted(() => { window.addEventListener('beforeunload',beforeUnload); run(async () => { me.value = await api('/me'); await refresh() }) })
+onMounted(() => { const initial = location.hash.slice(1); if ([...Object.keys(labels),'directory'].includes(initial)) { section.value = initial === 'directory' ? 'directory' : 'content'; if (initial !== 'directory') filter.value = initial } window.addEventListener('beforeunload',beforeUnload); run(async () => { me.value = await api('/me'); await refresh() }) })
 onBeforeUnmount(() => window.removeEventListener('beforeunload',beforeUnload))
 </script>
 
 <template>
-  <header class="topbar"><a class="brand" href="https://ipnchile.cl" target="_blank" rel="noopener">IPN <span>Chile</span></a><div><strong>Administración</strong><p>Comunicaciones de nuestra iglesia</p></div><a class="logout" href="/cdn-cgi/access/logout">Cerrar sesión</a></header>
+  <header class="topbar"><a class="brand" href="https://ipnchile.cl" target="_blank" rel="noopener">IPN <span>Chile</span></a><div><strong>Administración</strong><p>Comunicaciones de nuestra iglesia</p></div><a class="logout" :href="publicSite" target="_blank" rel="noopener">Ver sitio ↗</a><a v-if="me && !me.local" href="/cdn-cgi/access/logout">Cerrar sesión</a></header>
   <main>
     <div v-if="error" role="alert" class="notice error">{{ error }} <a v-if="!me" href="/">Volver a ingresar</a></div>
     <div v-if="message" role="status" class="notice success">{{ message }}</div>
     <p v-if="!me && busy" role="status">Verificando su acceso…</p>
     <template v-if="me">
+      <p v-if="me.local" class="notice local-notice"><strong>Entorno local</strong> · Los cambios se guardan en este computador. Publicar actualiza únicamente el sitio local.</p>
       <section class="welcome"><div><p class="eyebrow">Panel de contenidos</p><h1>Información que nos conecta</h1><p>Prepare, revise y comparta las novedades de IPN Chile.</p></div><p class="identity">{{ me.email }}<span>{{ me.role === 'admin' ? 'Administrador' : 'Editor · prepara borradores' }}</span></p></section>
-      <nav aria-label="Secciones"><button :aria-pressed="section === 'content'" @click="canLeave() && (section = 'content')">Noticias y eventos</button><button :aria-pressed="section === 'directory'" @click="canLeave() && (section = 'directory')">Pastores e iglesias</button></nav>
-      <DirectoryPanel v-show="section === 'directory'" :me="me"/>
+      <nav class="admin-menu" aria-label="Menú del mantenedor"><button v-for="(label,kind) in labels" :key="kind" :aria-pressed="section === 'content' && filter === kind" :disabled="busy" @click="navigate(kind)">{{ label }}</button><button :aria-pressed="section === 'directory'" :disabled="busy" @click="navigate('directory')">Pastores e iglesias</button></nav>
+      <DirectoryPanel ref="directoryPanel" v-show="section === 'directory'" :me="me"/>
       <template v-if="section === 'content'">
-      <nav aria-label="Tipos de contenido"><button v-for="(label,kind) in labels" :key="kind" :aria-pressed="filter === kind" :disabled="busy" @click="changeFilter(kind)">{{ label }}</button></nav>
       <div class="workspace" :aria-busy="busy">
         <aside class="list"><div class="list-heading"><h2>{{ labels[filter] }}</h2><button class="primary compact" :disabled="busy" @click="create">{{ filter === 'banner' && filtered.length ? 'Editar' : '+ Crear' }}</button></div><p v-if="!filtered.length" class="empty">Todavía no hay contenido en esta sección.</p><button v-for="row in filtered" :key="row.id" class="record" :class="{selected:selected?.id === row.id}" :disabled="busy" @click="edit(row)"><span class="badge">{{ row.published ? 'Publicado' : 'Borrador' }}</span><strong>{{ row.draft.title }}</strong><small>Versión {{ row.revision }} · {{ new Date(row.updated_at).toLocaleDateString('es-CL') }}</small></button></aside>
         <section class="editor">
           <div v-if="!form" class="empty large"><h2>Un espacio para preparar cada publicación</h2><p>Seleccione una entrada o cree una nueva. Los borradores son privados.</p></div>
           <form v-else @submit.prevent="save">
-            <div class="editor-heading"><div><p class="eyebrow">{{ labels[selected.kind] }}</p><h2>{{ selected.id ? 'Editar publicación' : 'Nueva publicación' }}</h2></div><span class="badge">{{ dirty ? 'Cambios sin guardar' : 'Borrador guardado' }}</span></div>
+            <div class="editor-heading"><div><p class="eyebrow">{{ labels[selected.kind] }}</p><h2>{{ selected.id ? 'Editar publicación' : 'Nueva publicación' }}</h2></div><button type="button" @click="previewOpen = true">Vista previa</button><span class="badge">{{ dirty ? 'Cambios sin guardar' : 'Borrador guardado' }}</span></div>
             <fieldset :disabled="busy">
+              <section v-if="selected.kind === 'banner'" class="media-box">
+                <h3>Video de entrada</h3>
+                <label class="checkbox"><input type="checkbox" :checked="form.conferenceVideo.mode !== 'off'" @change="form.conferenceVideo.mode = $event.target.checked ? 'preview' : 'off'">Activar video al entrar a la página</label>
+                <p><strong>{{ form.conferenceVideo.mode === 'off' ? 'Desactivado en este borrador' : 'Activado en este borrador' }}</strong> · Para aplicar el cambio, pulse Guardar borrador y luego Publicar.</p>
+                <p>Se abre al ingresar al sitio y queda un botón para volver a verlo. Funciona aunque el banner de imagen esté oculto.</p>
+                <label v-if="form.conferenceVideo.mode !== 'off'">Qué mostrar<select v-model="form.conferenceVideo.mode"><option value="preview">Video de previa</option><option value="live">Transmisión en vivo</option></select></label>
+                <label>Enlace de la previa<input v-model="form.conferenceVideo.previewUrl" type="url" :required="form.conferenceVideo.mode === 'preview'" placeholder="https://youtu.be/…"></label>
+                <label>Enlace de la transmisión en vivo<input v-model="form.conferenceVideo.liveUrl" type="url" :required="form.conferenceVideo.mode === 'live'" placeholder="https://www.youtube.com/live/…"></label>
+                <p>Al comenzar cada transmisión, pegue su enlace, seleccione «Transmisión en vivo», guarde el borrador y publique. Al terminar, vuelva a «Video de previa» o «Desactivado» y publique. El modo en vivo se activa manualmente; no detecta si YouTube está transmitiendo.</p>
+              </section>
               <label>Título<input v-model="form.title" required maxlength="200"></label>
+              <template v-if="selected.kind === 'video'"><label>Enlace de YouTube<input v-model="form.videoUrl" type="url" required placeholder="https://youtu.be/…"></label><div class="pair"><label>Categoría<input v-model="form.category" maxlength="100" placeholder="Conferencias"></label><label>Orden en la biblioteca<input v-model.number="form.order" type="number" min="0" max="10000" step="1"></label></div><p>Los números menores aparecen primero. Retirar el video lo oculta de la biblioteca y conserva su borrador.</p><details><summary>Botón destacado (opcional)</summary><label>Texto del botón<input v-model="form.action.label" maxlength="80" placeholder="Quiero donar"></label><label>Destino del botón<input v-model="form.action.to" placeholder="/donaciones"></label></details></template>
               <label>Descripción breve<textarea v-model="form.description" rows="3" maxlength="2000"></textarea></label>
               <template v-if="selected.kind === 'news'"><label>Fecha<input v-model="form.date" type="date" required></label><label>Texto de la noticia<textarea v-model="form.bodyText" rows="9" placeholder="Separe cada párrafo con una línea en blanco."></textarea></label><label>Enlace a un evento (opcional)<input v-model="form.eventLink" placeholder="/actualidad/eventos?evento=5"></label><details><summary>Fuente del comunicado</summary><label>Nombre de la fuente<input :value="form.source?.label" @input="form.source = {...form.source,label:$event.target.value}"></label><label>Enlace a la fuente<input :value="form.source?.url" @input="form.source = {...form.source,url:$event.target.value}" type="url"></label></details></template>
               <template v-if="selected.kind === 'event'"><div class="pair"><label>Inicio<input v-model="form.startDate" type="date" required></label><label>Término<input v-model="form.endDate" type="date" :min="form.startDate" required></label></div><label>Fecha para mostrar<input v-model="form.dateLabel" maxlength="150" placeholder="25, 26 y 27 de septiembre de 2026"></label><label>Lugar<input v-model="form.location" required maxlength="300"></label><label>Tipo de actividad<input v-model="form.type" maxlength="100"></label><label>Notas adicionales<textarea v-model="form.notes" rows="3" maxlength="4000"></textarea></label></template>
               <template v-if="selected.kind === 'banner'"><label>Enlace del banner<input v-model="form.link" placeholder="/actualidad/eventos"></label><label class="checkbox"><input v-model="form.enabled" type="checkbox">Mostrar banner en la página de inicio</label></template>
-              <div class="media-box"><h3>Imagen principal</h3><p>WebP, JPEG o PNG · máximo 5 MB. Se conserva el archivo sin alterar su diseño.</p><label v-if="me.mediaUploads">Cargar imagen<input type="file" accept="image/webp,image/jpeg,image/png" @change="upload($event)"></label><label>O usar una imagen existente de Cloudflare<input v-model="form.image" placeholder="https://media.ipnchile.cl/…"></label><img v-if="form.image" :src="imageUrl(form.image)" :alt="form.title || 'Vista previa de la imagen'" class="preview"></div>
+
+              <div v-if="selected.kind !== 'video'" class="media-box"><h3>Imagen principal</h3><p>WebP, JPEG o PNG · máximo 5 MB. Se conserva el archivo sin alterar su diseño.</p><label v-if="me.mediaUploads">Cargar imagen<input type="file" accept="image/webp,image/jpeg,image/png" @change="upload($event)"></label><label>O usar una imagen existente de Cloudflare<input v-model="form.image" placeholder="https://media.ipnchile.cl/…"></label><img v-if="form.image" :src="imageUrl(form.image)" :alt="form.title || 'Vista previa de la imagen'" class="preview"></div>
               <details v-if="selected.kind === 'news'"><summary>Miniatura (opcional)</summary><label v-if="me.mediaUploads">Cargar miniatura<input type="file" accept="image/webp,image/jpeg,image/png" @change="upload($event,'thumbnail')"></label><label>Imagen de miniatura<input v-model="form.thumbnail" placeholder="https://media.ipnchile.cl/…"></label><img v-if="form.thumbnail" :src="imageUrl(form.thumbnail)" alt="Miniatura" class="preview small"></details>
               <div class="actions"><button class="primary" type="submit">{{ busy ? 'Guardando…' : 'Guardar borrador' }}</button><button v-if="selected.id && me.role === 'admin'" type="button" :disabled="dirty" @click="action('publish')">Publicar</button><button v-if="selected.published && me.role === 'admin'" type="button" :disabled="dirty" @click="action('unpublish')">Retirar de la web</button><button v-if="selected.id" type="button" @click="loadHistory">Historial</button></div>
             </fieldset>
@@ -110,5 +134,6 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload',beforeUnload))
       </template>
     </template>
   </main>
+  <ContentPreview v-if="previewOpen && form" :kind="selected.kind" :draft="form" :published="selected.published" @close="previewOpen = false" />
   <footer>IPN Chile · Acceso privado para el equipo de comunicaciones</footer>
 </template>

@@ -5,6 +5,14 @@ import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
   plugins: [vue(), {
+    name: 'ipn-local-admin', apply: 'serve',
+    async configureServer(server) {
+      const { createLocalAdmin } = await import('./admin/scripts/local-admin.mjs')
+      const local = await createLocalAdmin()
+      server.middlewares.use(local.middleware)
+      server.httpServer?.once('close', () => { void local.dispose() })
+    },
+  }, {
     name: 'ipn-site-identity',
     transformIndexHtml() {
       return [{ tag: 'script', attrs: { id: identityScriptId, type: 'application/ld+json' }, children: identityJson, injectTo: 'head' }]

@@ -1,5 +1,6 @@
+import { youtubeId } from '../../src/utils/conferenceVideo.js'
 import { HttpError } from './auth.js'
-export const kinds = ['news', 'event', 'banner']
+export const kinds = ['news', 'event', 'banner', 'video']
 export const monthOrder = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE']
 const invalid = message => { throw new HttpError(400, message) }
 function text(value, name, max, required = false) {
@@ -28,7 +29,20 @@ export function mediaValue(value) {
 export function validateContent(kind, input) {
   if (!kinds.includes(kind) || !input || typeof input !== 'object' || Array.isArray(input)) invalid('Contenido inválido.')
   const result = { title: text(input.title,'título',200,true), description: text(input.description,'descripción',2000), image: mediaValue(input.image) }
-  if (kind === 'news') {
+  if (kind === 'video') {
+    const id = youtubeId(text(input.videoUrl,'enlace de YouTube',1000,true))
+    if (!id) invalid('Ingrese un enlace válido de un video de YouTube.')
+    result.videoUrl = 'https://www.youtube.com/watch?v=' + id
+    result.category = text(input.category,'categoría',100) || 'Videos de la misión'
+    result.order = input.order ?? 0
+    if (!Number.isInteger(result.order) || result.order < 0 || result.order > 10000) invalid('El orden debe ser un número entero entre 0 y 10000.')
+    result.action = null
+    if (input.action?.label || input.action?.to) {
+      const label = text(input.action.label,'texto del botón',80,true), to = safeLink(input.action.to)
+      if (!to) invalid('Ingrese el destino del botón.')
+      result.action = {label,to}
+    }
+  } else if (kind === 'news') {
     result.date = date(input.date,'fecha')
     result.thumbnail = mediaValue(input.thumbnail)
     if (input.paragraphs != null && !Array.isArray(input.paragraphs)) invalid('Párrafos inválidos.')
@@ -45,6 +59,16 @@ export function validateContent(kind, input) {
     result.type = text(input.type,'tipo',100)
     result.notes = text(input.notes,'notas',4000)
   } else {
+    if (input.conferenceVideo != null) {
+      const config = input.conferenceVideo
+      if (typeof config !== 'object' || Array.isArray(config) || !['off','preview','live'].includes(config.mode)) invalid('Seleccione previa, en vivo o desactivado.')
+      const previewUrl = text(config.previewUrl, 'video de previa', 1000)
+      const liveUrl = text(config.liveUrl, 'transmisión en vivo', 1000)
+      if ((previewUrl && !youtubeId(previewUrl)) || (liveUrl && !youtubeId(liveUrl))) invalid('Use un enlace HTTPS de un video de YouTube (youtu.be, watch o live).')
+      if (config.mode === 'preview' && !previewUrl) invalid('Ingrese el enlace del video de previa.')
+      if (config.mode === 'live' && !liveUrl) invalid('Ingrese el enlace de la transmisión en vivo.')
+      result.conferenceVideo = { mode: config.mode, previewUrl, liveUrl }
+    }
     result.link = safeLink(input.link)
     result.enabled = input.enabled === true
     if (!result.image) invalid('El banner necesita una imagen.')

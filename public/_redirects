@@ -1,1 +1,7 @@
+/sitemap.xml https://ipn-admin.master-ipnchile.workers.dev/public/sitemap.xml 200!
+/public/content https://ipn-admin.master-ipnchile.workers.dev/public/content 200!
+/public/directory https://ipn-admin.master-ipnchile.workers.dev/public/directory 200!
+/public/media/* https://ipn-admin.master-ipnchile.workers.dev/public/media/:splat 200!
+/mantenedor https://admin.ipnchile.cl/ 302
+/mantenedor/* https://admin.ipnchile.cl/:splat 302
 /* /index.html 200

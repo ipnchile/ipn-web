@@ -66,17 +66,18 @@
     </section>
 
     <!-- VIDEOS -->
-    <section class="section-container section-block">
+    <section id="videos" class="section-container section-block video-library" aria-labelledby="mission-videos-title">
       <div class="section-heading">
         <p class="section-eyebrow">Canal oficial</p>
-        <h2 class="section-title">Videos de la misión</h2>
+        <h2 id="mission-videos-title" class="section-title">Videos de la misión</h2>
         <p class="section-description">
-          Contenido audiovisual destacado del canal oficial de la misión.
+          Nuestra biblioteca de videos: conferencias, mensajes y vida de la misión para volver a ver cuando quiera.
         </p>
       </div>
 
-      <div class="videos-grid">
-        <article v-for="video in featuredVideos" :key="video.id" class="glass-panel video-card">
+      <p v-if="!missionVideos.length" class="glass-panel news-empty">Todavía no hay videos publicados en la biblioteca.</p>
+      <div v-else class="videos-grid">
+        <article v-for="video in missionVideos" :key="video.id" class="glass-panel video-card">
           <div class="video-card__embed">
             <iframe :src="video.embedUrl" :title="video.title" loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -84,11 +85,13 @@
           </div>
 
           <div class="video-card__body">
-            <p class="section-eyebrow">YouTube</p>
+            <p class="section-eyebrow">{{ video.category }}</p>
             <h3>{{ video.title }}</h3>
             <p class="video-card__summary">{{ video.summary }}</p>
 
             <div class="video-card__actions">
+              <RouterLink v-if="video.action?.to?.startsWith('/')" :to="video.action.to" class="btn-primary video-card__donate">{{ video.action.label }} <span aria-hidden="true">→</span></RouterLink>
+              <a v-else-if="video.action" :href="video.action.to" class="btn-primary video-card__donate" target="_blank" rel="noopener noreferrer">{{ video.action.label }} <span aria-hidden="true">↗</span></a>
               <a :href="video.url" class="btn-secondary" target="_blank" rel="noopener noreferrer">
                 Ver en YouTube
               </a>
@@ -124,7 +127,7 @@
 import { ref, nextTick, onBeforeUnmount } from 'vue'
 import { createModalController } from '@/utils/modal'
 import { usePublishedContent } from '@/composables/usePublishedContent'
-const { news: comunicados } = usePublishedContent()
+const { news: comunicados, videos: missionVideos } = usePublishedContent()
 
 const selectedComunicado = ref(null)
 const newsDialog = ref(null)
@@ -143,16 +146,6 @@ const closeComunicado = () => {
   modal.deactivate()
 }
 
-const featuredVideos = [
-  {
-    id: 'jtSa6783f-g',
-    title: 'Video destacado del canal oficial',
-    summary:
-      'Primer video incorporado como contenido destacado del canal oficial de YouTube de la misión.',
-    url: 'https://www.youtube.com/watch?v=jtSa6783f-g',
-    embedUrl: 'https://www.youtube.com/embed/jtSa6783f-g'
-  }
-]
 </script>
 
 <style scoped>
@@ -216,30 +209,33 @@ const featuredVideos = [
   color: var(--theme-text-soft);
 }
 
+.video-library { scroll-margin-top: 140px; }
+
 .videos-grid {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
 .video-card {
   overflow: hidden;
   display: grid;
-  grid-template-columns: 1.2fr 0.9fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
   gap: 0;
   padding: 0;
 }
 
 .video-card__embed {
   position: relative;
-  min-height: 100%;
+  aspect-ratio: 16 / 9;
   background: #000;
 }
 
 .video-card__embed iframe {
   width: 100%;
   height: 100%;
-  min-height: 380px;
+  min-height: 200px;
   border: 0;
   display: block;
 }
@@ -262,7 +258,13 @@ const featuredVideos = [
   line-height: 1.8;
 }
 
+.video-card__donate { gap: .65rem; box-shadow: 0 4px 18px rgba(var(--theme-secondary-rgb), .22); }
+
 .video-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
   margin-top: auto;
 }
 
@@ -411,12 +413,11 @@ const featuredVideos = [
     grid-template-columns: 1fr;
   }
 
-  .video-card__embed iframe {
-    min-height: 320px;
-  }
+
 }
 
 @media (max-width: 780px) {
+  .videos-grid { grid-template-columns: minmax(0, 1fr); }
   .news-hero__panel {
     grid-template-columns: 1fr;
   }
@@ -432,9 +433,7 @@ const featuredVideos = [
     padding: 1.25rem;
   }
 
-  .video-card__embed iframe {
-    min-height: 220px;
-  }
+
 
   .comunicado-image {
     height: 240px;

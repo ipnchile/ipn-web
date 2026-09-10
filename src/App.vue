@@ -1,6 +1,7 @@
 <script setup>
 import { computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+import ConferenceVideo from '@/components/ui/ConferenceVideo.vue'
 import ParticleTrail from '@/components/ui/ParticleTrail.vue'
 import AppNavbar from '@/components/ui/AppNavbar.vue'
 import SeptemberDecor from '@/components/ui/SeptemberDecor.vue'
@@ -48,6 +49,7 @@ watchEffect(() => {
     <ParticleTrail />
     <ScrollToTopButton />
     <AppFooter />
+    <ConferenceVideo />
 </template>
 <style scoped>
 .site-header {

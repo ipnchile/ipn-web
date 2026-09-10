@@ -3,7 +3,7 @@ import initial from '@/data/directory.json'
 import { projectChurches, projectAuthorities } from '../utils/directory.js'
 const data = shallowRef(initial)
 let pending, loadedAt = 0, attemptedAt = 0
-const endpoint = import.meta.env.VITE_DIRECTORY_API || ''
+const endpoint = import.meta.env.VITE_DIRECTORY_API || '/public/directory'
 export async function loadDirectory() {
   if (!endpoint) return
   if (pending) return pending
