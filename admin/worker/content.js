@@ -1,4 +1,5 @@
 import { youtubeId } from '../../src/utils/conferenceVideo.js'
+import { instagramPostUrl } from '../../src/utils/news.js'
 import { HttpError } from './auth.js'
 export const kinds = ['news', 'event', 'banner', 'video']
 export const monthOrder = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE']
@@ -43,6 +44,9 @@ export function validateContent(kind, input) {
       result.action = {label,to}
     }
   } else if (kind === 'news') {
+    const instagramUrl = text(input.instagramUrl, 'enlace de Instagram', 1000)
+    result.instagramUrl = instagramPostUrl(instagramUrl)
+    if (instagramUrl && !result.instagramUrl) invalid('Ingrese el enlace HTTPS de una publicación o reel de Instagram, no el perfil de la cuenta.')
     result.date = date(input.date,'fecha')
     result.thumbnail = mediaValue(input.thumbnail)
     if (input.paragraphs != null && !Array.isArray(input.paragraphs)) invalid('Párrafos inválidos.')

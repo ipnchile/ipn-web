@@ -35,10 +35,11 @@
         </p>
       </div>
 
-      <div v-if="comunicados.length" class="comunicados-grid">
-        <article v-for="item in comunicados" :key="item.id" class="comunicado-card">
+      <CardCarousel v-if="comunicados.length" :count="comunicados.length" label="Noticias y comunicados">
+        <article v-for="item in comunicados" :id="newsAnchor(item.id)" :key="item.id" class="comunicado-card" tabindex="-1">
           <button class="comunicado-image-link" @click="openComunicado(item)">
-            <img :src="item.thumbnail || item.image" :alt="item.title" class="comunicado-image" loading="lazy" />
+            <img v-if="item.thumbnail || item.image" :src="item.thumbnail || item.image" :alt="item.title" class="comunicado-image" loading="lazy" />
+            <span v-else class="comunicado-placeholder">Leer {{ item.title }}</span>
           </button>
 
           <div class="comunicado-content">
@@ -51,7 +52,7 @@
             </button>
           </div>
         </article>
-      </div>
+      </CardCarousel>
 
       <div v-else class="glass-panel news-empty">
         <div class="news-empty__icon">
@@ -63,6 +64,17 @@
           Actualmente no hay noticias o comunicados publicados en esta sección.
         </p>
       </div>
+    </section>
+
+    <section id="instagram" class="section-container section-block" aria-labelledby="instagram-news-title">
+      <div class="section-heading">
+        <p class="section-eyebrow">@ipnchilecuentaoficial</p>
+        <h2 id="instagram-news-title" class="section-title">Nuestra comunidad en Instagram</h2>
+        <p class="section-description">Noticias y momentos de la misión compartidos desde nuestra cuenta oficial.</p>
+      </div>
+      <NewsGallery v-if="instagramNews.length" :items="instagramNews" @read="openComunicado" />
+      <div v-else class="glass-panel news-empty"><h3>Pronto compartiremos nuevas publicaciones</h3><p>Mientras tanto, puede visitar nuestra cuenta oficial.</p></div>
+      <a class="btn-secondary instagram-profile" href="https://www.instagram.com/ipnchilecuentaoficial/" target="_blank" rel="noopener noreferrer">Visitar Instagram de IPN Chile ↗</a>
     </section>
 
     <!-- VIDEOS -->
@@ -110,11 +122,12 @@
         </button>
 
         <h2 id="news-modal-title" class="comunicado-modal__title">{{ selectedComunicado.title }}</h2>
-        <img :src="selectedComunicado.image" :alt="selectedComunicado.title" class="comunicado-modal__image" />
+        <img v-if="selectedComunicado.image" :src="selectedComunicado.image" :alt="selectedComunicado.title" class="comunicado-modal__image" />
         <div class="comunicado-modal__text">
-          <p v-if="!selectedComunicado.paragraphs">{{ selectedComunicado.description }}</p>
+          <p v-if="selectedComunicado.description">{{ selectedComunicado.description }}</p>
           <p v-for="paragraph in selectedComunicado.paragraphs || []" :key="paragraph">{{ paragraph }}</p>
           <a v-if="selectedComunicado.source" :href="selectedComunicado.source.url" target="_blank" rel="noopener noreferrer">{{ selectedComunicado.source.label }}</a>
+          <a v-if="instagramPostUrl(selectedComunicado.instagramUrl)" :href="instagramPostUrl(selectedComunicado.instagramUrl)" class="btn-secondary" target="_blank" rel="noopener noreferrer">Ver en Instagram ↗</a>
           <RouterLink v-if="selectedComunicado.eventLink" :to="selectedComunicado.eventLink" class="btn-primary">Ver evento en el calendario</RouterLink>
         </div>
       </div>
@@ -124,10 +137,23 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onBeforeUnmount } from 'vue'
+import { computed, ref, nextTick, onBeforeUnmount, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import NewsGallery from '@/components/ui/NewsGallery.vue'
+import CardCarousel from '@/components/ui/CardCarousel.vue'
+import { instagramPostUrl, newsAnchor } from '@/utils/news'
 import { createModalController } from '@/utils/modal'
 import { usePublishedContent } from '@/composables/usePublishedContent'
-const { news: comunicados, videos: missionVideos } = usePublishedContent()
+const { news, videos: missionVideos, settled } = usePublishedContent()
+const comunicados = computed(() => news.value.filter(item => !instagramPostUrl(item.instagramUrl)))
+const instagramNews = computed(() => news.value.filter(item => instagramPostUrl(item.instagramUrl)))
+const route = useRoute()
+watch([() => route.hash, news, settled], async () => {
+  if (!settled.value || !route.hash.startsWith('#noticia-')) return
+  await nextTick()
+  const card = document.getElementById(route.hash.slice(1))
+  if (card) { card.scrollIntoView({ block: 'start', inline: 'center' }); card.focus({ preventScroll: true }) }
+}, { immediate: true, flush: 'post' })
 
 const selectedComunicado = ref(null)
 const newsDialog = ref(null)
@@ -149,6 +175,10 @@ const closeComunicado = () => {
 </script>
 
 <style scoped>
+.instagram-profile { margin-top: 1.5rem; }
+.comunicado-card { scroll-margin-top: 155px; display: flex; flex-direction: column; }
+.comunicado-card:target { outline: 2px solid var(--theme-secondary); outline-offset: 4px; }
+.comunicado-placeholder { display: block; padding: 2rem; color: #fff; }
 .comunicado-modal__title { padding: 1.25rem 4.5rem 1.25rem 1.25rem; margin: 0; font-size: clamp(1.2rem, 3vw, 1.8rem); }
 .comunicado-modal__text { padding: 1.5rem; color: var(--theme-text-soft); line-height: 1.8; }
 .comunicado-modal__text a:not(.btn-primary) { color: var(--theme-secondary); text-decoration: underline; }
@@ -269,13 +299,6 @@ const closeComunicado = () => {
 }
 
 /* COMUNICADOS */
-.comunicados-grid {
-  display: grid;
-  grid-template-columns: minmax(280px, 430px);
-  justify-content: center;
-  gap: 1.25rem;
-}
-
 .comunicado-card {
   overflow: hidden;
   border-radius: 18px;
@@ -311,6 +334,9 @@ const closeComunicado = () => {
 }
 
 .comunicado-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 1rem;
   text-align: center;
 }
@@ -323,16 +349,25 @@ const closeComunicado = () => {
 }
 
 .comunicado-content h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   margin-bottom: 0.65rem;
 }
 
 .comunicado-content p:not(.comunicado-date) {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   color: var(--theme-text-soft);
   line-height: 1.7;
   margin-bottom: 1rem;
 }
 
 /* MODAL */
+.comunicado-content .btn-secondary { margin-top: auto; }
 .comunicado-modal {
   position: fixed;
   inset: 0;

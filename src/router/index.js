@@ -5,7 +5,9 @@ import { routes } from './routes.js'
 const router = createRouter({
     history: createWebHistory(),
     routes,
-    scrollBehavior() {
+    scrollBehavior(to) {
+        // News waits for published content before scrolling to and focusing its card.
+        if (to.path === '/actualidad/noticias' && to.hash.startsWith('#noticia-')) return false
         return { top: 0 }
     }
 })

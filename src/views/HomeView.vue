@@ -5,6 +5,17 @@
         <TheCarousel v-else />
         <HeroHome />
 
+        <section class="section-block section-container" aria-labelledby="home-news-title">
+            <div class="section-heading">
+                <p class="section-eyebrow">Actualidad IPN Chile</p>
+                <h2 id="home-news-title" class="section-title">Noticias de nuestra misión</h2>
+                <p class="section-description">Conozca nuestras últimas noticias, comunicados y publicaciones de Instagram.</p>
+            </div>
+            <NewsGallery v-if="news.length" :items="news.slice(0, 3)" home />
+            <p v-else class="glass-panel home-news-empty">Pronto compartiremos nuevas noticias de nuestra misión.</p>
+            <RouterLink to="/actualidad/noticias" class="btn-primary home-news-link">Ver todas las noticias →</RouterLink>
+        </section>
+
         <!-- BIENVENIDA -->
         <section class="section-block">
             <div class="section-container">
@@ -137,16 +148,19 @@
 
 <script setup>
 import TheCarousel from '@/components/ui/TheCarousel.vue'
+import NewsGallery from '@/components/ui/NewsGallery.vue'
 import HeroHome from '@/components/ui/HeroHome.vue'
 import ConferenceBanner from '@/components/ui/ConferenceBanner.vue'
 import { septemberConfig } from '@/config/seasonal'
 import PublishedBanner from '@/components/ui/PublishedBanner.vue'
 import { usePublishedContent } from '@/composables/usePublishedContent'
-const { loaded, banner } = usePublishedContent()
+const { loaded, banner, news } = usePublishedContent()
 
 </script>
 
 <style scoped>
+.home-news-link { margin-top: 1.5rem; }
+.home-news-empty { padding: 1.5rem; }
 .home-grid {
     display: grid;
     gap: 1.25rem;

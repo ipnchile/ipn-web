@@ -32,6 +32,26 @@ test('Valida videos, orden y botón sin aceptar enlaces ejecutables',()=>{
   assert.match(validateContent('video',draft).videoUrl,/watch\?v=VEPseBfwQZE/)
   for(const extra of [{videoUrl:'https://evil.test/video'},{order:-1},{order:1.5},{action:{label:'Donar',to:'javascript:alert(1)'}}]) assert.throws(()=>validateContent('video',{...draft,...extra}),e=>e.status===400)
 })
+
+test('Noticias de Instagram: valida enlace, publica, conserva borrador privado y retira', async () => {
+  const draft = {title:'Encuentro de nuestra misión', date:'2026-09-17', description:'Resumen de la noticia', instagramUrl:'https://instagram.com/p/Prueba_123/?igsh=tracking', image:'https://media.ipnchile.cl/noticias/encuentro.webp'}
+  for (const instagramUrl of ['https://instagram.com/ipnchilecuentaoficial/', 'https://evil.test/p/abc', 'javascript:alert(1)']) assert.throws(() => validateContent('news', {...draft, instagramUrl}), e => e.status === 400)
+  assert.equal(validateContent('news', {...draft, instagramUrl:''}).instagramUrl, '')
+  let row = await (await call('/api/documents', 'POST', {kind:'news', draft})).json()
+  assert.ok(!(await content()).news.some(item => item.id === row.id))
+  row = await (await call('/api/documents/'+row.id+'/publish', 'POST', {revision:row.revision})).json()
+  let published = (await content()).news.find(item => item.id === row.id)
+  assert.equal(published.instagramUrl, 'https://www.instagram.com/p/Prueba_123/')
+  assert.equal(published.image, draft.image)
+  row = await (await call('/api/documents/'+row.id, 'PUT', {revision:row.revision, draft:{...draft, title:'Edición privada', instagramUrl:'https://instagram.com/reel/Otra_123/'}})).json()
+  published = (await content()).news.find(item => item.id === row.id)
+  assert.equal(published.title, draft.title)
+  assert.equal(published.instagramUrl, 'https://www.instagram.com/p/Prueba_123/')
+  row = await (await call('/api/documents/'+row.id+'/publish', 'POST', {revision:row.revision})).json()
+  assert.equal((await content()).news.find(item => item.id === row.id).instagramUrl, 'https://www.instagram.com/reel/Otra_123/')
+  await call('/api/documents/'+row.id+'/unpublish', 'POST', {revision:row.revision})
+  assert.ok(!(await content()).news.some(item => item.id === row.id))
+})
 test('Crear, publicar, editar y retirar biblioteca no requiere recompilar',async()=>{
   let row=await(await call('/api/documents','POST',{kind:'video',draft:{title:'Prueba dinámica',videoUrl:'https://youtu.be/abcdefghijk',category:'Conferencias',order:4,action:{label:'Quiero donar',to:'/donaciones'}}})).json()
   assert.ok(!(await content()).videos.some(v=>v.id===row.id))

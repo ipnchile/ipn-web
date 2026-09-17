@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { instagramPostUrl } from '../../src/utils/news.js'
 import { youtubeId, activeConferenceVideo, defaultConferenceVideo } from '../../src/utils/conferenceVideo.js'
 const props = defineProps({ kind: String, draft: Object, published: Object })
 const emit = defineEmits(['close'])
@@ -34,7 +35,13 @@ onBeforeUnmount(() => { dialog.value?.close(); document.body.style.overflow = ov
           <img v-if="imageUrl(data.image || data.foto_url)" class="content-image" :src="imageUrl(data.image || data.foto_url)" :alt="data.title || data.nombre">
           <p class="preview-date">{{ data.dateLabel || data.date || [data.startDate,data.endDate].filter(Boolean).join(' — ') || data.grado || data.comuna }}</p>
           <h3>{{ data.title || data.nombre || 'Título de la publicación' }}</h3><p>{{ data.description }}</p>
-          <template v-if="kind === 'news'"><p v-for="(paragraph,index) in paragraphs" :key="index">{{ paragraph }}</p></template>
+          <template v-if="kind === 'news'">
+            <p v-if="instagramPostUrl(data.instagramUrl)" class="preview-date">Desde Instagram · @ipnchilecuentaoficial</p>
+            <p v-for="(paragraph,index) in paragraphs" :key="index">{{ paragraph }}</p>
+            <a v-if="instagramPostUrl(data.instagramUrl)" :href="instagramPostUrl(data.instagramUrl)" target="_blank" rel="noopener noreferrer" class="instagram-link">Ver en Instagram ↗</a>
+            <p v-else-if="data.instagramUrl" class="placeholder">Ingrese un enlace válido de una publicación o reel de Instagram.</p>
+            <aside class="home-news-preview"><strong>Referencia en el inicio</strong><h3>{{ data.title || 'Título de la noticia' }}</h3><p>Leer noticia →</p><small>Aparece si está entre las tres noticias publicadas más recientes.</small></aside>
+          </template>
           <template v-if="kind === 'event'"><p v-if="data.location"><strong>Lugar:</strong> {{ data.location }}</p><p>{{ data.type }}</p><p class="preserve-lines">{{ data.notes }}</p></template>
           <template v-if="kind === 'church'"><p>{{ data.direccion }} · {{ data.region }}</p><p v-for="hour in data.horarios" :key="hour">{{ hour }}</p><p>{{ data.telefono }}</p></template>
           <template v-if="kind === 'person'"><p v-for="(role,index) in data.cargos" :key="index">{{ role.cargo }}</p></template>
@@ -45,5 +52,7 @@ onBeforeUnmount(() => { dialog.value?.close(); document.body.style.overflow = ov
   </Teleport>
 </template>
 <style scoped>
+.instagram-link { color: #dab56d; text-decoration: underline; }
+.home-news-preview { margin-top: 1.5rem; padding: 1rem; border: 1px solid #778a9a; border-radius: 12px; }
 .content-preview{position:fixed;inset:0;margin:auto;padding:0;width:min(1180px,96vw);max-width:96vw;max-height:94dvh;border:1px solid #ccd7e3;border-radius:16px;background:#eef2f6;color:#17283c}.content-preview::backdrop{background:#061425b8}.preview-toolbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.4rem;background:#fff}.preview-toolbar p{font-size:.8rem;color:#65758a}.preview-controls{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:1rem}.preview-controls [role=group]{display:flex;gap:.4rem}.preview-controls [aria-pressed=true]{background:#173a5d;color:#fff}.preview-stage{padding:0 1rem 1.5rem}.preview-page{margin:auto;background:linear-gradient(120deg,#112b40,#09151f);color:#e3eaf0;padding:clamp(1rem,3vw,2rem);border-radius:12px;overflow-wrap:anywhere;width:100%}.preview-page.mobile{max-width:390px}.preview-brand{font-weight:800;color:#dab56d;letter-spacing:.1em;font-size:.85rem}.preview-brand span{font-weight:400;letter-spacing:0}.preview-page h3{font-size:clamp(1.3rem,3vw,2rem);line-height:1.2;color:white}.preview-page p{line-height:1.7;margin:1rem 0}.preview-date{color:#dab56d}.content-image{max-height:400px;object-fit:contain;width:100%;background:#081019}.banner-image{width:100%;height:auto}.placeholder{padding:1rem;border:1px dashed #778a9a}.preview-video{margin-top:1.5rem}.preview-video iframe{width:100%;aspect-ratio:16/9;min-height:200px;border:0;background:#000}.preserve-lines{white-space:pre-line}
 </style>

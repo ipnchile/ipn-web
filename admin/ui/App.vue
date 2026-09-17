@@ -27,6 +27,7 @@ function canLeave() { return !dirty.value || window.confirm('Tiene cambios sin g
 function setForm(row) {
   selected.value = row
   form.value = JSON.parse(JSON.stringify(row.draft))
+  if (row.kind === 'news') form.value.instagramUrl = form.value.instagramUrl || ''
   if (row.kind === 'banner') form.value.conferenceVideo = { ...defaultConferenceVideo, ...form.value.conferenceVideo }
   if (row.kind === 'video') form.value.action = {label:'',to:'',...form.value.action}
   form.value.bodyText = (form.value.paragraphs || []).join('\n\n')
@@ -118,6 +119,12 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload',beforeUnload))
               </section>
               <label>Título<input v-model="form.title" required maxlength="200"></label>
               <template v-if="selected.kind === 'video'"><label>Enlace de YouTube<input v-model="form.videoUrl" type="url" required placeholder="https://youtu.be/…"></label><div class="pair"><label>Categoría<input v-model="form.category" maxlength="100" placeholder="Conferencias"></label><label>Orden en la biblioteca<input v-model.number="form.order" type="number" min="0" max="10000" step="1"></label></div><p>Los números menores aparecen primero. Retirar el video lo oculta de la biblioteca y conserva su borrador.</p><details><summary>Botón destacado (opcional)</summary><label>Texto del botón<input v-model="form.action.label" maxlength="80" placeholder="Quiero donar"></label><label>Destino del botón<input v-model="form.action.to" placeholder="/donaciones"></label></details></template>
+              <section v-if="selected.kind === 'news'" class="media-box">
+                <h3>Publicación de Instagram (opcional)</h3>
+                <label>Enlace de la publicación o reel<input v-model="form.instagramUrl" type="url" maxlength="1000" placeholder="https://www.instagram.com/p/…/"></label>
+                <p>Pegue el enlace de la publicación, no el perfil de la cuenta. Complete el título, la descripción y la imagen en este formulario: no se importan desde Instagram.</p>
+                <p>Al publicar, aparecerá en la galería de Instagram de Noticias. Las tres noticias más recientes también se muestran en el inicio con su título y enlace al detalle.</p>
+              </section>
               <label>Descripción breve<textarea v-model="form.description" rows="3" maxlength="2000"></textarea></label>
               <template v-if="selected.kind === 'news'"><label>Fecha<input v-model="form.date" type="date" required></label><label>Texto de la noticia<textarea v-model="form.bodyText" rows="9" placeholder="Separe cada párrafo con una línea en blanco."></textarea></label><label>Enlace a un evento (opcional)<input v-model="form.eventLink" placeholder="/actualidad/eventos?evento=5"></label><details><summary>Fuente del comunicado</summary><label>Nombre de la fuente<input :value="form.source?.label" @input="form.source = {...form.source,label:$event.target.value}"></label><label>Enlace a la fuente<input :value="form.source?.url" @input="form.source = {...form.source,url:$event.target.value}" type="url"></label></details></template>
               <template v-if="selected.kind === 'event'"><div class="pair"><label>Inicio<input v-model="form.startDate" type="date" required></label><label>Término<input v-model="form.endDate" type="date" :min="form.startDate" required></label></div><label>Fecha para mostrar<input v-model="form.dateLabel" maxlength="150" placeholder="25, 26 y 27 de septiembre de 2026"></label><label>Lugar<input v-model="form.location" required maxlength="300"></label><label>Tipo de actividad<input v-model="form.type" maxlength="100"></label><label>Notas adicionales<textarea v-model="form.notes" rows="3" maxlength="4000"></textarea></label></template>
