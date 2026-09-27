@@ -31,7 +31,8 @@ function close() {
   const target = previousFocus instanceof HTMLElement && previousFocus !== document.body && previousFocus.isConnected ? previousFocus : launcher.value
   target?.focus()
 }
-watch([settled, routeReady, () => video.value?.id, () => video.value?.mode], () => {
+// Watch scalar values: a shallowRef source forces callbacks on identical content refreshes.
+watch([() => settled.value, () => routeReady.value, () => video.value?.id, () => video.value?.mode], () => {
   close()
   if (!settled.value || !routeReady.value || !video.value) return
   const key = `${video.value.mode}:${video.value.id}`
