@@ -58,3 +58,23 @@ test('Las imágenes privadas solo se exponen mientras estén referenciadas por u
   await call(`/api/documents/${row.id}/unpublish`,'POST',{revision:row.revision})
   assert.equal((await worker.fetch(new Request(url),env)).status,404)
 })
+
+test('Carrusel: borrador privado, publicación completa, imagen principal y retiro de fotos', async () => {
+  const id = crypto.randomUUID()
+  await bucket.put(id,new Uint8Array([1,2,3]),{httpMetadata:{contentType:'image/webp'}})
+  await db.prepare('INSERT INTO media VALUES(?,?,?,?,?)').bind(id,'image/webp',3,new Date().toISOString(),admin.email).run()
+  const imageUrl = env.PUBLIC_ORIGIN + `/public/media/${id}`
+  const slides = [{id:'principal',image:'https://media.ipnchile.cl/uno.webp',title:'Conferencia',showText:true},{id:'segunda',image:`asset:${id}`,title:'Comunidad',showText:true}]
+  let row = await (await call('/api/documents','POST',{kind:'banner',draft:{title:'Portada',enabled:true,slides,primarySlideId:'principal'}})).json()
+  assert.equal((await worker.fetch(new Request(imageUrl),env)).status,404)
+  row = await (await call(`/api/documents/${row.id}/publish`,'POST',{revision:row.revision})).json()
+  const published = (await (await worker.fetch(new Request(env.PUBLIC_ORIGIN+'/public/content'),env)).json()).banner
+  assert.equal(published.slides.length,2)
+  assert.equal(published.slides[1].image,imageUrl)
+  assert.equal((await worker.fetch(new Request(imageUrl),env)).status,200)
+  row = await (await call(`/api/documents/${row.id}`,'PUT',{revision:row.revision,draft:{...row.draft,slides:[slides[0]]}})).json()
+  assert.equal((await worker.fetch(new Request(imageUrl),env)).status,200,'Guardar un borrador no retira la foto publicada')
+  row = await (await call(`/api/documents/${row.id}/publish`,'POST',{revision:row.revision})).json()
+  assert.equal(row.published.slides.length,1,'Se puede publicar una sola imagen')
+  assert.equal((await worker.fetch(new Request(imageUrl),env)).status,404,'La foto retirada vuelve a ser privada')
+})

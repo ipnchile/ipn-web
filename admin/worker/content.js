@@ -1,6 +1,7 @@
 import { youtubeId } from '../../src/utils/conferenceVideo.js'
 import { instagramPostUrl } from '../../src/utils/news.js'
 import { HttpError } from './auth.js'
+import { MAX_BANNER_SLIDES } from '../../src/utils/banner.js'
 export const kinds = ['news', 'event', 'banner', 'video']
 export const monthOrder = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE']
 const invalid = message => { throw new HttpError(400, message) }
@@ -75,15 +76,39 @@ export function validateContent(kind, input) {
     }
     result.link = safeLink(input.link)
     result.enabled = input.enabled === true
+    if (input.slides != null) {
+      if (!Array.isArray(input.slides) || input.slides.length < 1 || input.slides.length > MAX_BANNER_SLIDES) invalid(`Seleccione entre 1 y ${MAX_BANNER_SLIDES} imágenes.`)
+      const ids = new Set()
+      result.slides = input.slides.map(slide => {
+        if (!slide || typeof slide !== 'object' || Array.isArray(slide)) invalid('Imagen del carrusel inválida.')
+        const id = text(slide.id, 'identificador de imagen', 80, true)
+        if (!/^[a-zA-Z0-9_-]+$/.test(id) || ids.has(id)) invalid('Cada imagen debe tener un identificador único.')
+        ids.add(id)
+        const image = mediaValue(slide.image)
+        if (!image) invalid('Seleccione una imagen para cada elemento del carrusel.')
+        const fit = slide.fit ?? 'cover'
+        if (!['cover', 'contain'].includes(fit)) invalid('Seleccione un ajuste válido para la imagen.')
+        const link = safeLink(slide.link), buttonText = text(slide.buttonText, 'texto del botón', 80)
+        if (buttonText && !link) invalid('Ingrese el enlace del botón o deje su texto vacío.')
+        return { id, image, alt: text(slide.alt, 'descripción de imagen', 200), eyebrow: text(slide.eyebrow, 'antetítulo', 100), title: text(slide.title, 'título de imagen', 200), description: text(slide.description, 'texto superpuesto', 600), buttonText, link, showText: slide.showText === true, fit }
+      })
+      result.primarySlideId = text(input.primarySlideId, 'imagen principal', 80) || result.slides[0].id
+      if (!ids.has(result.primarySlideId)) invalid('Seleccione una imagen principal de esta lista.')
+      // Keep the legacy image/link fields usable by older clients during rollout.
+      const primary = result.slides.find(slide => slide.id === result.primarySlideId)
+      result.image = primary.image
+      result.link = primary.link
+    }
     if (!result.image) invalid('El banner necesita una imagen.')
   }
   return result
 }
 export function mediaIds(data) {
-  return [...new Set([data.image, data.thumbnail].filter(s => s?.startsWith('asset:')).map(s => s.slice(6)))]
+  return [...new Set([data.image, data.thumbnail, ...(data.slides || []).map(slide => slide.image)].filter(s => s?.startsWith('asset:')).map(s => s.slice(6)))]
 }
 export function publicData(row, origin) {
   const data = JSON.parse(row.published)
   for (const key of ['image','thumbnail']) if (data[key]?.startsWith('asset:')) data[key] = `${origin}/public/media/${data[key].slice(6)}`
+  for (const slide of data.slides || []) if (slide.image?.startsWith('asset:')) slide.image = `${origin}/public/media/${slide.image.slice(6)}`
   return { ...data, id: row.id }
 }

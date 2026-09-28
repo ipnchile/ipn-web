@@ -1,5 +1,13 @@
 # Administración IPN Chile
 
+## Banner fijo y carrusel administrable — septiembre de 2026
+
+En «Banner y video de entrada», la sección «Imágenes de la portada» admite de 1 a 12 imágenes. Pegue la URL pública de cada archivo de `media.ipnchile.cl`, elija la principal y ordene las restantes con Subir/Bajar. Una sola imagen se publica como banner fijo, sin navegación; dos o más activan el carrusel. Los títulos, antetítulos, descripciones, botones y enlaces son opcionales por imagen. «Mostrar textos superpuestos» permite conservar afiches que ya incluyen sus propios textos. El ajuste Fotografía llena el espacio y Afiche muestra la imagen completa.
+
+Vista previa usa el mismo componente del sitio y permite revisar escritorio/móvil antes de Guardar borrador y Publicar. La principal aparece primero. Cambiar un borrador no altera la portada publicada. Quitar una imagen de la lista no elimina su archivo de Cloudflare. Los banners anteriores se convierten en una sola imagen al editarlos. La configuración del video de entrada sigue siendo independiente.
+
+Las cargas directas siguen sujetas a `ALLOW_MEDIA_UPLOADS`; cuando están deshabilitadas, se usan las rutas públicas existentes de Cloudflare. No hace falta una migración de base de datos: las diapositivas y la principal se guardan en el JSON de la publicación con su historial habitual.
+
 Panel Vue 3 separado del sitio público. Cloudflare Access protege `admin.ipnchile.cl`; el Worker vuelve a verificar firma RS256, emisor, audiencia, expiración y correo de cada sesión. La lista de roles está en las variables del Worker: `ADMIN_EMAILS` y `EDITOR_EMAILS` (correos separados por coma). No se guardan contraseñas ni claves de R2 en el navegador.
 
 ## Estado inicial de esta integración (histórico)

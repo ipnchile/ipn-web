@@ -73,7 +73,7 @@ async function publicRoute(request, env, url) {
   const match = url.pathname.match(/^\/public\/media\/([0-9a-f-]{36})$/)
   if (!match) throw new HttpError(404,'No encontrado.')
   // No public bucket or signed draft URLs: publication is checked on every read.
-  const row = await env.DB.prepare("SELECT id FROM documents WHERE published IS NOT NULL AND (json_extract(published,'$.image')=? OR json_extract(published,'$.thumbnail')=?) LIMIT 1").bind(`asset:${match[1]}`,`asset:${match[1]}`).first()
+  const row = await env.DB.prepare("SELECT id FROM documents WHERE published IS NOT NULL AND (json_extract(published,'$.image')=? OR json_extract(published,'$.thumbnail')=? OR EXISTS (SELECT 1 FROM json_each(documents.published,'$.slides') WHERE json_extract(value,'$.image')=?)) LIMIT 1").bind(`asset:${match[1]}`,`asset:${match[1]}`,`asset:${match[1]}`).first()
   if (!row) throw new HttpError(404,'No encontrado.')
   return readMedia(env,match[1],request.method)
 }

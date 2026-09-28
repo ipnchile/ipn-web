@@ -1,5 +1,7 @@
 <script setup>
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import BannerCarousel from '../../src/components/ui/BannerCarousel.vue'
+import { bannerSlides } from '../../src/utils/banner.js'
 import { instagramPostUrl } from '../../src/utils/news.js'
 import { youtubeId, activeConferenceVideo, defaultConferenceVideo } from '../../src/utils/conferenceVideo.js'
 const props = defineProps({ kind: String, draft: Object, published: Object })
@@ -11,6 +13,7 @@ function imageUrl(value) {
   if (/^asset:[0-9a-f-]{36}$/.test(value || '')) return `/api/media/${value.slice(6)}`
   try { const u = new URL(value); return u.origin === 'https://media.ipnchile.cl' && !u.username && !u.password ? u.href : '' } catch { return '' }
 }
+const bannerPreview = computed(() => ({ ...data.value, slides: bannerSlides(data.value).map(slide => ({ ...slide, image: imageUrl(slide.image) })) }))
 const libraryId = computed(() => youtubeId(data.value.videoUrl))
 const paragraphs = computed(() => data.value.bodyText != null ? data.value.bodyText.split(/\n\s*\n/).filter(Boolean) : data.value.paragraphs || [])
 const originalFocus = document.activeElement
@@ -27,7 +30,7 @@ onBeforeUnmount(() => { dialog.value?.close(); document.body.style.overflow = ov
         <p class="preview-brand">IPN CHILE <span>• {{ {news:'Noticias',event:'Eventos',banner:'Inicio',video:'Biblioteca de videos',person:'Pastores',church:'Iglesias'}[kind] }}</span></p>
         <template v-if="kind === 'video'"><section class="preview-video"><p>{{ data.category }}</p><iframe v-if="libraryId" :key="libraryId" :src="'https://www.youtube-nocookie.com/embed/'+libraryId+'?playsinline=1&rel=0'" :title="data.title || 'Video de la biblioteca'" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe><p v-else class="placeholder">Ingrese un enlace válido de YouTube.</p><h3>{{ data.title || 'Título del video' }}</h3><p>{{ data.description }}</p><button v-if="data.action?.label" type="button" disabled>{{ data.action.label }} →</button><p v-if="data.action?.to">Destino: {{ data.action.to }}</p></section></template>
         <template v-else-if="kind === 'banner'">
-          <template v-if="data.enabled"><img v-if="imageUrl(data.image)" class="banner-image" :src="imageUrl(data.image)" :alt="data.title"><p v-else class="placeholder">Seleccione una imagen para el banner</p><h3>{{ data.title || 'Título del banner' }}</h3><p>{{ data.description }}</p></template>
+          <BannerCarousel v-if="data.enabled" :banner="bannerPreview" preview />
           <p v-else class="placeholder">El banner de imagen está desactivado.</p>
           <section class="preview-video"><h3>{{ video?.title || 'Video de conferencias desactivado' }}</h3><iframe v-if="video" :key="video.id" :src="`https://www.youtube-nocookie.com/embed/${video.id}?playsinline=1&rel=0`" :title="video.title" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe><p v-else-if="data.conferenceVideo?.mode !== 'off'">Ingrese un enlace válido de YouTube para previsualizarlo.</p></section>
         </template>

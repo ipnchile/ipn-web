@@ -1,6 +1,8 @@
 <script setup>
 import { defaultConferenceVideo } from '../../src/utils/conferenceVideo.js'
 import ContentPreview from './ContentPreview.vue'
+import BannerEditor from './BannerEditor.vue'
+import { bannerSlides, newBannerSlide } from '../../src/utils/banner.js'
 import DirectoryPanel from './DirectoryPanel.vue'
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 const section = ref('content'), previewOpen = ref(false), directoryPanel = ref(null)
@@ -28,7 +30,12 @@ function setForm(row) {
   selected.value = row
   form.value = JSON.parse(JSON.stringify(row.draft))
   if (row.kind === 'news') form.value.instagramUrl = form.value.instagramUrl || ''
-  if (row.kind === 'banner') form.value.conferenceVideo = { ...defaultConferenceVideo, ...form.value.conferenceVideo }
+  if (row.kind === 'banner') {
+    form.value.conferenceVideo = { ...defaultConferenceVideo, ...form.value.conferenceVideo }
+    form.value.slides = Array.isArray(form.value.slides) ? form.value.slides : bannerSlides(form.value)
+    if (!form.value.slides.length) form.value.slides = [newBannerSlide()]
+    form.value.primarySlideId ||= form.value.slides[0].id
+  }
   if (row.kind === 'video') form.value.action = {label:'',to:'',...form.value.action}
   form.value.bodyText = (form.value.paragraphs || []).join('\n\n')
   baseline.value = JSON.stringify(form.value)
@@ -72,12 +79,12 @@ async function action(type, targetRevision) {
     setForm(row); await refresh(); message.value = type === 'publish' ? 'Publicado en la web.' : type === 'unpublish' ? 'Publicación retirada.' : 'Versión recuperada como borrador.'
   })
 }
-async function upload(event, field = 'image') {
+async function upload(event, field = 'image', target = form.value) {
   const file = event.target.files?.[0]; if (!file) return
   if (file.size > 5_000_000) { error.value = 'La imagen debe pesar menos de 5 MB.'; event.target.value = ''; return }
   await run(async () => {
     const result = await api('/media',{method:'POST',body:file,headers:{'Content-Type':file.type}})
-    form.value[field] = result.value
+    target[field] = result.value
     message.value = 'Imagen privada cargada. Guarde el borrador para conservar la selección.'
   })
   event.target.value = ''
@@ -125,12 +132,12 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload',beforeUnload))
                 <p>Pegue el enlace de la publicación, no el perfil de la cuenta. Complete el título, la descripción y la imagen en este formulario: no se importan desde Instagram.</p>
                 <p>Al publicar, aparecerá en la galería de Instagram de Noticias. Las tres noticias más recientes también se muestran en el inicio con su título y enlace al detalle.</p>
               </section>
-              <label>Descripción breve<textarea v-model="form.description" rows="3" maxlength="2000"></textarea></label>
+              <label v-if="selected.kind !== 'banner'">Descripción breve<textarea v-model="form.description" rows="3" maxlength="2000"></textarea></label>
               <template v-if="selected.kind === 'news'"><label>Fecha<input v-model="form.date" type="date" required></label><label>Texto de la noticia<textarea v-model="form.bodyText" rows="9" placeholder="Separe cada párrafo con una línea en blanco."></textarea></label><label>Enlace a un evento (opcional)<input v-model="form.eventLink" placeholder="/actualidad/eventos?evento=5"></label><details><summary>Fuente del comunicado</summary><label>Nombre de la fuente<input :value="form.source?.label" @input="form.source = {...form.source,label:$event.target.value}"></label><label>Enlace a la fuente<input :value="form.source?.url" @input="form.source = {...form.source,url:$event.target.value}" type="url"></label></details></template>
               <template v-if="selected.kind === 'event'"><div class="pair"><label>Inicio<input v-model="form.startDate" type="date" required></label><label>Término<input v-model="form.endDate" type="date" :min="form.startDate" required></label></div><label>Fecha para mostrar<input v-model="form.dateLabel" maxlength="150" placeholder="25, 26 y 27 de septiembre de 2026"></label><label>Lugar<input v-model="form.location" required maxlength="300"></label><label>Tipo de actividad<input v-model="form.type" maxlength="100"></label><label>Notas adicionales<textarea v-model="form.notes" rows="3" maxlength="4000"></textarea></label></template>
-              <template v-if="selected.kind === 'banner'"><label>Enlace del banner<input v-model="form.link" placeholder="/actualidad/eventos"></label><label class="checkbox"><input v-model="form.enabled" type="checkbox">Mostrar banner en la página de inicio</label></template>
+              <template v-if="selected.kind === 'banner'"><label class="checkbox"><input v-model="form.enabled" type="checkbox">Mostrar banner o carrusel en la página de inicio</label><BannerEditor v-model="form" :media-uploads="me.mediaUploads" :upload-image="(event,slide) => upload(event, 'image', slide)" /></template>
 
-              <div v-if="selected.kind !== 'video'" class="media-box"><h3>Imagen principal</h3><p>WebP, JPEG o PNG · máximo 5 MB. Se conserva el archivo sin alterar su diseño.</p><label v-if="me.mediaUploads">Cargar imagen<input type="file" accept="image/webp,image/jpeg,image/png" @change="upload($event)"></label><label>O usar una imagen existente de Cloudflare<input v-model="form.image" placeholder="https://media.ipnchile.cl/…"></label><img v-if="form.image" :src="imageUrl(form.image)" :alt="form.title || 'Vista previa de la imagen'" class="preview"></div>
+              <div v-if="!['video','banner'].includes(selected.kind)" class="media-box"><h3>Imagen principal</h3><p>WebP, JPEG o PNG · máximo 5 MB. Se conserva el archivo sin alterar su diseño.</p><label v-if="me.mediaUploads">Cargar imagen<input type="file" accept="image/webp,image/jpeg,image/png" @change="upload($event)"></label><label>O usar una imagen existente de Cloudflare<input v-model="form.image" placeholder="https://media.ipnchile.cl/…"></label><img v-if="form.image" :src="imageUrl(form.image)" :alt="form.title || 'Vista previa de la imagen'" class="preview"></div>
               <details v-if="selected.kind === 'news'"><summary>Miniatura (opcional)</summary><label v-if="me.mediaUploads">Cargar miniatura<input type="file" accept="image/webp,image/jpeg,image/png" @change="upload($event,'thumbnail')"></label><label>Imagen de miniatura<input v-model="form.thumbnail" placeholder="https://media.ipnchile.cl/…"></label><img v-if="form.thumbnail" :src="imageUrl(form.thumbnail)" alt="Miniatura" class="preview small"></details>
               <div class="actions"><button class="primary" type="submit">{{ busy ? 'Guardando…' : 'Guardar borrador' }}</button><button v-if="selected.id && me.role === 'admin'" type="button" :disabled="dirty" @click="action('publish')">Publicar</button><button v-if="selected.published && me.role === 'admin'" type="button" :disabled="dirty" @click="action('unpublish')">Retirar de la web</button><button v-if="selected.id" type="button" @click="loadHistory">Historial</button></div>
             </fieldset>
