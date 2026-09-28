@@ -5,6 +5,24 @@ import { validateContent, mediaIds, publicData } from '../admin/worker/content.j
 
 const slide = (id, overrides = {}) => ({ id, image: `https://media.ipnchile.cl/conferencias/${id}.webp`, title: 'Fe y comunión', description: 'Nuestra iglesia reunida', showText: true, ...overrides })
 const banner = slides => ({ title: 'Conferencias', enabled: true, slides })
+
+test('Conserva efectos y encuadre, con valores compatibles para banners anteriores', () => {
+  const legacy = validateContent('banner', banner([slide('uno')]))
+  assert.equal(legacy.transition, 'fade')
+  assert.equal(legacy.slides[0].zoom, 100)
+  assert.equal(legacy.slides[0].positionX, 50)
+  for (const transition of ['fade', 'slide', 'zoom', 'none']) {
+    const value = validateContent('banner', {...banner([slide('uno', {zoom:150, positionX:25, positionY:75})]), transition})
+    const published = publicData({id:'home-banner',published:JSON.stringify(value)}, 'https://public.test')
+    assert.equal(published.transition, transition)
+    assert.equal(published.slides[0].zoom, 150)
+    assert.equal(published.slides[0].positionY, 75)
+  }
+  for (const overrides of [{zoom:99}, {zoom:201}, {zoom:'150'}, {zoom:NaN}, {positionX:-1}, {positionY:101}]) {
+    assert.throws(() => validateContent('banner', banner([slide('uno', overrides)])), e => e.status === 400)
+  }
+  assert.throws(() => validateContent('banner', {...banner([slide('uno')]), transition:'invalid'}), e => e.status === 400)
+})
 test('Una imagen es válida sin exigir carrusel; conserva títulos y textos superpuestos', () => {
   const value = validateContent('banner', banner([slide('uno')]))
   assert.equal(value.slides.length, 1)

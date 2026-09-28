@@ -76,6 +76,8 @@ export function validateContent(kind, input) {
     }
     result.link = safeLink(input.link)
     result.enabled = input.enabled === true
+    result.transition = input.transition ?? 'fade'
+    if (!['fade', 'slide', 'zoom', 'none'].includes(result.transition)) invalid('Seleccione un efecto de transición válido.')
     if (input.slides != null) {
       if (!Array.isArray(input.slides) || input.slides.length < 1 || input.slides.length > MAX_BANNER_SLIDES) invalid(`Seleccione entre 1 y ${MAX_BANNER_SLIDES} imágenes.`)
       const ids = new Set()
@@ -87,10 +89,12 @@ export function validateContent(kind, input) {
         const image = mediaValue(slide.image)
         if (!image) invalid('Seleccione una imagen para cada elemento del carrusel.')
         const fit = slide.fit ?? 'cover'
+        const zoom = slide.zoom ?? 100, positionX = slide.positionX ?? 50, positionY = slide.positionY ?? 50
+        if (![zoom, positionX, positionY].every(Number.isFinite) || zoom < 100 || zoom > 200 || positionX < 0 || positionX > 100 || positionY < 0 || positionY > 100) invalid('Revise el zoom (100–200%) y la posición de la imagen (0–100%).')
         if (!['cover', 'contain'].includes(fit)) invalid('Seleccione un ajuste válido para la imagen.')
         const link = safeLink(slide.link), buttonText = text(slide.buttonText, 'texto del botón', 80)
         if (buttonText && !link) invalid('Ingrese el enlace del botón o deje su texto vacío.')
-        return { id, image, alt: text(slide.alt, 'descripción de imagen', 200), eyebrow: text(slide.eyebrow, 'antetítulo', 100), title: text(slide.title, 'título de imagen', 200), description: text(slide.description, 'texto superpuesto', 600), buttonText, link, showText: slide.showText === true, fit }
+        return { id, image, alt: text(slide.alt, 'descripción de imagen', 200), eyebrow: text(slide.eyebrow, 'antetítulo', 100), title: text(slide.title, 'título de imagen', 200), description: text(slide.description, 'texto superpuesto', 600), buttonText, link, showText: slide.showText === true, fit, zoom, positionX, positionY }
       })
       result.primarySlideId = text(input.primarySlideId, 'imagen principal', 80) || result.slides[0].id
       if (!ids.has(result.primarySlideId)) invalid('Seleccione una imagen principal de esta lista.')

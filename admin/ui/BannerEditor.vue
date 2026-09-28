@@ -26,6 +26,8 @@ function move(index, direction) {
     <p>Una imagen queda como banner fijo. Con dos o más se crea un carrusel. La imagen principal aparece primero; las demás siguen el orden de esta lista.</p>
     <p>Pegue el enlace público de Cloudflare, por ejemplo https://media.ipnchile.cl/carpeta/foto.webp. El enlace del panel dash.cloudflare.com no es una imagen pública.</p>
     <p class="banner-mode"><strong>{{ model.slides.length > 1 ? `Carrusel · ${model.slides.length} imágenes` : 'Banner fijo · una imagen' }}</strong></p>
+    <label>Efecto de transición<select :value="model.transition || 'fade'" @change="model.transition = $event.target.value"><option value="fade">Desvanecer</option><option value="slide">Deslizar</option><option value="zoom">Zoom suave</option><option value="none">Sin efecto</option></select></label>
+    <p>El efecto se aplica al cambiar de imagen. Use Vista previa para revisarlo antes de publicar.</p>
     <article v-for="(slide, index) in model.slides" :key="slide.id" class="slide-editor">
       <header><h4>Imagen {{ index + 1 }}</h4><span v-if="model.primarySlideId === slide.id" class="badge">Principal</span></header>
       <div class="slide-tools">
@@ -39,6 +41,11 @@ function move(index, direction) {
       <img v-if="slide.image" class="slide-thumbnail" :src="imageUrl(slide.image)" :alt="slide.alt || `Vista previa de imagen ${index + 1}`">
       <label>Descripción de la imagen {{ index + 1 }} para accesibilidad<input v-model="slide.alt" maxlength="200" placeholder="Describa brevemente lo que se ve en la foto"></label>
       <label>Ajuste de la imagen {{ index + 1 }}<select v-model="slide.fit"><option value="cover">Llenar el espacio (fotografía)</option><option value="contain">Mostrar completa (afiche)</option></select></label>
+      <label>Zoom de imagen {{ index + 1 }}: {{ slide.zoom ?? 100 }}%<input type="range" min="100" max="200" step="1" :value="slide.zoom ?? 100" @input="slide.zoom = Number($event.target.value)"></label>
+      <label>Posición horizontal de imagen {{ index + 1 }}: {{ slide.positionX ?? 50 }}%<input type="range" min="0" max="100" step="1" :value="slide.positionX ?? 50" @input="slide.positionX = Number($event.target.value)"></label>
+      <label>Posición vertical de imagen {{ index + 1 }}: {{ slide.positionY ?? 50 }}%<input type="range" min="0" max="100" step="1" :value="slide.positionY ?? 50" @input="slide.positionY = Number($event.target.value)"></label>
+      <button type="button" @click="slide.zoom = 100; slide.positionX = 50; slide.positionY = 50">Restablecer encuadre de imagen {{ index + 1 }}</button>
+      <p>El zoom amplía la foto y recorta sus bordes. Ajuste la posición para centrar a las personas; no amplía los textos superpuestos.</p>
       <label class="checkbox"><input v-model="slide.showText" type="checkbox">Mostrar textos superpuestos en imagen {{ index + 1 }}</label>
       <div v-if="slide.showText" class="slide-text-fields">
         <label>Antetítulo de imagen {{ index + 1 }}<input v-model="slide.eyebrow" maxlength="100" placeholder="Conferencias IPN Chile"></label>
