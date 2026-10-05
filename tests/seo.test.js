@@ -3,8 +3,8 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { updatePageMetadata, resolvePageMetadata, homeTitle, defaultDescription } from '../src/utils/seo.js'
 import { routes } from '../src/router/routes.js'
-import { allEvents } from '../src/data/events.js'
-const churches = JSON.parse(readFileSync(new URL('../src/data/directory.json',import.meta.url))).churches
+import { allEvents } from '../admin/seed-data/events.js'
+const churches = JSON.parse(readFileSync(new URL('../admin/seed-data/directory.json',import.meta.url))).churches
 function route(name, params = {}, query = {}) {
   const record = routes.find(item => item.name === name)
   return { ...record, matched:[record], params, query }

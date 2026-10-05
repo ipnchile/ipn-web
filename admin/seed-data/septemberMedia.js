@@ -1,4 +1,4 @@
-import { septemberConfig } from '../config/seasonal.js'
+import { septemberConfig } from '../../src/config/seasonal.js'
 
 const base = (septemberConfig.mediaBaseUrl || '/media/septiembre-2026').replace(/\/+$/, '')
 const asset = name => base + '/' + name + '.webp'

@@ -1,9 +1,10 @@
 <script setup>
-import { defaultConferenceVideo } from '../../src/utils/conferenceVideo.js'
+const defaultConferenceVideo = { mode: 'off', previewUrl: '', liveUrl: '' }
 import ContentPreview from './ContentPreview.vue'
 import BannerEditor from './BannerEditor.vue'
 import { bannerSlides, newBannerSlide } from '../../src/utils/banner.js'
 import DirectoryPanel from './DirectoryPanel.vue'
+import InstagramPanel from './InstagramPanel.vue'
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 const section = ref('content'), previewOpen = ref(false), directoryPanel = ref(null)
 const publicSite = computed(() => me.value?.local ? '/' : 'https://ipnchile.cl/')
@@ -107,6 +108,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload',beforeUnload))
       <nav class="admin-menu" aria-label="Menú del mantenedor"><button v-for="(label,kind) in labels" :key="kind" :aria-pressed="section === 'content' && filter === kind" :disabled="busy" @click="navigate(kind)">{{ label }}</button><button :aria-pressed="section === 'directory'" :disabled="busy" @click="navigate('directory')">Pastores e iglesias</button></nav>
       <DirectoryPanel ref="directoryPanel" v-show="section === 'directory'" :me="me"/>
       <template v-if="section === 'content'">
+      <InstagramPanel v-if="filter === 'news' && me.role === 'admin' && !me.local" />
       <div class="workspace" :aria-busy="busy">
         <aside class="list"><div class="list-heading"><h2>{{ labels[filter] }}</h2><button class="primary compact" :disabled="busy" @click="create">{{ filter === 'banner' && filtered.length ? 'Editar' : '+ Crear' }}</button></div><p v-if="!filtered.length" class="empty">Todavía no hay contenido en esta sección.</p><button v-for="row in filtered" :key="row.id" class="record" :class="{selected:selected?.id === row.id}" :disabled="busy" @click="edit(row)"><span class="badge">{{ row.published ? 'Publicado' : 'Borrador' }}</span><strong>{{ row.draft.title }}</strong><small>Versión {{ row.revision }} · {{ new Date(row.updated_at).toLocaleDateString('es-CL') }}</small></button></aside>
         <section class="editor">

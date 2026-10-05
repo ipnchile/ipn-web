@@ -198,39 +198,12 @@
 </template>
 
 <script setup>
+import { useSiteData } from '@/composables/useSiteData'
 import { ref } from 'vue'
 import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import departmentLogo from '@/assets/img/departamentos/VARONES_NACIONAL.png'
 
-const nationalBoard = [
-  {
-    role: 'Jefe Nacional',
-    name: 'Hno. Stalin Guzman',
-    period: 'Directiva Nacional',
-    description:
-      'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional de Varones.',
-    photo: 'https://media.ipnchile.cl/perfiles/varones/Hno%20Stalin%20-%20Jefe%20Nacional%20Varones.webp',
-    email: 'jefe.varones@ipnchile.cl'
-  },
-  {
-    role: 'Secretario Nacional',
-    name: 'Hno. Álvaro Gonzalez',
-    period: 'Directiva Nacional',
-    description:
-      'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades.',
-    photo: 'https://media.ipnchile.cl/perfiles/varones/Hno%20Alvaro%20Gonzalez%20-%20Secretario%20Nacional.webp',
-    email: 'secretario.varones@ipnchile.cl'
-  },
-  {
-    role: 'Tesorero Nacional',
-    name: 'Hno. Claudio Ayala',
-    period: 'Directiva Nacional',
-    description:
-      'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
-    photo: 'https://media.ipnchile.cl/perfiles/varones/Hno%20Claudio%20Ayala%20-%20Tesorero%20Nacional.webp',
-    email: 'tesoreria.varones@ipnchile.cl'
-  }
-]
+const nationalBoard = useSiteData('departamentos/VaronesView.nationalBoard', [])
 
 const selectedLeader = ref(null)
 
@@ -243,7 +216,7 @@ const openLeaderModal = (leader) => {
   Más adelante puede agregar cualquier tipo de contenido
   simplemente incorporando objetos al arreglo.
 */
-const galleryPhotos = []
+const galleryPhotos = useSiteData('departamentos/VaronesView.galleryPhotos', [])
 
 /*
 Ejemplo futuro:

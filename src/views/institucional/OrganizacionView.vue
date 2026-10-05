@@ -103,11 +103,11 @@
                     <button
                         type="button"
                         class="director-avatar-button"
-                        :aria-label="`Ver información de ${director.nombre}`"
+                        :aria-label="`Ver información de ${director.value.nombre}`"
                         @click="selectedDirector = directorProfile"
                     >
                         <div class="director-avatar">
-                            <img v-if="director.foto" :src="director.foto" :alt="director.nombre" />
+                            <img v-if="director.value.foto" :src="director.value.foto" :alt="director.value.nombre" />
                             <div v-else class="fallback">
                                 <font-awesome-icon :icon="['fas', 'user-tie']" />
                             </div>
@@ -116,8 +116,8 @@
 
                     <div class="director-info">
                         <p class="section-eyebrow">Coordinación</p>
-                        <h2>{{ director.cargo }}</h2>
-                        <h3 class="director-name">{{ director.nombre }}</h3>
+                        <h2>{{ director.value.cargo }}</h2>
+                        <h3 class="director-name">{{ director.value.nombre }}</h3>
                         <p>
                             Responsable de coordinar y fortalecer el trabajo de los Departamentos
                             Nacionales, asegurando unidad y desarrollo ministerial.
@@ -166,22 +166,19 @@
 </template>
 
 <script setup>
+import { useSiteData } from '@/composables/useSiteData'
 import { computed, ref } from 'vue'
 import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import isotipoLogo from '@/assets/img/logos/isotipo.png'
 
-const director = {
-    cargo: 'Pastor Director de Departamentos',
-    nombre: 'Pr. Presbítero Rev. Ricardo Alarcón',
-    foto: 'https://pub-065eb4027e4242aea56805003b4c89aa.r2.dev/perfiles/directorDepartamento/pastor%20ricardo%20alarcaon.webp'
-}
+const director = useSiteData('institucional/OrganizacionView.director', {})
 
 const selectedDirector = ref(null)
 
 const directorProfile = computed(() => ({
-    name: director.nombre,
-    role: director.cargo,
-    photo: director.foto,
+    name: director.value.nombre,
+    role: director.value.cargo,
+    photo: director.value.foto,
     description:
         'Responsable de coordinar y fortalecer el trabajo de los Departamentos Nacionales, asegurando unidad y desarrollo ministerial.'
 }))

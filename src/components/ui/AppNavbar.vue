@@ -244,8 +244,9 @@
 <script setup>
 import { computed, ref, reactive, onMounted, onBeforeUnmount, watch } from "vue"
 import { useRoute } from "vue-router"
-import { comunicados } from "@/data/comunicados"
-import { allEvents } from "@/data/events"
+import { usePublishedContent } from "@/composables/usePublishedContent"
+const { news: comunicados, calendar } = usePublishedContent()
+const allEvents = computed(() => calendar.value.flatMap(month => month.events))
 
 const route = useRoute()
 const menuOpen = ref(false)
@@ -293,7 +294,7 @@ const daysBetween = (fromKey, toKey) => {
 const recentNews = computed(() => {
   const today = getTodayKey()
 
-  return comunicados
+  return comunicados.value
     .filter((item) => {
       const age = daysBetween(item.date, today)
       return age >= 0 && age <= notificationWindowDays
@@ -312,7 +313,7 @@ const recentNews = computed(() => {
 const upcomingEvents = computed(() => {
   const today = getTodayKey()
 
-  return allEvents
+  return allEvents.value
     .filter((event) => {
       const days = daysBetween(today, event.startDate)
       return days >= 0 && days <= notificationWindowDays

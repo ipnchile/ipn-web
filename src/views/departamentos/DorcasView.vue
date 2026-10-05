@@ -182,39 +182,12 @@
 </template>
 
 <script setup>
+import { useSiteData } from '@/composables/useSiteData'
 import { ref } from 'vue'
 import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import departmentLogo from '@/assets/img/departamentos/DORCAS_NACIONAL.png'
 
-const nationalBoard = [
-    {
-        role: 'Jefa Nacional',
-        name: 'Pra. Miriam Morales',
-        period: 'Directiva Nacional',
-        description:
-            'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional Dorcas.',
-        photo: 'https://media.ipnchile.cl/perfiles/dorcas/Jefa%20Nacional.webp',
-        email: 'jefa.dorcas@ipnchile.cl'
-    },
-    {
-        role: 'Secretaria Nacional',
-        name: 'Pra. Isabel González',
-        period: 'Directiva Nacional',
-        description:
-            'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades.',
-        photo: 'https://pub-065eb4027e4242aea56805003b4c89aa.r2.dev/perfiles/dorcas/Secretaria%20Nacional.webp',
-        email: 'secretaria.dorcas@ipnchile.cl'
-    },
-    {
-        role: 'Tesorera Nacional',
-        name: 'Pra. Norma Aguilera',
-        period: 'Directiva Nacional',
-        description:
-            'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
-        photo: 'https://media.ipnchile.cl/perfiles/dorcas/Tesorera%20Nacional.webp',
-        email: 'tesoreria.dorcas@ipnchile.cl'
-    }
-]
+const nationalBoard = useSiteData('departamentos/DorcasView.nationalBoard', [])
 
 const selectedLeader = ref(null)
 
@@ -227,7 +200,7 @@ const openLeaderModal = (leader) => {
   Más adelante puede agregar cualquier tipo de contenido
   simplemente incorporando objetos al arreglo.
 */
-const galleryPhotos = []
+const galleryPhotos = useSiteData('departamentos/DorcasView.galleryPhotos', [])
 
 /*
 Ejemplo futuro:

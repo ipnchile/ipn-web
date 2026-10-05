@@ -201,6 +201,7 @@
 </template>
 
 <script setup>
+import { useSiteData } from '@/composables/useSiteData'
 import { computed, ref, watch } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { FreeMode } from 'swiper/modules'
@@ -210,16 +211,18 @@ import 'swiper/css/free-mode'
 
 import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import departmentLogo from '@/assets/img/departamentos/JUMIX_NACIONAL.png'
-import { galleryBlocks, galleryPhotos } from '@/data/jumixGallery'
+const galleryBlocks = useSiteData('jumixGallery.galleryBlocks')
+const galleryPhotos = useSiteData('jumixGallery.galleryPhotos')
 
-const selectedBlock = ref(galleryBlocks[0]?.id || null)
+const selectedBlock = ref(null)
 const currentPhotoIndex = ref(0)
+watch(galleryBlocks, blocks => { if (!selectedBlock.value && blocks.length) selectedBlock.value = blocks[0].id }, { immediate: true })
 
 const modules = [FreeMode]
 const selectedLeader = ref(null)
 
 const filteredPhotos = computed(() =>
-    galleryPhotos.filter((photo) => photo.blockId === selectedBlock.value)
+    galleryPhotos.value.filter((photo) => photo.blockId === selectedBlock.value)
 )
 
 const currentPhoto = computed(() =>
@@ -258,35 +261,7 @@ watch(filteredPhotos, () => {
     currentPhotoIndex.value = 0
 })
 
-const nationalBoard = [
-    {
-        role: 'Jefe Nacional',
-        name: 'Hno. Joel Pardo',
-        period: 'Directiva Nacional',
-        description:
-            'Responsable de guiar, coordinar y representar el trabajo del Departamento Nacional JUMIX.',
-        photo: 'https://media.ipnchile.cl/perfiles/jumix/Jefe%20Nacional%20-%20Jumix.webp',
-        email: 'jumix.ipn@ipnchile.cl'
-    },
-    {
-        role: 'Secretario Nacional',
-        name: 'Hno. Benjamin Ceballo',
-        period: 'Directiva Nacional',
-        description:
-            'Apoya la organización del departamento, el orden administrativo y la coordinación de actividades juveniles.',
-        photo: 'https://media.ipnchile.cl/perfiles/jumix/Secretario%20NAcional%20-%20%20Jumix.webp',
-        email: 'jumix.ipn@ipnchile.cl'
-    },
-    {
-        role: 'Tesorero Nacional',
-        name: 'Hna. Genesis Rodriguez',
-        period: 'Directiva Nacional',
-        description:
-            'Colabora en la administración responsable de los recursos y en el apoyo financiero del departamento.',
-        photo: 'https://media.ipnchile.cl/perfiles/jumix/Tesorera%20Nacional%20-%20Jumix.webp',
-        email: 'jumix.ipn@ipnchile.cl'
-    }
-]
+const nationalBoard = useSiteData('departamentos/JumixView.nationalBoard', [])
 </script>
 
 <style scoped>

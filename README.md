@@ -23,12 +23,13 @@ El script lint valida sintaxis JavaScript y compila los componentes Vue; no apli
 - src/router/routes.js: rutas y títulos/descripciones de página.
 - src/views: páginas institucionales, departamentos, actualidad y contacto.
 - src/components/ui: navegación, pie, carrusel y elementos compartidos.
-- src/data: iglesias, eventos, comunicados, creencias y galería.
+- src/composables: consultas del directorio y contenido publicado en D1.
+- admin/seed-data: insumos históricos de migración y pruebas.
 - src/utils: metadatos y ciclo de vida del modal de eventos.
 - src/style.css: estilos globales y colores por departamento mediante data-department.
 - public: fuentes, iconos y archivos estáticos.
 
-El contenido público inicial se mantiene en archivos locales; el panel separado se encuentra en admin/. Para añadir una página, registre su ruta y sus metadatos. Contacto y Donaciones usan Formspree; el destino se define con FORM_ENDPOINT en cada vista. No envíe solicitudes reales al ejecutar pruebas. La página /privacidad describe los datos transmitidos; debe actualizarse cuando cambien los formularios o los servicios utilizados.
+El contenido público se consulta desde Cloudflare D1; los archivos de admin/seed-data sirven únicamente como insumos de migración. Las fichas pastorales privadas se consultan bajo autenticación; el panel separado se encuentra en admin/. Para añadir una página, registre su ruta y sus metadatos. Contacto y Donaciones usan Formspree; el destino se define con FORM_ENDPOINT en cada vista. No envíe solicitudes reales al ejecutar pruebas. La página /privacidad describe los datos transmitidos; debe actualizarse cuando cambien los formularios o los servicios utilizados.
 
 ## Publicación
 
@@ -51,7 +52,7 @@ Las imágenes se muestran completas, sin filtros ni recortes. Los archivos WebP 
 
 Para usar Cloudflare R2 (bucket ipn-media), suba los siete WebP a eventos/septiembre-2026/ conservando los nombres. Después configure mediaBaseUrl como https://media.ipnchile.cl/eventos/septiembre-2026 y vuelva a compilar. Hasta entonces se sirven los archivos locales; la dirección del panel dash.cloudflare.com no es una URL pública de imagen.
 
-Los dos comunicados están en src/data/comunicados.js. El texto histórico del Mes de la Biblia enlaza su fuente, la Sociedad Bíblica Chilena. El evento de conferencia conserva el identificador 5, sus fechas y ubicación del calendario existente. /actualidad/eventos?evento=5 abre su detalle directamente.
+Los comunicados se consultan desde D1. El texto histórico del Mes de la Biblia enlaza su fuente, la Sociedad Bíblica Chilena. El evento de conferencia conserva el identificador 5, sus fechas y ubicación del calendario existente. /actualidad/eventos?evento=5 abre su detalle directamente.
 
 
 ## Panel de administración
@@ -84,7 +85,7 @@ Acción manual pendiente del propietario: usar “IPN Chile — Iglesia Pentecos
 
 El modal global abre la previa VEPseBfwQZE tras consultar el contenido publicado (máximo 5 segundos si falla la API). Cada video/modo abre una vez por carga del sitio; navegar no lo reabre. Cerrar elimina el iframe y detiene el audio. El botón permanece en todas las páginas. Los cambios publicados se consultan cada minuto y al volver a la pestaña. Se conserva el último contenido válido ante fallos de red.
 
-En el mantenedor: Banner de inicio → Video de conferencias. Seleccione previa, en vivo o desactivado; ingrese los enlaces; guarde y publique. La configuración es independiente de la casilla Mostrar banner. Retirar toda la publicación del banner también oculta el video cuando responde la API. Las publicaciones antiguas sin configuración usan la previa incluida. No hay programación ni detección automática del estado del directo: al finalizar debe cambiar el modo y publicar.
+En el mantenedor: Banner de inicio → Video de conferencias. Seleccione previa, en vivo o desactivado; ingrese los enlaces; guarde y publique. La configuración es independiente de la casilla Mostrar banner. Retirar toda la publicación del banner también oculta el video cuando responde la API. Las publicaciones sin configuración de video no abren un video predeterminado. No hay programación ni detección automática del estado del directo: al finalizar debe cambiar el modo y publicar.
 
 El autoplay se solicita con sonido, con controles y enlace alternativo a YouTube. El navegador puede exigir una pulsación; el canal debe permitir inserción. Referencia: https://developers.google.com/youtube/player_parameters. El reproductor se carga desde youtube-nocookie.com.
 
@@ -92,10 +93,14 @@ Desplegar sitio y mantenedor juntos para habilitar edición. No requiere migraci
 
 ## Contenido sin despliegues
 
-Biblioteca de videos tiene documentos publicados en D1, con enlace YouTube validado, título, descripción, categoría, orden y botón opcional. Las migraciones 0005/0006 conservan documentos e historial e importan los dos videos existentes una vez. Se mantienen los datos locales iniciales como respaldo si la API no responde; una biblioteca publicada vacía sí se muestra vacía. El video de entrada es independiente.
+Biblioteca de videos tiene documentos publicados en D1, con enlace YouTube validado, título, descripción, categoría, orden y botón opcional. Las migraciones 0005/0006 conservan documentos e historial e importan los dos videos existentes una vez. La app consulta la BD y conserva únicamente la última respuesta recibida en memoria; una biblioteca publicada vacía se muestra vacía. El video de entrada es independiente.
 
 El sitemap no usa un archivo de dist ni solicita recompilaciones. /sitemap.xml se reescribe hacia /public/sitemap.xml del Worker y lee solo publicaciones actuales. Retirar eventos e iglesias los quita del siguiente sitemap. Los videos se muestran en la página de Noticias, sin inventar páginas individuales.
 
 La puesta en marcha exige aplicar las migraciones D1, desplegar el Worker/panel y desplegar una vez la web con las reglas de proxy. Después publicar contenidos no llama a Netlify ni a un build hook. Solo cambiar código/diseño requiere despliegue. No se ha hecho push, migración remota ni despliegue desde esta tarea.
 
 Referencias: https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/ y https://developers.cloudflare.com/d1/sql-api/foreign-keys/.
+
+## Registro pastoral
+
+Consulte admin/REGISTRO-PASTORAL.md para las tablas, consultas, historial de importación y acceso privado a fechas de nacimiento. El directorio público y el contenido estructurado se obtienen de la BD; no hay respaldo de registros en JavaScript del navegador.

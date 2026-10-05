@@ -97,9 +97,10 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { reactive, ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { beliefs } from '@/data/beliefs'
+import { useSiteData } from '@/composables/useSiteData'
+const beliefs = useSiteData('beliefs.beliefs')
 
 const heroRef = ref(null)
 const introRef = ref(null)
@@ -114,7 +115,7 @@ const visible = reactive({
 
 const visibleBeliefs = reactive({})
 
-beliefs.forEach((belief) => {
+beliefs.value.forEach((belief) => {
     visibleBeliefs[belief.id] = false
 })
 
@@ -127,6 +128,14 @@ const tooltip = reactive({
 })
 
 let observer = null
+watch(beliefs, async () => {
+  await nextTick()
+  for (const belief of beliefs.value) {
+    const element = beliefRefs.value[belief.id]
+    if (element && observer) observer.observe(element)
+    else visibleBeliefs[belief.id] = true
+  }
+})
 
 const setBeliefRef = (el, id) => {
     if (el) {
@@ -164,7 +173,7 @@ const updateVisibility = (target, state) => {
     if (target === introRef.value) visible.intro = state
     if (target === headingRef.value) visible.heading = state
 
-    beliefs.forEach((belief) => {
+    beliefs.value.forEach((belief) => {
         if (target === beliefRefs.value[belief.id]) {
             visibleBeliefs[belief.id] = state
         }
@@ -181,7 +190,7 @@ onMounted(async () => {
         visible.intro = true
         visible.heading = true
 
-        beliefs.forEach((belief) => {
+        beliefs.value.forEach((belief) => {
             visibleBeliefs[belief.id] = true
         })
         return

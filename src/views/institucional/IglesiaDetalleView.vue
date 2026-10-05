@@ -260,8 +260,8 @@
     <main v-else class="not-found-page">
         <div class="not-found-box">
             <font-awesome-icon :icon="['fas', 'church']" class="not-found-icon" />
-            <h1>Iglesia no encontrada</h1>
-            <p>No fue posible localizar la información solicitada.</p>
+            <h1>{{ loading ? 'Cargando iglesia…' : error ? 'No se pudo cargar la iglesia' : 'Iglesia no encontrada' }}</h1>
+            <p>{{ loading ? 'Consultando el directorio.' : error || 'No fue posible localizar la información solicitada.' }}</p>
             <RouterLink to="/iglesias" class="btn-primary-ipn text-decoration-none">
                 Volver al listado
             </RouterLink>
@@ -275,7 +275,7 @@ import { useRoute } from "vue-router"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
 import { useDirectory } from '@/composables/useDirectory'
-const { churches: iglesias } = useDirectory()
+const { churches: iglesias, loading, error } = useDirectory()
 
 const route = useRoute()
 

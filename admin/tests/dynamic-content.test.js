@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises'
 import { Miniflare } from 'miniflare'
 import worker, { adminRoute } from '../worker/index.js'
 import { validateContent } from '../worker/content.js'
-import paths from '../../src/data/sitemapPaths.js'
+import paths from '../../src/config/sitemapPaths.js'
 import { routes } from '../../src/router/routes.js'
 const mf = new Miniflare({modules:true,script:'export default {fetch(){return new Response("test")}}',compatibilityDate:'2026-08-06',d1Databases:['DB']})
 after(() => mf.dispose())
@@ -15,7 +15,7 @@ async function migrate(name) {
 }
 for (const name of ['0001_content.sql','0002_initial_content.sql','0003_directory.sql','0004_initial_directory.sql']) await migrate(name)
 const before = await db.prepare('SELECT * FROM documents ORDER BY id').all(), historyBefore = await db.prepare('SELECT * FROM history ORDER BY id').all()
-await migrate('0005_video_library.sql');await migrate('0006_initial_videos.sql')
+await migrate('0005_video_library.sql');await migrate('0006_initial_videos.sql');await migrate('0008_pastoral_registry.sql');await migrate('0009_database_site_data.sql')
 const origin='https://admin.example.test', env={DB:db,ADMIN_ORIGIN:origin,PUBLIC_ORIGIN:origin}, admin={email:'test@example.test',role:'admin'}
 const call=async(path,method,body,identity=admin)=>adminRoute(new Request(origin+path,{method,headers:{Origin:origin,'X-IPN-Request':'admin','Content-Type':'application/json'},body:JSON.stringify(body)}),env,new URL(origin+path),identity)
 const content=async()=> (await worker.fetch(new Request(origin+'/public/content'),env)).json()

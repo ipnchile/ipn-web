@@ -1,9 +1,10 @@
 <script setup>
-import { septemberMedia } from '@/data/septemberMedia'
+import { useSiteData } from '@/composables/useSiteData'
+const septemberMedia = useSiteData('septemberMedia.septemberMedia', {})
 </script>
 
 <template>
-  <section class="conference-banner" aria-label="Conferencias Semestrales 2026">
+  <section v-if="septemberMedia.banner" class="conference-banner" aria-label="Conferencias Semestrales 2026">
     <RouterLink to="/actualidad/eventos?evento=5" class="conference-banner__link">
       <img :src="septemberMedia.banner" :srcset="septemberMedia.bannerSrcset" sizes="100vw"
         width="2560" height="853" fetchpriority="high" decoding="async"

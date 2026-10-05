@@ -1,5 +1,5 @@
 <template>
-    <section class="carousel-container">
+    <section v-if="slides.length" class="carousel-container">
         <div class="carousel-wrapper">
             <div class="carousel-slides">
                 <article v-for="(slide, index) in slides" :key="index" class="carousel-slide" :class="[
@@ -58,73 +58,37 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { useSiteData } from '@/composables/useSiteData'
 
-import slide1 from '@/assets/img/carousel/optimized/slide1-1920.jpg'
-import slide2 from '@/assets/img/carousel/optimized/slide2-1920.jpg'
-import slide3 from '@/assets/img/carousel/optimized/slide3-1920.jpg'
-import slide1Webp640 from '@/assets/img/carousel/optimized/slide1-640.webp'
-import slide1Webp1280 from '@/assets/img/carousel/optimized/slide1-1280.webp'
-import slide1Webp1920 from '@/assets/img/carousel/optimized/slide1-1920.webp'
-import slide2Webp640 from '@/assets/img/carousel/optimized/slide2-640.webp'
-import slide2Webp1280 from '@/assets/img/carousel/optimized/slide2-1280.webp'
-import slide2Webp1920 from '@/assets/img/carousel/optimized/slide2-1920.webp'
-import slide3Webp640 from '@/assets/img/carousel/optimized/slide3-640.webp'
-import slide3Webp1280 from '@/assets/img/carousel/optimized/slide3-1280.webp'
-import slide3Webp1920 from '@/assets/img/carousel/optimized/slide3-1920.webp'
+
+
+
+
+
+
+
+
+
+
+
+
 
 const imageSet = (...sources) => sources.join(', ')
 
 const currentSlide = ref(0)
 let autoplay = null
+watch(slides, () => { currentSlide.value = 0 })
 
-const slides = ref([
-    {
-        eyebrow: 'Iglesia Pentecostal Nazareth',
-        title: 'Una presencia Institucional con propósito',
-        description: 'Un espacio digital renovado para fortalecer la conexión, la identidad y la misión de nuestra comunidad.',
-        buttonText: 'Conócenos',
-        buttonLink: '/quienes-somos',
-        image: slide1,
-        webpSrcset: imageSet(
-            `${slide1Webp640} 640w`,
-            `${slide1Webp1280} 1280w`,
-            `${slide1Webp1920} 1920w`
-        )
-    },
-    {
-        eyebrow: 'Ministerios y comunidad',
-        title: 'Cada departamento, una obra con identidad',
-        description: 'Varones, Dorcas y Jumix forman parte de una visión viva, organizada y enfocada en servir.',
-        buttonText: 'Ver departamentos',
-        buttonLink: '/quienes-somos',
-        image: slide2,
-        webpSrcset: imageSet(
-            `${slide2Webp640} 640w`,
-            `${slide2Webp1280} 1280w`,
-            `${slide2Webp1920} 1920w`
-        )
-    },
-    {
-        eyebrow: 'Súmate a la visión',
-        title: 'Fe, servicio y comunidad en un solo lugar',
-        description: 'Descubra una plataforma pensada para informar, conectar e inspirar a cada familia y generación.',
-        buttonText: 'Súmate',
-        buttonLink: '/sumate',
-        image: slide3,
-        webpSrcset: imageSet(
-            `${slide3Webp640} 640w`,
-            `${slide3Webp1280} 1280w`,
-            `${slide3Webp1920} 1920w`
-        )
-    }
-])
+const slides = useSiteData('carousel.slides')
 
 const nextSlide = () => {
+    if (!slides.value.length) return
     currentSlide.value = (currentSlide.value + 1) % slides.value.length
 }
 
 const prevSlide = () => {
+    if (!slides.value.length) return
     currentSlide.value =
         (currentSlide.value - 1 + slides.value.length) % slides.value.length
 }

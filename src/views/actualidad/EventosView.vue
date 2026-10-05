@@ -181,7 +181,7 @@
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { monthOrder } from '@/data/events'
+import { monthOrder } from '@/config/calendar'
 import { usePublishedContent, loadPublishedContent } from '@/composables/usePublishedContent'
 const { calendar } = usePublishedContent()
 import { useRoute, useRouter } from 'vue-router'

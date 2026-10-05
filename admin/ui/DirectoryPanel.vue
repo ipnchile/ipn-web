@@ -2,13 +2,17 @@
 import ContentPreview from './ContentPreview.vue'
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 const previewOpen = ref(false)
+const profiles = ref([]), privateForm = ref(null), privateBaseline = ref('')
+const birthdayMonth = ref(new Intl.DateTimeFormat('en',{month:'2-digit',timeZone:'America/Santiago'}).format(new Date()))
+const birthdays = computed(() => profiles.value.filter(p => p.fecha_nacimiento?.slice(5,7)===birthdayMonth.value).sort((a,b) => a.fecha_nacimiento.slice(5).localeCompare(b.fecha_nacimiento.slice(5)) || a.nombre.localeCompare(b.nombre)))
+const months = Array.from({length:12},(_,i)=>({id:String(i+1).padStart(2,'0'),name:new Intl.DateTimeFormat('es-CL',{month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(2026,i,1)))}))
 const props = defineProps({me:Object})
 const records=ref([]), kind=ref('church'), query=ref(''), selected=ref(null), form=ref(null), busy=ref(false), error=ref(''), message=ref(''), baseline=ref('')
-const dirty=computed(() => form.value && JSON.stringify(form.value)!==baseline.value)
+const dirty=computed(() => form.value && (JSON.stringify(form.value)!==baseline.value || JSON.stringify(privateForm.value)!==privateBaseline.value))
 const people=computed(() => records.value.filter(r=>r.kind==='person'))
 const rows=computed(() => records.value.filter(r=>r.kind===kind.value && `${r.draft.nombre} ${r.draft.comuna || ''}`.toLocaleLowerCase('es').includes(query.value.toLocaleLowerCase('es'))))
-async function request(path='',method='GET',body) {
-  const response=await fetch('/api/directory'+path,{method,credentials:'same-origin',headers:{'Content-Type':'application/json','X-IPN-Request':'admin'},body:body ? JSON.stringify(body) : undefined})
+async function request(path='',method='GET',body,base='/api/directory') {
+  const response=await fetch(base+path,{method,credentials:'same-origin',headers:{'Content-Type':'application/json','X-IPN-Request':'admin'},body:body ? JSON.stringify(body) : undefined})
   if (response.redirected || !response.headers.get('Content-Type')?.includes('application/json')) throw new Error('Vuelva a iniciar sesión en el panel.')
   const data=await response.json()
   if (!response.ok) throw new Error(data.error || 'No se pudo completar la operación.')
@@ -21,12 +25,22 @@ function choose(row) {
   if (!canLeave()) return
   selected.value=row
   form.value=JSON.parse(JSON.stringify(row.draft))
+  privateForm.value=row.kind==='person' ? {...(profiles.value.find(p=>p.person_id===row.id) || {role:row.id?.startsWith('pastora-')?'pastora':'pastor',fecha_nacimiento:'',updated_at:null})} : null
+  privateBaseline.value=JSON.stringify(privateForm.value)
   baseline.value=JSON.stringify(form.value)
 }
 function change(value) { if(canLeave()) {kind.value=value; selected.value=null; form.value=null} }
 function create() { choose({kind:kind.value,revision:0,draft:kind.value==='person' ? {nombre:'',foto_url:'',grado:'',email:'',cargos:[]} : {nombre:'',slug:'',foto_url:'',comuna:'',region:'',zona:'',direccion:'',googleMapsName:'',searchAliases:[],horarios:[],lat:null,lng:null,telefono:'',email:'',pastor_id:'',pastora_id:'',redes:{facebook:'',instagram:'',youtube:''}}}) }
-async function refresh() {records.value=await request()}
-async function save() { await run(async()=>{const row=await request(selected.value.id?'/'+selected.value.id:'',selected.value.id?'PUT':'POST',{kind:selected.value.kind,draft:form.value,revision:selected.value.revision}); baseline.value=JSON.stringify(form.value); choose(row); await refresh(); message.value='Borrador guardado. Publique para mostrar los cambios.'}) }
+async function refresh() {records.value=await request(); if(props.me.role==='admin') profiles.value=await request('','GET',undefined,'/api/pastoral')}
+async function save() { await run(async()=>{
+  const row=await request(selected.value.id?'/'+selected.value.id:'',selected.value.id?'PUT':'POST',{kind:selected.value.kind,draft:form.value,revision:selected.value.revision})
+  selected.value=row; baseline.value=JSON.stringify(form.value)
+  if(privateForm.value && props.me.role==='admin') {
+    const profile=await request('/'+row.id,'PUT',privateForm.value,'/api/pastoral')
+    privateForm.value=profile; privateBaseline.value=JSON.stringify(profile)
+  }
+  await refresh(); choose(row); message.value='Ficha guardada. Publique los cambios del directorio.'
+}) }
 async function publish(action) {
   if(dirty.value) {error.value='Guarde el borrador antes de publicar.'; return}
   if(!window.confirm(action==='publish'?'¿Publicar este registro?':'¿Retirar este registro de la web?'))return
@@ -38,9 +52,14 @@ onBeforeUnmount(()=>window.removeEventListener('beforeunload',unload))
 </script>
 <template>
   <section aria-label="Directorio público">
-    <p>Directorio público: incluya únicamente información institucional destinada a la web.</p>
+    <p>Direcciones y horarios se publican en el directorio. Las fechas de nacimiento y los datos de contacto personal son privados.</p>
     <div v-if="error" class="notice error" role="alert">{{ error }}</div><div v-if="message" class="notice success" role="status">{{ message }}</div>
     <nav aria-label="Directorio"><button :disabled="busy" :aria-pressed="kind==='church'" @click="change('church')">Iglesias</button><button :disabled="busy" :aria-pressed="kind==='person'" @click="change('person')">Pastores y pastoras</button></nav>
+    <details v-if="props.me.role==='admin'"><summary>Cumpleaños del cuerpo pastoral</summary>
+      <label>Mes<select v-model="birthdayMonth"><option v-for="month in months" :key="month.id" :value="month.id">{{ month.name }}</option></select></label>
+      <ul><li v-for="person in birthdays" :key="person.person_id">{{ person.fecha_nacimiento.slice(8,10) }}/{{ birthdayMonth }} · {{ person.nombre }} ({{ person.role }})</li></ul>
+      <p v-if="!birthdays.length">No hay cumpleaños registrados para este mes.</p>
+    </details>
     <div class="workspace" :aria-busy="busy">
       <aside class="list"><div class="list-heading"><h2>{{ kind==='church'?'Iglesias':'Personas' }}</h2><button v-if="props.me.role==='admin'" :disabled="busy" @click="create">+ Crear</button></div><label>Buscar<input v-model="query" type="search"></label>
         <button v-for="row in rows" :key="row.id" class="record" :disabled="busy" @click="choose(row)"><span class="badge">{{ row.published?'Publicado':'Borrador' }}</span><strong>{{ row.draft.nombre }}</strong><small>{{ row.draft.comuna || row.draft.grado }}</small></button>
@@ -65,6 +84,14 @@ onBeforeUnmount(()=>window.removeEventListener('beforeunload',unload))
             <details><summary>Búsqueda en el mapa</summary><label>Nombre en Google Maps<input v-model="form.googleMapsName" maxlength="300"></label><label>Nombres alternativos (uno por línea)<textarea :value="form.searchAliases.join('\n')" @input="form.searchAliases=$event.target.value.split('\n')"></textarea></label></details>
           </template>
           <template v-else><label>Grado o función pastoral<input v-model="form.grado" maxlength="200"></label>
+            <section v-if="privateForm && props.me.role==='admin'" aria-label="Ficha pastoral privada">
+              <h3>Ficha pastoral privada</h3>
+              <label>Función<select v-model="privateForm.role"><option value="pastor">Pastor</option><option value="pastora">Pastora</option></select></label>
+              <label>Fecha de nacimiento para cumpleaños<input v-model="privateForm.fecha_nacimiento" type="date"></label>
+              <p v-if="privateForm.telefono">Contacto: {{ privateForm.telefono }}</p>
+              <p v-if="privateForm.correo_contacto">Correo de contacto: {{ privateForm.correo_contacto }}</p>
+              <p v-if="privateForm.estado_civil">Estado civil: {{ privateForm.estado_civil }}</p>
+            </section>
             <h3>Cargos institucionales</h3><div v-for="(cargo,index) in form.cargos" :key="index"><label>Área<select v-model="cargo.area"><option value="directorio">Directorio nacional</option><option value="tribunal">Tribunal de Ética y Disciplina</option></select></label><label>Cargo<input v-model="cargo.cargo" maxlength="200"></label><label>Orden<input v-model.number="cargo.orden" type="number" min="0" max="100"></label><button type="button" @click="form.cargos.splice(index,1)">Quitar cargo del borrador</button></div><button type="button" :disabled="form.cargos.length>=10" @click="form.cargos.push({area:'directorio',cargo:'',orden:form.cargos.length})">Añadir cargo</button>
           </template>
           <label>Correo institucional público<input v-model="form.email" type="email" placeholder="nombre@ipnchile.cl"></label>

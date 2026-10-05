@@ -1,5 +1,3 @@
-export const defaultConferenceVideo = Object.freeze({ mode: 'preview', previewUrl: 'https://youtu.be/VEPseBfwQZE', liveUrl: '' })
-
 export function youtubeId(value) {
   try {
     const url = new URL(value)

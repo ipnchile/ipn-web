@@ -43,7 +43,9 @@ export function validateDirectory(kind, value) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(data.slug)) fail('Use un identificador de iglesia en minúsculas, separado por guiones.')
   for (const key of ['comuna','region','zona','direccion','googleMapsName','telefono']) data[key] = str(value[key], 300)
   data.email = email(value.email)
-  data.horarios = items(value.horarios || [])
+  if (!Array.isArray(value.horarios || []) || (value.horarios || []).length > 30) fail('Lista de horarios inválida.')
+  data.horarios = (value.horarios || []).map(v => str(v, 2000)).filter(Boolean)
+  data.horarios_texto = data.horarios.join('\n')
   data.searchAliases = items(value.searchAliases || [])
   for (const [key,limit] of [['lat',90],['lng',180]]) {
     data[key] = value[key] == null || value[key] === '' ? null : Number(value[key])

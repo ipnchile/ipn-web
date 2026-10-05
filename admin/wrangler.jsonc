@@ -6,6 +6,7 @@
   "account_id": "e225e8b28b9744c25c9b696a1d11ef23",
   "workers_dev": true,
   "preview_urls": false,
+  "triggers": { "crons": ["17 * * * *"] },
   "routes": [
     {
       "pattern": "admin.ipnchile.cl",
@@ -24,7 +25,9 @@
     "ACCESS_AUD": "4606d22037e807ad3433ffa5adefa540ae89d1305deac50fd53571019fed83f6",
     "ADMIN_EMAILS": "master.ipnchile@gmail.com",
     "EDITOR_EMAILS": "",
-    "ALLOW_MEDIA_UPLOADS": "false"
+    "ALLOW_MEDIA_UPLOADS": "false",
+    "INSTAGRAM_ENABLED": "true",
+    "INSTAGRAM_API_VERSION": "v25.0"
   },
   "d1_databases": [
     {

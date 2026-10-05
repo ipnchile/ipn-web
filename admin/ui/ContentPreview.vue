@@ -3,12 +3,12 @@ import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import BannerCarousel from '../../src/components/ui/BannerCarousel.vue'
 import { bannerSlides } from '../../src/utils/banner.js'
 import { instagramPostUrl } from '../../src/utils/news.js'
-import { youtubeId, activeConferenceVideo, defaultConferenceVideo } from '../../src/utils/conferenceVideo.js'
+import { youtubeId, activeConferenceVideo } from '../../src/utils/conferenceVideo.js'
 const props = defineProps({ kind: String, draft: Object, published: Object })
 const emit = defineEmits(['close'])
 const dialog = ref(null), version = ref('draft'), device = ref('desktop')
 const data = computed(() => (version.value === 'published' ? props.published : props.draft) || {})
-const video = computed(() => activeConferenceVideo(data.value.conferenceVideo ?? defaultConferenceVideo))
+const video = computed(() => activeConferenceVideo(data.value.conferenceVideo ?? null))
 function imageUrl(value) {
   if (/^asset:[0-9a-f-]{36}$/.test(value || '')) return `/api/media/${value.slice(6)}`
   try { const u = new URL(value); return u.origin === 'https://media.ipnchile.cl' && !u.username && !u.password ? u.href : '' } catch { return '' }

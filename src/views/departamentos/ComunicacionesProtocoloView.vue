@@ -155,30 +155,12 @@
 </template>
 
 <script setup>
+import { useSiteData } from '@/composables/useSiteData'
 import { ref } from 'vue'
 import PersonProfileModal from '@/components/ui/PersonProfileModal.vue'
 import departmentLogo from '@/assets/img/departamentos/RRPP_NACIONAL.png'
 
-const nationalBoard = [
-    {
-        role: 'Director Nacional',
-        name: 'Pr. Iván González Rodríguez',
-        period: 'Equipo Nacional',
-        description:
-            'Responsable de coordinar la comunicación institucional, protocolo y relaciones públicas a nivel nacional.',
-        photo: 'https://pub-065eb4027e4242aea56805003b4c89aa.r2.dev/perfiles/rrpp/Pastor%20Ivan.webp',
-        email: 'rrpp@ipnchile.cl'
-    },
-    {
-        role: 'Protocolo',
-        name: 'Pr. Mauricio Carrasco Valenzuelas',
-        period: 'Equipo Nacional',
-        description:
-            'Colabora en la organización protocolar de actividades, ceremonias y eventos oficiales.',
-        photo: 'https://pub-065eb4027e4242aea56805003b4c89aa.r2.dev/perfiles/rrpp/Pastor%20Mauricio.webp',
-        email: 'protocolo@ipnchile.cl'
-    }
-]
+const nationalBoard = useSiteData('departamentos/ComunicacionesProtocoloView.nationalBoard', [])
 
 const selectedLeader = ref(null)
 
@@ -186,7 +168,7 @@ const openLeaderModal = (leader) => {
     selectedLeader.value = leader
 }
 
-const galleryPhotos = []
+const galleryPhotos = useSiteData('departamentos/ComunicacionesProtocoloView.galleryPhotos', [])
 </script>
 
 <style scoped>

@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { youtubeId, activeConferenceVideo, defaultConferenceVideo } from '../src/utils/conferenceVideo.js'
+import { youtubeId, activeConferenceVideo } from '../src/utils/conferenceVideo.js'
+const defaultConferenceVideo = { mode: 'preview', previewUrl: 'https://youtu.be/VEPseBfwQZE', liveUrl: '' }
 import { validateContent } from '../admin/worker/content.js'
 
 test('Acepta enlaces compartidos, watch y directos, y rechaza dominios falsos', () => {

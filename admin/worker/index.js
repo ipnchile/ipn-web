@@ -1,5 +1,8 @@
 import { sitemapXml } from './sitemap.js'
+import { instagramAdmin, instagramNews, syncInstagram } from './instagram.js'
 import { directoryAdmin, directoryPublic } from './directory.js'
+import { publicBirthdays } from './birthdays.js'
+import { pastoralAdmin } from './pastoral.js'
 import { authenticate, checkMutation, requireAdmin, HttpError } from './auth.js'
 import { kinds, validateContent, mediaIds, publicData } from './content.js'
 
@@ -61,13 +64,16 @@ async function publicRoute(request, env, url) {
   if (url.pathname === '/public/directory') return json(await directoryPublic(env.DB),200,{'Access-Control-Allow-Origin':'*'})
   if (url.pathname === '/public/content') {
     const {results} = await env.DB.prepare('SELECT id,kind,published FROM documents WHERE published IS NOT NULL ORDER BY updated_at DESC').all()
-    const output = {news:[],events:[],videos:[],banner:null}
+    const {results:siteRows} = await env.DB.prepare('SELECT id,data FROM site_data ORDER BY id').all()
+    const output = {news:[],events:[],videos:[],banner:null,birthdays:await publicBirthdays(env.DB),siteData:Object.fromEntries(siteRows.map(row => [row.id,JSON.parse(row.data)]))}
     for (const row of results) {
       const item = publicData(row,env.PUBLIC_ORIGIN)
       if (row.kind === 'banner') output.banner = item
       else if (row.kind === 'video') output.videos.push(item)
       else output[row.kind === 'news' ? 'news' : 'events'].push(item)
     }
+    const manualUrls = new Set(output.news.map(item => item.instagramUrl).filter(Boolean))
+    output.news.push(...(await instagramNews(env)).filter(item => !manualUrls.has(item.instagramUrl)))
     return json(output,200,{'Access-Control-Allow-Origin':'*'})
   }
   const match = url.pathname.match(/^\/public\/media\/([0-9a-f-]{36})$/)
@@ -85,6 +91,8 @@ async function readMedia(env, id, method) {
 export async function adminRoute(request, env, url, identity) {
   const db = env.DB, path = url.pathname
   if (!['GET','HEAD'].includes(request.method)) checkMutation(request,env)
+  if (path === '/api/pastoral' || path.startsWith('/api/pastoral/')) return pastoralAdmin(request,env,url,identity,bodyJson)
+  if (path === '/api/instagram' || path === '/api/instagram/sync') return instagramAdmin(request,env,identity,bodyJson)
   if (path === '/api/directory' || path.startsWith('/api/directory/')) return directoryAdmin(request,env,url,identity,bodyJson)
   if (path === '/api/me' && request.method === 'GET') return json({...identity,mediaUploads:env.ALLOW_MEDIA_UPLOADS === 'true'})
   if (path === '/api/documents' && request.method === 'GET') {
@@ -141,6 +149,13 @@ export async function adminRoute(request, env, url, identity) {
   return env.ASSETS.fetch(request)
 }
 export default {
+  async scheduled(_event, env, ctx) {
+    if (env.INSTAGRAM_ENABLED !== 'true' || !env.INSTAGRAM_ACCESS_TOKEN) return
+    ctx.waitUntil((async () => {
+      const row = await env.DB.prepare('SELECT enabled FROM instagram_feed WHERE id=1').first()
+      if (row?.enabled) await syncInstagram(env)
+    })().catch(() => { /* The administrator sees a sanitized error on the panel. */ }))
+  },
   async fetch(request,env,ctx) {
     try {
       const url = new URL(request.url)

@@ -4,6 +4,18 @@
         <ConferenceBanner v-else-if="!loaded && septemberConfig.showConferenceBanner" />
         <TheCarousel v-else />
         <HeroHome />
+        <PastoralBirthday />
+
+        <section class="section-block section-container" aria-labelledby="home-news-title">
+            <div class="section-heading">
+                <p class="section-eyebrow">Actualidad IPN Chile</p>
+                <h2 id="home-news-title" class="section-title">Noticias de nuestra misión</h2>
+                <p class="section-description">Conozca nuestras últimas noticias, comunicados y publicaciones de Instagram.</p>
+            </div>
+            <NewsGallery v-if="news.length" :items="news.slice(0, 3)" home />
+            <p v-else class="glass-panel home-news-empty">Pronto compartiremos nuevas noticias de nuestra misión.</p>
+            <RouterLink to="/actualidad/noticias" class="btn-primary home-news-link">Ver todas las noticias →</RouterLink>
+        </section>
 
         <section class="section-block section-container" aria-labelledby="home-news-title">
             <div class="section-heading">
@@ -147,6 +159,7 @@
 </template>
 
 <script setup>
+import PastoralBirthday from '@/components/ui/PastoralBirthday.vue'
 import TheCarousel from '@/components/ui/TheCarousel.vue'
 import NewsGallery from '@/components/ui/NewsGallery.vue'
 import HeroHome from '@/components/ui/HeroHome.vue'

@@ -1,4 +1,4 @@
-import publicPaths from '../../src/data/sitemapPaths.js'
+import publicPaths from '../../src/config/sitemapPaths.js'
 const origin = 'https://ipnchile.cl'
 const escapeXml = value => value.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&apos;')
 export async function sitemapXml(db) {

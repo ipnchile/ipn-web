@@ -160,58 +160,12 @@
 </template>
 
 <script setup>
+import { useSiteData } from '@/composables/useSiteData'
 import seminarioLogo from '@/assets/img/departamentos/SEM.png'
 
-const programs = [
-    {
-        type: 'Programa académico',
-        title: 'Diploma en Teología Bíblica',
-        description:
-            'Programa orientado al estudio bíblico y doctrinal para fortalecer la formación cristiana y ministerial.',
-        icon: ['fas', 'graduation-cap']
-    },
-    {
-        type: 'Formación para la iglesia',
-        title: 'Cursos para miembros activos',
-        description:
-            'Instancias de aprendizaje dirigidas a hermanos y hermanas que desean profundizar su preparación para servir.',
-        icon: ['fas', 'book-bible']
-    },
-    {
-        type: 'Formación ministerial',
-        title: 'Programas para pastores y líderes',
-        description:
-            'Espacios de capacitación pensados para apoyar el servicio pastoral, docente y ministerial dentro de la IPN.',
-        icon: ['fas', 'person-chalkboard']
-    }
-]
+const programs = useSiteData('institucional/SemView.programs', [])
 
-const steps = [
-    {
-        number: '01',
-        title: 'Materiales de estudio',
-        description:
-            'Acceso a contenidos y recursos preparados para cada lección.'
-    },
-    {
-        number: '02',
-        title: 'Comunicación docente',
-        description:
-            'Acompañamiento y orientación durante el proceso formativo.'
-    },
-    {
-        number: '03',
-        title: 'Tareas y evaluaciones',
-        description:
-            'Desarrollo de actividades que fortalecen el aprendizaje.'
-    },
-    {
-        number: '04',
-        title: 'Trabajo formativo',
-        description:
-            'Participación responsable en el proceso académico y espiritual.'
-    }
-]
+const steps = useSiteData('institucional/SemView.steps', [])
 </script>
 
 <style scoped>

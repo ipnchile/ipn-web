@@ -8,13 +8,14 @@ import SeptemberDecor from '@/components/ui/SeptemberDecor.vue'
 import AppFooter from '@/components/ui/AppFooter.vue'
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton.vue'
 
-import { useDirectory } from '@/composables/useDirectory'
-import { usePublishedContent } from '@/composables/usePublishedContent'
+import { useDirectory, loadDirectory } from '@/composables/useDirectory'
+import { usePublishedContent, loadPublishedContent } from '@/composables/usePublishedContent'
 import { resolvePageMetadata, updatePageMetadata } from '@/utils/seo'
 import { syncSiteIdentity } from '@/utils/structuredData'
 const route = useRoute()
-const { churches } = useDirectory()
-const { calendar } = usePublishedContent()
+const { churches, error: directoryError } = useDirectory()
+const { calendar, error: contentError } = usePublishedContent()
+const reloadData = () => { loadDirectory(true); loadPublishedContent() }
 watchEffect(() => {
     syncSiteIdentity(route.name === 'home')
     updatePageMetadata(resolvePageMetadata(route, { churches: churches.value, events: calendar.value.flatMap(month => month.events) }))
@@ -46,6 +47,7 @@ watchEffect(() => {
         <SeptemberDecor />
     </div>
     <router-view />
+    <p v-if="contentError || directoryError" class="database-notice" role="alert">{{ contentError || directoryError }} <button type="button" @click="reloadData">Reintentar</button></p>
     <ParticleTrail />
     <ScrollToTopButton />
     <AppFooter />
@@ -57,4 +59,5 @@ watchEffect(() => {
     top: 0;
     z-index: 1000;
 }
+.database-notice { position: fixed; bottom: 1rem; left: 1rem; right: 1rem; z-index: 1100; padding: .8rem; background: #243744; color: white; border-radius: .5rem; text-align: center; }
 </style>

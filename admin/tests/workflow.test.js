@@ -10,6 +10,10 @@ const schema = await readFile(new URL('../migrations/0001_content.sql',import.me
 // exec accepts one statement per line, including triggers with internal semicolons.
 await db.exec(schema.replace(/--[^\n]*/g,'').replace(/\n/g,' ').replace(/; CREATE/g,';\nCREATE'))
 const env = {DB:db,DRAFT_MEDIA:bucket,ADMIN_ORIGIN:'https://admin.ipnchile.cl',PUBLIC_ORIGIN:'https://ipn-admin.example.com'}
+for (const name of ['0003_directory.sql','0008_pastoral_registry.sql']) {
+  const sql = await readFile(new URL('../migrations/'+name,import.meta.url),'utf8')
+  await db.exec(sql.replace(/--[^\n]*/g,'').replace(/\n/g,' ').replace(/; (?=CREATE|INSERT)/g,';\n'))
+}
 const admin = {email:'admin@example.com',role:'admin'}, editor = {email:'editor@example.com',role:'editor'}
 async function call(path,method='GET',body,identity=admin) {
   const request = new Request(env.ADMIN_ORIGIN+path,{method,headers:{Origin:env.ADMIN_ORIGIN,'X-IPN-Request':'admin','Content-Type':'application/json'},body:body ? JSON.stringify(body) : undefined})
