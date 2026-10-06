@@ -5,6 +5,7 @@ const props = defineProps({ banner: { type: Object, required: true }, preview: B
 const slides = computed(() => bannerSlides(props.banner))
 const current = ref(0), paused = ref(false), hovering = ref(false), focused = ref(false), hidden = ref(false), reducedMotion = ref(false)
 const multiple = computed(() => slides.value.length > 1)
+const photoOnly = computed(() => slides.value.length > 0 && slides.value.every(slide => slide.fit === 'contain' && !slide.showText))
 const signature = computed(() => JSON.stringify(slides.value))
 let timer, motion
 function stop() { clearInterval(timer); timer = undefined }
@@ -31,7 +32,7 @@ onBeforeUnmount(() => { stop(); motion?.removeEventListener('change', motionChan
 </script>
 
 <template>
-  <section v-if="slides.length" class="banner-carousel" :class="[{ single: !multiple }, `effect-${banner.transition || 'fade'}`]" :aria-label="banner.title || 'Imágenes de nuestra iglesia'" :aria-roledescription="multiple ? 'carrusel' : undefined"
+  <section v-if="slides.length" class="banner-carousel" :class="[{ single: !multiple, 'photo-only': photoOnly && multiple }, `effect-${banner.transition || 'fade'}`]" :aria-label="banner.title || 'Imágenes de nuestra iglesia'" :aria-roledescription="multiple ? 'carrusel' : undefined"
     @mouseenter="hovering = true" @mouseleave="hovering = false" @focusin="focused = true" @focusout="focusOut"
     @keydown.left.prevent="multiple && go(current - 1)" @keydown.right.prevent="multiple && go(current + 1)">
     <div class="banner-stage" :aria-live="paused || reducedMotion ? 'polite' : 'off'">
@@ -82,6 +83,9 @@ onBeforeUnmount(() => { stop(); motion?.removeEventListener('change', motionChan
 .banner-controls .banner-pause{font-size:.8rem;padding:0 .6rem}
 .banner-dots{display:flex;flex-wrap:wrap;justify-content:center}.banner-dots button{min-width:24px;width:24px}.banner-dots span{display:block;width:8px;height:8px;margin:auto;background:#ffffff70;border-radius:50%}.banner-dots .selected span{background:#ecd19a;outline:2px solid #ecd19a;outline-offset:3px}
 .banner-controls button:focus-visible,.banner-action:focus-visible,.banner-image-link:focus-visible{outline:3px solid #ecd19a;outline-offset:2px}
+.photo-only .banner-stage{min-height:0;aspect-ratio:16/9}
+.photo-only .banner-controls{position:relative;bottom:auto;left:auto;transform:none;width:fit-content;margin:.75rem auto}
+.banner-carousel.photo-only{padding-bottom:.1rem}
 @container(max-width:600px){.banner-copy{padding:2.5rem 1.4rem 8rem}.banner-copy h2{font-size:2rem}.banner-stage{min-height:510px}.banner-controls{width:max-content}.banner-dots button{min-width:18px;width:18px}.banner-controls button{min-width:32px}.banner-controls .banner-pause{font-size:.72rem}.banner-shade{background:linear-gradient(0deg,#061321f2,#06132188)}}
 @media(prefers-reduced-motion:reduce){.banner-carousel .banner-slide{transition:none;transform:none}}
 </style>

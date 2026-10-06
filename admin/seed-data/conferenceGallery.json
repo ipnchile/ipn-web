@@ -1,0 +1,582 @@
+{
+  "sourceFolder": "https://drive.google.com/drive/folders/13yPW-b0H_dNnq98VMEAj6iXh0VBCyonu",
+  "bucket": "ipn-media",
+  "prefix": "eventos/conferencias-nacimiento-2026",
+  "banner": {
+    "title": "Conferencias en Nacimiento 2026 · IPN Chile",
+    "description": "Recuerdos de nuestras conferencias en Nacimiento",
+    "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/principales/dsc03604-2560.webp",
+    "conferenceVideo": {
+      "mode": "off",
+      "previewUrl": "https://youtu.be/VEPseBfwQZE",
+      "liveUrl": "https://www.youtube.com/watch?v=JUDq7z_UeN4"
+    },
+    "link": "/actualidad/noticias#galeria-conferencias",
+    "enabled": true,
+    "transition": "fade",
+    "slides": [
+      {
+        "id": "DSC03604",
+        "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/principales/dsc03604-2560.webp",
+        "alt": "Fotografía oficial de las conferencias en Nacimiento",
+        "eyebrow": "",
+        "title": "Fotografía oficial de las conferencias en Nacimiento",
+        "description": "",
+        "buttonText": "",
+        "link": "/actualidad/noticias#galeria-conferencias",
+        "showText": false,
+        "fit": "contain",
+        "zoom": 100,
+        "positionX": 50,
+        "positionY": 50
+      },
+      {
+        "id": "DSC03616",
+        "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/principales/dsc03616-2560.webp",
+        "alt": "Segundo recuerdo oficial de las conferencias en Nacimiento",
+        "eyebrow": "",
+        "title": "Segundo recuerdo oficial de las conferencias en Nacimiento",
+        "description": "",
+        "buttonText": "",
+        "link": "/actualidad/noticias#galeria-conferencias",
+        "showText": false,
+        "fit": "contain",
+        "zoom": 100,
+        "positionX": 50,
+        "positionY": 50
+      },
+      {
+        "id": "DSC03147",
+        "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03147-2560.webp",
+        "alt": "Mensaje desde el púlpito en el primer día",
+        "eyebrow": "",
+        "title": "Mensaje desde el púlpito en el primer día",
+        "description": "",
+        "buttonText": "",
+        "link": "/actualidad/noticias#galeria-conferencias",
+        "showText": false,
+        "fit": "contain",
+        "zoom": 100,
+        "positionX": 50,
+        "positionY": 50
+      },
+      {
+        "id": "DSC03328",
+        "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03328-2560.webp",
+        "alt": "Vista de la congregación durante las sesiones",
+        "eyebrow": "",
+        "title": "Vista de la congregación durante las sesiones",
+        "description": "",
+        "buttonText": "",
+        "link": "/actualidad/noticias#galeria-conferencias",
+        "showText": false,
+        "fit": "contain",
+        "zoom": 100,
+        "positionX": 50,
+        "positionY": 50
+      },
+      {
+        "id": "DSC03444",
+        "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03444-2560.webp",
+        "alt": "La congregación reunida en el servicio de clausura",
+        "eyebrow": "",
+        "title": "La congregación reunida en el servicio de clausura",
+        "description": "",
+        "buttonText": "",
+        "link": "/actualidad/noticias#galeria-conferencias",
+        "showText": false,
+        "fit": "contain",
+        "zoom": 100,
+        "positionX": 50,
+        "positionY": 50
+      }
+    ],
+    "primarySlideId": "DSC03604"
+  },
+  "gallery": [
+    {
+      "id": "dia-1",
+      "title": "Día 1 · Conferencias",
+      "photos": [
+        {
+          "id": "DSC03147",
+          "title": "Mensaje desde el púlpito en el primer día",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03147-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03147-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03147-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03147-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "id": "DSC03122",
+          "title": "La congregación en adoración",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03122-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03122-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03122-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03122-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "id": "DSC03089",
+          "title": "La Palabra compartida en las conferencias",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03089-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03089-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03089-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03089-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        }
+      ]
+    },
+    {
+      "id": "dia-2",
+      "title": "Día 2 · Sesiones",
+      "photos": [
+        {
+          "id": "DSC03365",
+          "title": "Encuentro y conversaciones de la misión",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03365-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03365-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03365-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03365-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "id": "DSC03328",
+          "title": "Vista de la congregación durante las sesiones",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03328-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03328-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03328-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03328-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "id": "DSC03256",
+          "title": "Servicio y comunión durante el encuentro",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03256-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03256-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03256-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03256-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        }
+      ]
+    },
+    {
+      "id": "clausura",
+      "title": "Servicio de clausura",
+      "photos": [
+        {
+          "id": "DSC03517",
+          "title": "Un abrazo fraternal en la clausura",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03517-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03517-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03517-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03517-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "id": "DSC03444",
+          "title": "La congregación reunida en el servicio de clausura",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03444-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03444-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03444-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03444-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "id": "DSC03423",
+          "title": "Adoración durante la clausura",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03423-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03423-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03423-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/clausura/dsc03423-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        }
+      ]
+    },
+    {
+      "id": "almuerzo",
+      "title": "Almuerzo y despedida",
+      "photos": [
+        {
+          "id": "DSC03617",
+          "title": "Equipo de servicio en el almuerzo",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03617-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03617-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03617-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03617-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "id": "DSC03544",
+          "title": "Preparativos y servicio del almuerzo",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03544-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03544-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03544-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03544-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        },
+        {
+          "id": "DSC03527",
+          "title": "Recuerdo del equipo en la despedida",
+          "src": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03527-2560.webp",
+          "thumbnail": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03527-640.webp",
+          "srcset": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03527-640.webp 640w, https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/almuerzo/dsc03527-1280.webp 1280w",
+          "width": 2048,
+          "height": 1152
+        }
+      ]
+    }
+  ],
+  "photos": [
+    {
+      "driveId": "1mZD3r6Xjgf9GFutZdqdDEWD_iQ6Ih8ha",
+      "original": "DSC03147.png",
+      "group": "dia-1",
+      "files": [
+        {
+          "file": "dsc03147-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 70018
+        },
+        {
+          "file": "dsc03147-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 181256
+        },
+        {
+          "file": "dsc03147-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 317946
+        }
+      ]
+    },
+    {
+      "driveId": "1XRt019X5ZTP9wHWJhiZZY0rCOvyOp9J1",
+      "original": "DSC03122.png",
+      "group": "dia-1",
+      "files": [
+        {
+          "file": "dsc03122-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 59990
+        },
+        {
+          "file": "dsc03122-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 153452
+        },
+        {
+          "file": "dsc03122-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 295202
+        }
+      ]
+    },
+    {
+      "driveId": "12sNIQXJT_VMPiCUYnHbltGeJT9H9Ijza",
+      "original": "DSC03089.png",
+      "group": "dia-1",
+      "files": [
+        {
+          "file": "dsc03089-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 55286
+        },
+        {
+          "file": "dsc03089-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 137000
+        },
+        {
+          "file": "dsc03089-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 245908
+        }
+      ]
+    },
+    {
+      "driveId": "10d9pG1Sw_yVF8hXFvjTRJI7UxogzAmTd",
+      "original": "DSC03365.png",
+      "group": "dia-2",
+      "files": [
+        {
+          "file": "dsc03365-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 39108
+        },
+        {
+          "file": "dsc03365-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 105370
+        },
+        {
+          "file": "dsc03365-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 204578
+        }
+      ]
+    },
+    {
+      "driveId": "11QxsGy8JMvGTNcntPj3-8ac3bRjr8UaT",
+      "original": "DSC03328.png",
+      "group": "dia-2",
+      "files": [
+        {
+          "file": "dsc03328-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 60248
+        },
+        {
+          "file": "dsc03328-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 152462
+        },
+        {
+          "file": "dsc03328-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 267096
+        }
+      ]
+    },
+    {
+      "driveId": "12M0dUOcMCKFgSJefuswRcDAOG5wDb5gm",
+      "original": "DSC03256.png",
+      "group": "dia-2",
+      "files": [
+        {
+          "file": "dsc03256-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 40070
+        },
+        {
+          "file": "dsc03256-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 105074
+        },
+        {
+          "file": "dsc03256-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 194680
+        }
+      ]
+    },
+    {
+      "driveId": "1js6W9bSKiguboknLT5NNeZ4rkzrt6Y07",
+      "original": "DSC03517.png",
+      "group": "clausura",
+      "files": [
+        {
+          "file": "dsc03517-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 54846
+        },
+        {
+          "file": "dsc03517-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 150202
+        },
+        {
+          "file": "dsc03517-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 294134
+        }
+      ]
+    },
+    {
+      "driveId": "1S_EroY5ptF5NYnSuneQa0LMs8RgLeAMM",
+      "original": "DSC03444.png",
+      "group": "clausura",
+      "files": [
+        {
+          "file": "dsc03444-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 70388
+        },
+        {
+          "file": "dsc03444-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 214280
+        },
+        {
+          "file": "dsc03444-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 432524
+        }
+      ]
+    },
+    {
+      "driveId": "1khNf1ATiULL6Cxf3obnPhObKctB3XNNO",
+      "original": "DSC03423.png",
+      "group": "clausura",
+      "files": [
+        {
+          "file": "dsc03423-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 74922
+        },
+        {
+          "file": "dsc03423-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 220926
+        },
+        {
+          "file": "dsc03423-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 436450
+        }
+      ]
+    },
+    {
+      "driveId": "1Ibbl3lsFhD3qhrRyOBDig04wcpxDsvtY",
+      "original": "DSC03617.png",
+      "group": "almuerzo",
+      "files": [
+        {
+          "file": "dsc03617-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 53958
+        },
+        {
+          "file": "dsc03617-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 153950
+        },
+        {
+          "file": "dsc03617-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 314298
+        }
+      ]
+    },
+    {
+      "driveId": "1xqktIbF8ghxIi9OkX9lwR2d3x7CFTa9I",
+      "original": "DSC03544.png",
+      "group": "almuerzo",
+      "files": [
+        {
+          "file": "dsc03544-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 36540
+        },
+        {
+          "file": "dsc03544-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 113214
+        },
+        {
+          "file": "dsc03544-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 226860
+        }
+      ]
+    },
+    {
+      "driveId": "1usA_DqEPYBZCwFFMp_d7gVBauuAZPYI4",
+      "original": "DSC03527.png",
+      "group": "almuerzo",
+      "files": [
+        {
+          "file": "dsc03527-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 50510
+        },
+        {
+          "file": "dsc03527-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 146306
+        },
+        {
+          "file": "dsc03527-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 308106
+        }
+      ]
+    },
+    {
+      "driveId": "1EZxjjFXv60TLmYtiTx5LgaPnK2sgkwTI",
+      "original": "DSC03604.png",
+      "group": "principales",
+      "files": [
+        {
+          "file": "dsc03604-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 79284
+        },
+        {
+          "file": "dsc03604-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 230184
+        },
+        {
+          "file": "dsc03604-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 452476
+        }
+      ]
+    },
+    {
+      "driveId": "1qbMGnqnSEJxts91dkER51G2LtobBjCY7",
+      "original": "DSC03616.png",
+      "group": "principales",
+      "files": [
+        {
+          "file": "dsc03616-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 82096
+        },
+        {
+          "file": "dsc03616-1280.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 238404
+        },
+        {
+          "file": "dsc03616-2560.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 470882
+        }
+      ]
+    }
+  ]
+}

@@ -24,6 +24,8 @@
       </div>
     </section>
 
+    <ConferenceGallery />
+
     <!-- COMUNICADOS -->
     <section class="section-container section-block">
       <div class="section-heading">
@@ -140,6 +142,7 @@
 import { computed, ref, nextTick, onBeforeUnmount, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import NewsGallery from '@/components/ui/NewsGallery.vue'
+import ConferenceGallery from '@/components/ui/ConferenceGallery.vue'
 import CardCarousel from '@/components/ui/CardCarousel.vue'
 import { instagramPostUrl, newsAnchor } from '@/utils/news'
 import { createModalController } from '@/utils/modal'
