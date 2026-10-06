@@ -53,7 +53,9 @@ onBeforeUnmount(() => { stop(); motion?.removeEventListener('change', motionChan
       <button type="button" aria-label="Imagen anterior" @click="go(current - 1)">‹</button>
       <div class="banner-dots"><button v-for="(slide, index) in slides" :key="slide.id" type="button" :class="{ selected: index === current }" :aria-current="index === current ? 'true' : undefined" :aria-label="`Mostrar imagen ${index + 1}`" @click="go(index)"><span></span></button></div>
       <button type="button" aria-label="Imagen siguiente" @click="go(current + 1)">›</button>
-      <button v-if="!reducedMotion" type="button" class="banner-pause" :aria-label="paused ? 'Reanudar carrusel' : 'Pausar carrusel'" @click="paused = !paused">{{ paused ? 'Reanudar' : 'Pausar' }}</button>
+      <button v-if="!reducedMotion" type="button" class="banner-pause" :aria-label="paused ? 'Reanudar carrusel' : 'Pausar carrusel'" :title="paused ? 'Reanudar carrusel' : 'Pausar carrusel'" @click="paused = !paused">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path v-if="paused" d="M7 4v16l14-8z" /><path v-else d="M6 4h4v16H6zm8 0h4v16h-4z" /></svg>
+      </button>
     </div>
   </section>
 </template>
@@ -83,9 +85,20 @@ onBeforeUnmount(() => { stop(); motion?.removeEventListener('change', motionChan
 .banner-controls .banner-pause{font-size:.8rem;padding:0 .6rem}
 .banner-dots{display:flex;flex-wrap:wrap;justify-content:center}.banner-dots button{min-width:24px;width:24px}.banner-dots span{display:block;width:8px;height:8px;margin:auto;background:#ffffff70;border-radius:50%}.banner-dots .selected span{background:#ecd19a;outline:2px solid #ecd19a;outline-offset:3px}
 .banner-controls button:focus-visible,.banner-action:focus-visible,.banner-image-link:focus-visible{outline:3px solid #ecd19a;outline-offset:2px}
-.photo-only .banner-stage{min-height:0;aspect-ratio:16/9}
-.photo-only .banner-controls{position:relative;bottom:auto;left:auto;transform:none;width:fit-content;margin:.75rem auto}
-.banner-carousel.photo-only{padding-bottom:.1rem}
+.photo-only .banner-stage{height:calc(100svh - 88px);min-height:360px}
+.photo-only .banner-slide img{object-fit:cover}
+.photo-only .banner-controls{inset:0;left:0;bottom:0;transform:none;max-width:none;width:100%;padding:0;border:0;border-radius:0;background:none;pointer-events:none}
+.photo-only .banner-controls button{pointer-events:auto;text-shadow:0 1px 8px #000;font-size:2rem;display:grid;place-items:center;opacity:.8}
+.photo-only .banner-controls button:hover,.photo-only .banner-controls button:focus-visible{opacity:1;background:#08111c55}
+.photo-only .banner-controls > button:first-child,.photo-only .banner-controls > button:nth-child(3){position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%}
+.photo-only .banner-controls > button:first-child{left:1rem}
+.photo-only .banner-controls > button:nth-child(3){right:1rem}
+.photo-only .banner-dots{position:absolute;bottom:.5rem;left:50%;transform:translateX(-50%);flex-wrap:nowrap}
+.photo-only .banner-dots button{width:28px;min-width:28px}
+.photo-only .banner-dots span{width:6px;height:6px;background:#ffffff85;box-shadow:0 1px 5px #0008}
+.photo-only .banner-dots .selected span{background:white;outline:0;transform:scale(1.4)}
+.photo-only .banner-controls .banner-pause{position:absolute;bottom:.5rem;right:1rem;width:44px;height:44px;padding:0}
 @container(max-width:600px){.banner-copy{padding:2.5rem 1.4rem 8rem}.banner-copy h2{font-size:2rem}.banner-stage{min-height:510px}.banner-controls{width:max-content}.banner-dots button{min-width:18px;width:18px}.banner-controls button{min-width:32px}.banner-controls .banner-pause{font-size:.72rem}.banner-shade{background:linear-gradient(0deg,#061321f2,#06132188)}}
+@container(max-width:600px){.photo-only .banner-stage{height:calc(100svh - 102px)}.photo-only .banner-controls > button:first-child{left:.25rem}.photo-only .banner-controls > button:nth-child(3),.photo-only .banner-controls .banner-pause{right:.25rem}}
 @media(prefers-reduced-motion:reduce){.banner-carousel .banner-slide{transition:none;transform:none}}
 </style>
