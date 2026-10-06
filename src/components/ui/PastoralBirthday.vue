@@ -21,7 +21,7 @@ const dateLabel = computed(() => {
 </script>
 
 <style scoped>
-.birthday-card { display:flex; align-items:center; gap:1rem; margin-top:1.5rem; margin-bottom:1.5rem; padding:1.15rem 1.4rem; max-width:720px; width:calc(100% - 2rem); border:1px solid rgba(185,144,66,.35); border-radius:18px; background:linear-gradient(120deg,rgba(185,144,66,.13),rgba(185,144,66,.04)); }
+.birthday-card { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:.75rem; margin:1.5rem auto; padding:1.15rem 1.4rem; max-width:720px; width:calc(100% - 2rem); border:1px solid rgba(185,144,66,.35); border-radius:18px; background:linear-gradient(120deg,rgba(185,144,66,.13),rgba(185,144,66,.04)); }
 .birthday-icon { font-size:2.2rem; flex-shrink:0; }
 .birthday-title { margin:0 0 .3rem; font-size:.85rem; font-weight:700; }
 .birthday-person { margin:.15rem 0; font-weight:600; }

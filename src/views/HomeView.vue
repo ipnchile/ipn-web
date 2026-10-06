@@ -17,16 +17,6 @@
             <RouterLink to="/actualidad/noticias" class="btn-primary home-news-link">Ver todas las noticias →</RouterLink>
         </section>
 
-        <section class="section-block section-container" aria-labelledby="home-news-title">
-            <div class="section-heading">
-                <p class="section-eyebrow">Actualidad IPN Chile</p>
-                <h2 id="home-news-title" class="section-title">Noticias de nuestra misión</h2>
-                <p class="section-description">Conozca nuestras últimas noticias, comunicados y publicaciones de Instagram.</p>
-            </div>
-            <NewsGallery v-if="news.length" :items="news.slice(0, 3)" home />
-            <p v-else class="glass-panel home-news-empty">Pronto compartiremos nuevas noticias de nuestra misión.</p>
-            <RouterLink to="/actualidad/noticias" class="btn-primary home-news-link">Ver todas las noticias →</RouterLink>
-        </section>
 
         <!-- BIENVENIDA -->
         <section class="section-block">
