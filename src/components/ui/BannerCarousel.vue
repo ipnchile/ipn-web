@@ -6,6 +6,12 @@ const slides = computed(() => bannerSlides(props.banner))
 const current = ref(0), paused = ref(false), hovering = ref(false), focused = ref(false), hidden = ref(false), reducedMotion = ref(false)
 const multiple = computed(() => slides.value.length > 1)
 const photoOnly = computed(() => slides.value.length > 0 && slides.value.every(slide => slide.fit === 'contain' && !slide.showText))
+const imageRatios = ref({})
+const activeRatio = computed(() => imageRatios.value[slides.value[current.value]?.image] || 16 / 9)
+function rememberRatio(slide, event) {
+  const image = event.target
+  if (image.naturalWidth && image.naturalHeight) imageRatios.value[slide.image] = image.naturalWidth / image.naturalHeight
+}
 const signature = computed(() => JSON.stringify(slides.value))
 let timer, motion
 function stop() { clearInterval(timer); timer = undefined }
@@ -32,12 +38,12 @@ onBeforeUnmount(() => { stop(); motion?.removeEventListener('change', motionChan
 </script>
 
 <template>
-  <section v-if="slides.length" class="banner-carousel" :class="[{ single: !multiple, 'photo-only': photoOnly && multiple }, `effect-${banner.transition || 'fade'}`]" :aria-label="banner.title || 'Imágenes de nuestra iglesia'" :aria-roledescription="multiple ? 'carrusel' : undefined"
+  <section v-if="slides.length" class="banner-carousel" :class="[{ single: !multiple, 'photo-only': photoOnly && multiple, 'wide-poster': photoOnly && activeRatio > 2 }, `effect-${banner.transition || 'fade'}`]" :style="{ '--banner-aspect': activeRatio }" :aria-label="banner.title || 'Imágenes de nuestra iglesia'" :aria-roledescription="multiple ? 'carrusel' : undefined"
     @mouseenter="hovering = true" @mouseleave="hovering = false" @focusin="focused = true" @focusout="focusOut"
     @keydown.left.prevent="multiple && go(current - 1)" @keydown.right.prevent="multiple && go(current + 1)">
     <div class="banner-stage" :aria-live="paused || reducedMotion ? 'polite' : 'off'">
       <article v-for="(slide, index) in slides" :key="slide.id" class="banner-slide" :class="{ active: index === current, poster: slide.fit === 'contain', 'with-text': slide.showText }" :aria-hidden="index !== current" :inert="index !== current" :aria-label="multiple ? `Imagen ${index + 1} de ${slides.length}` : undefined">
-        <img :src="slide.image" :alt="slide.alt || slide.title || banner.title" :style="{ transform: `scale(${(slide.zoom ?? 100) / 100})`, objectPosition: `${slide.positionX ?? 50}% ${slide.positionY ?? 50}%`, transformOrigin: `${slide.positionX ?? 50}% ${slide.positionY ?? 50}%` }" :fetchpriority="index === 0 ? 'high' : 'auto'" :loading="index === 0 ? 'eager' : 'lazy'">
+        <img :src="slide.image" :alt="slide.alt || slide.title || banner.title" :style="{ transform: `scale(${(slide.zoom ?? 100) / 100})`, objectPosition: `${slide.positionX ?? 50}% ${slide.positionY ?? 50}%`, transformOrigin: `${slide.positionX ?? 50}% ${slide.positionY ?? 50}%` }" :fetchpriority="index === 0 ? 'high' : 'auto'" :loading="index === 0 ? 'eager' : 'lazy'" @load="rememberRatio(slide, $event)">
         <div v-if="slide.showText" class="banner-shade"></div>
         <div v-if="slide.showText" class="banner-copy">
           <p v-if="slide.eyebrow" class="banner-eyebrow">{{ slide.eyebrow }}</p>
@@ -85,7 +91,7 @@ onBeforeUnmount(() => { stop(); motion?.removeEventListener('change', motionChan
 .banner-controls .banner-pause{font-size:.8rem;padding:0 .6rem}
 .banner-dots{display:flex;flex-wrap:wrap;justify-content:center}.banner-dots button{min-width:24px;width:24px}.banner-dots span{display:block;width:8px;height:8px;margin:auto;background:#ffffff70;border-radius:50%}.banner-dots .selected span{background:#ecd19a;outline:2px solid #ecd19a;outline-offset:3px}
 .banner-controls button:focus-visible,.banner-action:focus-visible,.banner-image-link:focus-visible{outline:3px solid #ecd19a;outline-offset:2px}
-.photo-only .banner-stage{height:auto;min-height:0;aspect-ratio:16/9}
+.photo-only .banner-stage{height:auto;min-height:0;aspect-ratio:var(--banner-aspect,16/9)}
 .photo-only .banner-slide img{object-fit:cover}
 .photo-only .banner-controls{inset:0;left:0;bottom:0;transform:none;max-width:none;width:100%;padding:0;border:0;border-radius:0;background:none;pointer-events:none}
 .photo-only .banner-controls button{pointer-events:auto;text-shadow:0 1px 8px #000;font-size:2rem;display:grid;place-items:center;opacity:.8}
@@ -100,5 +106,6 @@ onBeforeUnmount(() => { stop(); motion?.removeEventListener('change', motionChan
 .photo-only .banner-controls .banner-pause{position:absolute;bottom:.5rem;right:1rem;width:44px;height:44px;padding:0}
 @container(max-width:600px){.banner-copy{padding:2.5rem 1.4rem 8rem}.banner-copy h2{font-size:2rem}.banner-stage{min-height:510px}.banner-controls{width:max-content}.banner-dots button{min-width:18px;width:18px}.banner-controls button{min-width:32px}.banner-controls .banner-pause{font-size:.72rem}.banner-shade{background:linear-gradient(0deg,#061321f2,#06132188)}}
 @container(max-width:600px){.photo-only .banner-stage{height:calc(100svh - 102px);aspect-ratio:auto;min-height:360px}.photo-only .banner-controls > button:first-child{left:.25rem}.photo-only .banner-controls > button:nth-child(3),.photo-only .banner-controls .banner-pause{right:.25rem}}
+.photo-only.wide-poster .banner-stage{height:auto;min-height:0;aspect-ratio:var(--banner-aspect)}
 @media(prefers-reduced-motion:reduce){.banner-carousel .banner-slide{transition:none;transform:none}}
 </style>

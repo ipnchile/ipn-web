@@ -245,6 +245,7 @@
 import { computed, ref, reactive, onMounted, onBeforeUnmount, watch } from "vue"
 import { useRoute } from "vue-router"
 import { usePublishedContent } from "@/composables/usePublishedContent"
+import { instagramPostUrl } from "@/utils/news"
 const { news: comunicados, calendar } = usePublishedContent()
 const allEvents = computed(() => calendar.value.flatMap(month => month.events))
 
@@ -295,6 +296,7 @@ const recentNews = computed(() => {
   const today = getTodayKey()
 
   return comunicados.value
+    .filter((item) => !item.automatic && !instagramPostUrl(item.instagramUrl) && !instagramPostUrl(item.source?.url))
     .filter((item) => {
       const age = daysBetween(item.date, today)
       return age >= 0 && age <= notificationWindowDays
@@ -304,7 +306,7 @@ const recentNews = computed(() => {
       id: `news-${item.id}`,
       type: "news",
       title: item.title,
-      description: `Nueva noticia · ${item.date}`,
+      description: `Nuevo comunicado · ${item.date}`,
       to: "/actualidad/noticias",
       icon: ["fas", "newspaper"],
     }))
@@ -328,7 +330,7 @@ const upcomingEvents = computed(() => {
         type: "event",
         title: event.title,
         description: `${prefix} · ${event.location}`,
-        to: "/actualidad/eventos",
+        to: `/actualidad/eventos?evento=${encodeURIComponent(event.id)}`,
         icon: ["fas", "calendar-check"],
       }
     })

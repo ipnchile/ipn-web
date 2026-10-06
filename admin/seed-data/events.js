@@ -117,12 +117,13 @@ export const calendar = [
         dateLabel: '23 y 24 de octubre de 2026',
         startDate: '2026-10-23',
         endDate: '2026-10-24',
-        title: 'Congreso Nacional de Dorcas',
+        title: '24° Congreso Nacional de Dorcas',
         location: 'IPN El Monte',
         type: 'Congreso',
         description:
-          'Congreso nacional del Departamento Dorcas, enfocado en comunión, servicio y edificación espiritual.',
-        notes: ''
+          'Levántate y Resplandece · Congreso Nacional del Departamento Dorcas, los días 23 y 24 de octubre de 2026 en IPN El Monte.',
+        image: 'https://media.ipnchile.cl/eventos/dorcas-2026/congreso-nacional-dorcas-2026-2032.webp',
+        notes: 'Lema: «Levántate y Resplandece». Isaías 60:1–2.'
       }
     ]
   },

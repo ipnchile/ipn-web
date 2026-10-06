@@ -1,7 +1,6 @@
 <template>
     <main class="home-page">
         <PublishedBanner v-if="loaded && banner?.enabled" :banner="banner" />
-        <ConferenceBanner v-else-if="!loaded && septemberConfig.showConferenceBanner" />
         <TheCarousel v-else />
         <HeroHome />
         <PastoralBirthday />
@@ -153,8 +152,6 @@ import PastoralBirthday from '@/components/ui/PastoralBirthday.vue'
 import TheCarousel from '@/components/ui/TheCarousel.vue'
 import NewsGallery from '@/components/ui/NewsGallery.vue'
 import HeroHome from '@/components/ui/HeroHome.vue'
-import ConferenceBanner from '@/components/ui/ConferenceBanner.vue'
-import { septemberConfig } from '@/config/seasonal'
 import PublishedBanner from '@/components/ui/PublishedBanner.vue'
 import { usePublishedContent } from '@/composables/usePublishedContent'
 const { loaded, banner, news } = usePublishedContent()

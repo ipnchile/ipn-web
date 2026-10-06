@@ -1,0 +1,91 @@
+{
+  "title": "Nuestra misión · Conferencias y Congreso Nacional de Dorcas",
+  "description": "Recuerdos de nuestras conferencias en Nacimiento",
+  "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/principales/dsc03604-2560.webp",
+  "conferenceVideo": {
+    "mode": "off",
+    "previewUrl": "https://youtu.be/VEPseBfwQZE",
+    "liveUrl": "https://www.youtube.com/watch?v=JUDq7z_UeN4"
+  },
+  "link": "/actualidad/noticias#galeria-conferencias",
+  "enabled": true,
+  "transition": "fade",
+  "slides": [
+    {
+      "id": "DSC03604",
+      "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/principales/dsc03604-2560.webp",
+      "alt": "Fotografía oficial de las conferencias en Nacimiento",
+      "eyebrow": "",
+      "title": "Fotografía oficial de las conferencias en Nacimiento",
+      "description": "",
+      "buttonText": "",
+      "link": "/actualidad/noticias#galeria-conferencias",
+      "showText": false,
+      "fit": "contain",
+      "zoom": 100,
+      "positionX": 50,
+      "positionY": 50
+    },
+    {
+      "id": "DSC03616",
+      "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/principales/dsc03616-2560.webp",
+      "alt": "Segundo recuerdo oficial de las conferencias en Nacimiento",
+      "eyebrow": "",
+      "title": "Segundo recuerdo oficial de las conferencias en Nacimiento",
+      "description": "",
+      "buttonText": "",
+      "link": "/actualidad/noticias#galeria-conferencias",
+      "showText": false,
+      "fit": "contain",
+      "zoom": 100,
+      "positionX": 50,
+      "positionY": 50
+    },
+    {
+      "id": "dorcas-2026",
+      "image": "https://media.ipnchile.cl/eventos/dorcas-2026/congreso-nacional-dorcas-2026-2032.webp",
+      "alt": "24° Congreso Nacional de Dorcas: Levántate y Resplandece. 23 y 24 de octubre de 2026, IPN El Monte.",
+      "eyebrow": "",
+      "title": "24° Congreso Nacional de Dorcas",
+      "description": "",
+      "buttonText": "",
+      "link": "/actualidad/eventos?evento=6",
+      "showText": false,
+      "fit": "contain",
+      "zoom": 100,
+      "positionX": 50,
+      "positionY": 50
+    },
+    {
+      "id": "DSC03147",
+      "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-1/dsc03147-2560.webp",
+      "alt": "Mensaje desde el púlpito en el primer día",
+      "eyebrow": "",
+      "title": "Mensaje desde el púlpito en el primer día",
+      "description": "",
+      "buttonText": "",
+      "link": "/actualidad/noticias#galeria-conferencias",
+      "showText": false,
+      "fit": "contain",
+      "zoom": 100,
+      "positionX": 50,
+      "positionY": 50
+    },
+    {
+      "id": "DSC03328",
+      "image": "https://media.ipnchile.cl/eventos/conferencias-nacimiento-2026/dia-2/dsc03328-2560.webp",
+      "alt": "Vista de la congregación durante las sesiones",
+      "eyebrow": "",
+      "title": "Vista de la congregación durante las sesiones",
+      "description": "",
+      "buttonText": "",
+      "link": "/actualidad/noticias#galeria-conferencias",
+      "showText": false,
+      "fit": "contain",
+      "zoom": 100,
+      "positionX": 50,
+      "positionY": 50
+    }
+  ],
+  "primarySlideId": "DSC03604"
+}
