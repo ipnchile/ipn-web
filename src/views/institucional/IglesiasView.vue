@@ -131,7 +131,7 @@
                                     <img v-if="getCardImage(iglesia)" :src="getCardImage(iglesia)" :alt="iglesia.nombre"
                                         class="church-card-full__image" @error="handleImageError" />
 
-                                    <div v-else class="church-card-full__placeholder">
+                                    <div class="church-card-full__placeholder">
                                         <font-awesome-icon :icon="['fas', 'church']" class="placeholder-icon" />
                                     </div>
                                 </div>
@@ -144,15 +144,6 @@
                                         {{ iglesia.googleMapsName }}
                                     </p>
 
-                                    <div class="church-card-full__image-wrap">
-                                        <img v-if="getCardImage(iglesia)" :src="getCardImage(iglesia)"
-                                            :alt="iglesia.nombre" class="church-card-full__image"
-                                            @error="handleImageError" />
-
-                                        <div class="church-card-full__placeholder">
-                                            <font-awesome-icon :icon="['fas', 'church']" class="placeholder-icon" />
-                                        </div>
-                                    </div>
                                 </div>
                             </article>
                         </div>
