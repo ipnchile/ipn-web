@@ -44,12 +44,12 @@ onBeforeUnmount(close)
 
 <template>
   <button v-if="video && settled" ref="launcher" class="conference-watch" :class="{ live: video.mode === 'live' }" @click="open">
-    <span aria-hidden="true">▶</span> {{ video.mode === 'live' ? 'Ver transmisión en vivo' : 'Ver previa de conferencias' }}
+    <span aria-hidden="true">▶</span> {{ video.mode === 'live' ? 'Ver transmisión en vivo' : video.title }}
   </button>
   <Teleport to="body">
     <dialog ref="dialog" class="conference-dialog" aria-labelledby="conference-video-title" aria-describedby="conference-video-help" @cancel.prevent="close" @close="close" @click="($event.target === dialog) && close()">
       <template v-if="opened && video">
-        <header><div><p>{{ video.mode === 'live' ? 'EN VIVO · IPN CHILE' : 'CONFERENCIAS · IPN CHILE' }}</p><h2 id="conference-video-title">{{ video.title }}</h2></div><button autofocus class="video-close" @click="close">Cerrar <span aria-hidden="true">×</span></button></header>
+        <header><div><p>{{ video.mode === 'live' ? 'EN VIVO · IPN CHILE' : 'IPN CHILE' }}</p><h2 id="conference-video-title">{{ video.title }}</h2></div><button autofocus class="video-close" @click="close">Cerrar <span aria-hidden="true">×</span></button></header>
         <iframe :key="embed" :src="embed" :title="video.title" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
         <footer><p id="conference-video-help">Si el video no comienza automáticamente, pulse reproducir para verlo con sonido.</p><a :href="video.url" target="_blank" rel="noopener noreferrer">Abrir en YouTube ↗</a></footer>
       </template>

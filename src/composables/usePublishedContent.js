@@ -46,7 +46,7 @@ export function usePublishedContent() {
         return id ? {...item, summary:item.description, url:'https://www.youtube.com/watch?v='+id, embedUrl:'https://www.youtube-nocookie.com/embed/'+id+'?playsinline=1&rel=0&hl=es'} : null
       }).filter(Boolean)
     }),
-    conferenceVideo: computed(() => content.value ? (content.value.banner ? content.value.banner.conferenceVideo ?? null : null) : null),
+    conferenceVideo: computed(() => content.value ? (content.value.banner?.conferenceVideo ? { ...content.value.banner.conferenceVideo, title: content.value.banner.title } : null) : null),
     loaded: computed(() => content.value !== null),
     news: computed(() => content.value ? [...content.value.news].sort((a,b) => b.date.localeCompare(a.date)) : []),
     calendar: computed(() => content.value ? monthOrder.map(month => ({month,events:content.value.events.filter(e => e.month === month).sort((a,b) => a.startDate.localeCompare(b.startDate))})) : []),

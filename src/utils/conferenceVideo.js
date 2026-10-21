@@ -16,5 +16,5 @@ export function youtubeId(value) {
 export function activeConferenceVideo(config) {
   if (!config || !['preview', 'live'].includes(config.mode)) return null
   const id = youtubeId(config.mode === 'live' ? config.liveUrl : config.previewUrl)
-  return id ? { id, mode: config.mode, title: config.mode === 'live' ? 'Conferencias en vivo' : 'La previa de nuestras conferencias', url: `https://www.youtube.com/watch?v=${id}` } : null
+  return id ? { id, mode: config.mode, title: config.title?.trim() || (config.mode === 'live' ? 'Transmisión en vivo' : 'Video de nuestra misión'), url: `https://www.youtube.com/watch?v=${id}` } : null
 }
