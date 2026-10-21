@@ -2,18 +2,6 @@
     <main class="home-page">
         <PublishedBanner v-if="homeBanner" :banner="homeBanner" />
         <TheCarousel v-else />
-        <section class="section-block section-container" aria-labelledby="dorcas-invitation-title">
-            <div class="section-heading">
-                <p class="section-eyebrow">Departamento Nacional Dorcas</p>
-                <h2 id="dorcas-invitation-title" class="section-title">Invitación al Congreso Nacional de Dorcas</h2>
-                <p class="section-description">Le invitamos a compartir este encuentro de fe, comunión y servicio.</p>
-            </div>
-            <iframe class="dorcas-video" src="https://www.youtube-nocookie.com/embed/SllKL8Wja4Q?playsinline=1&amp;rel=0&amp;hl=es" title="Invitación al Congreso Nacional de Dorcas" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            <div class="dorcas-actions">
-                <RouterLink to="/actualidad/eventos?evento=6" class="btn-primary">Ver evento de Dorcas</RouterLink>
-                <a href="https://www.youtube.com/watch?v=SllKL8Wja4Q" target="_blank" rel="noopener noreferrer" class="btn-secondary">Ver invitación en YouTube</a>
-            </div>
-        </section>
         <HeroHome />
         <PastoralBirthday />
 
@@ -189,8 +177,6 @@ const homeBanner = computed(() => seasonalHomeBanner(banner.value, october.value
 </script>
 
 <style scoped>
-.dorcas-video { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: var(--radius-lg); }
-.dorcas-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; }
 .home-news-link { margin-top: 1.5rem; }
 .home-news-empty { padding: 1.5rem; }
 .home-grid {

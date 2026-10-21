@@ -105,7 +105,7 @@ Referencias: https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/
 
 Consulte admin/REGISTRO-PASTORAL.md para las tablas, consultas, historial de importación y acceso privado a fechas de nacimiento. El directorio público y el contenido estructurado se obtienen de la BD; no hay respaldo de registros en JavaScript del navegador.
 
-Octubre: el afiche WebP de la Reforma Protestante se agrega al carrusel de portada y la franja muestra banderas cristianas solo durante octubre, cada año, según America/Santiago. Al terminar el mes se restablece el banner administrado. La invitación de Dorcas se muestra en portada mediante YouTube sin reproducción automática.
+Octubre: el afiche WebP de la Reforma Protestante se agrega al carrusel de portada y la franja muestra banderas cristianas solo durante octubre, cada año, según America/Santiago. Al terminar el mes se restablece el banner administrado. La invitación de Dorcas se configura en «Banner y video de entrada» del mantenedor y se muestra en el modal flotante habitual.
 
 El afiche de octubre se sirve desde https://media.ipnchile.cl/eventos/octubre/mes-reforma-protestante.webp (bucket ipn-media, objeto eventos/octubre/mes-reforma-protestante.webp).
 
