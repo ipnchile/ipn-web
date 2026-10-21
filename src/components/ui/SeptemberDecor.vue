@@ -1,9 +1,11 @@
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue'
+import { octoberConfig } from '@/config/seasonal'
 import { isSeasonActive } from '@/utils/seasonal'
 
-const visible = ref(isSeasonActive())
-const refresh = () => { visible.value = isSeasonActive() }
+const october = ref(isSeasonActive(new Date(), octoberConfig))
+const visible = ref(isSeasonActive() || october.value)
+const refresh = () => { october.value = isSeasonActive(new Date(), octoberConfig); visible.value = isSeasonActive() || october.value }
 let timer
 onMounted(() => {
   timer = window.setInterval(refresh, 60000)
@@ -18,16 +20,22 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div v-if="visible" class="september-decor" aria-hidden="true">
+  <div v-if="visible" class="september-decor">
     <span v-for="side in ['left', 'right']" :key="side" class="september-decor__flags" :class="side">
-      <svg v-for="flag in 3" :key="flag" viewBox="0 0 30 20" focusable="false">
+      <svg aria-hidden="true" v-for="flag in 3" :key="flag" viewBox="0 0 30 20" focusable="false">
         <path fill="#fff" d="M0 0h30v20H0z" />
+        <template v-if="!october">
         <path fill="#d52b1e" d="M0 10h30v10H0z" />
         <path fill="#0039a6" d="M0 0h10v10H0z" />
         <path fill="#fff" d="m5 1.6.8 2.4h2.5l-2 1.5.8 2.4L5 6.4 2.9 7.9l.8-2.4-2-1.5h2.5z" />
+        </template>
+        <template v-else>
+          <path fill="#0039a6" d="M0 0h12v11H0z" />
+          <path fill="#d52b1e" d="M5 1h2v3h3v2H7v4H5V6H2V4h3z" />
+        </template>
       </svg>
     </span>
-    <span class="september-decor__label">Septiembre · Mes de la Patria y Mes de la Biblia</span>
+    <span class="september-decor__label">{{ october ? 'Octubre · Mes de la Reforma Protestante' : 'Septiembre · Mes de la Patria y Mes de la Biblia' }}</span>
   </div>
 </template>
 

@@ -8,3 +8,5 @@ export const septemberConfig = {
   // Use una cadena vacía para volver a las copias locales.
   mediaBaseUrl: 'https://media.ipnchile.cl/eventos/septiembre-2026',
 }
+
+export const octoberConfig = { mode: 'auto', month: 10, timeZone: 'America/Santiago' }

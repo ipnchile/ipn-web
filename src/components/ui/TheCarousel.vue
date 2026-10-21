@@ -78,9 +78,9 @@ const imageSet = (...sources) => sources.join(', ')
 
 const currentSlide = ref(0)
 let autoplay = null
-watch(slides, () => { currentSlide.value = 0 })
 
 const slides = useSiteData('carousel.slides')
+watch(slides, () => { currentSlide.value = 0 })
 
 const nextSlide = () => {
     if (!slides.value.length) return
